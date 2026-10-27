@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House of Student – Vibe Match</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lime:#c4f962; --lime-d:#9be02f; --ink:#1d1f1b; --ink2:#4a4d45; --mute:#8a8d83;
+  --bg:#fbfbf7; --card:#fff; --line:#e8e8e0; --warm:#fff3c4; --shadow:0 10px 40px -12px rgba(30,40,10,.18);
+  --good:#2f9e6b; --r:22px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+input{font:inherit}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:24px;padding:14px 32px;background:rgba(251,251,247,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;line-height:1;letter-spacing:.5px}
+.logo i{width:38px;height:38px;border-radius:11px;background:var(--lime);display:grid;place-items:center;position:relative}
+.logo i:before,.logo i:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.logo i:before{left:10px;bottom:11px}.logo i:after{right:11px;top:11px}
+.logo small{display:block;font-weight:400}
+nav .links{margin-left:auto;display:flex;gap:26px;color:var(--ink2)}
+nav .links a{position:relative;padding:4px 0}
+nav .links a:after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--lime-d);transition:width .3s}
+nav .links a:hover:after{width:100%}
+
+/* hero */
+.hero{position:relative;padding:66px 32px 30px;text-align:center;isolation:isolate;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;z-index:-1;animation:float 14s ease-in-out infinite}
+.b1{width:420px;height:420px;background:var(--lime);left:-80px;top:-60px}
+.b2{width:380px;height:380px;background:#ffe27a;right:-60px;top:20px;animation-delay:-5s}
+.b3{width:320px;height:320px;background:#b9f0e0;left:40%;bottom:-160px;animation-delay:-9s}
+@keyframes float{50%{transform:translate(40px,30px) scale(1.12)}}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:6px 14px;border-radius:99px;background:#fff;border:1px solid var(--line);font-size:14px;color:var(--ink2);animation:rise .8s both}
+.eyebrow b{width:8px;height:8px;border-radius:50%;background:var(--lime-d);animation:pulse 1.6s infinite}
+h1{font-size:clamp(36px,6vw,64px);font-weight:700;line-height:1.05;letter-spacing:-1.5px;margin:18px auto 14px;max-width:860px;text-wrap:balance;animation:rise .8s .08s both}
+h1 em{font-style:normal;position:relative;white-space:nowrap}
+h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:.36em;background:var(--lime);z-index:-1;border-radius:8px;transform-origin:left;animation:grow 1s .7s both cubic-bezier(.2,.9,.3,1)}
+.sub{color:var(--ink2);font-size:18px;animation:rise .8s .16s both}
+.steps-bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px;animation:rise .8s .22s both}
+.stepdot{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--mute);padding:7px 14px;border-radius:99px;background:#fff;border:1px solid var(--line);transition:all .3s}
+.stepdot b{width:22px;height:22px;border-radius:50%;background:var(--line);color:var(--ink2);display:grid;place-items:center;font-size:12px}
+.stepdot.on{color:var(--ink);border-color:var(--ink)}
+.stepdot.on b{background:var(--ink);color:var(--lime)}
+.stepdot.done b{background:var(--good);color:#fff}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(155,224,47,0)}0%{box-shadow:0 0 0 0 rgba(155,224,47,.7)}}
+
+.step{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--lime);font-size:17px;margin-right:8px;vertical-align:middle;flex:none}
+
+/* where */
+.where{max-width:1240px;margin:34px auto 0;padding:0 32px}
+.where-card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:26px 28px;box-shadow:var(--shadow)}
+.where h2,.p-title{font-size:25px;letter-spacing:-.6px;display:flex;align-items:center}
+.where .lead,.personalise .lead{color:var(--mute);margin:6px 0 18px}
+.country .fl{font-size:20px}
+.cities-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s cubic-bezier(.2,.9,.3,1)}
+.cities-wrap.open{grid-template-rows:1fr}
+.cities-wrap>div{overflow:hidden}
+.cities-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:24px 0 12px}
+.cities-head h3,.sec h3{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mute);font-weight:600}
+.csearch{margin-left:auto;display:flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px solid var(--line);border-radius:99px;background:#fff;min-width:220px;transition:border-color .2s,box-shadow .2s}
+.csearch:focus-within{border-color:var(--lime-d);box-shadow:0 0 0 4px rgba(196,249,98,.4)}
+.csearch input{border:0;outline:0;background:none;width:100%}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{padding:9px 16px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-size:15px;transition:all .25s cubic-bezier(.3,1.5,.5,1);position:relative}
+.chip small{color:var(--mute);margin-left:5px;font-size:12px}
+.chip:hover{border-color:var(--lime-d);transform:translateY(-2px)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--lime);border-color:var(--ink);transform:scale(1.04)}
+.chip[aria-pressed=true] small{color:#b7bfa8}
+.chip[aria-pressed=true]:before{content:"✓ "}
+.city-grid .chip,.nb-grid .chip{animation:chipIn .45s both cubic-bezier(.2,.9,.3,1);animation-delay:calc(var(--k)*16ms)}
+@keyframes chipIn{from{opacity:0;transform:translateY(10px) scale(.9)}}
+.morebtn{margin-top:12px;font-weight:600;text-decoration:underline;text-decoration-color:var(--lime-d);text-decoration-thickness:3px;text-underline-offset:4px}
+.nearby{margin-top:22px;padding-top:4px;border-top:1px dashed var(--line);animation:rise .5s both}
+.nb-grid{margin-top:12px}
+.chip.nb[aria-pressed=false]{opacity:.5;text-decoration:line-through}
+
+/* personalise */
+.personalise{max-width:1240px;margin:34px auto 0;padding:0 32px}
+.p-card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:26px 28px;box-shadow:var(--shadow)}
+.p-head{text-align:center;margin-bottom:6px}
+.toggle-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0 6px}
+.vibe-toggle{position:relative;display:flex;align-items:center;gap:16px;padding:10px 12px 10px 26px;border-radius:99px;background:var(--ink);color:#fff;font-size:19px;font-weight:600;box-shadow:0 14px 40px -10px rgba(0,0,0,.45);transition:transform .25s,background .4s;animation:vibrate 3.6s infinite}
+.vibe-toggle:before,.vibe-toggle:after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--lime-d);opacity:0;animation:ring 2.4s infinite}
+.vibe-toggle:after{animation-delay:1.2s}
+.vibe-toggle:hover{transform:scale(1.04)}
+.vibe-toggle .sw{width:60px;height:33px;border-radius:99px;background:#43463f;position:relative;transition:background .35s;flex:none}
+.vibe-toggle .sw:after{content:"";position:absolute;top:4px;left:4px;width:25px;height:25px;border-radius:50%;background:#fff;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.vibe-toggle[aria-pressed=true]{background:#22251e;animation:none}
+.vibe-toggle[aria-pressed=true]:before,.vibe-toggle[aria-pressed=true]:after{animation:none}
+.vibe-toggle[aria-pressed=true] .sw{background:var(--lime)}
+.vibe-toggle[aria-pressed=true] .sw:after{transform:translateX(27px);background:var(--ink)}
+.vibe-toggle .spark{display:inline-block;animation:spin 5s linear infinite}
+.vibe-toggle:disabled{background:#b4b7ae;box-shadow:none;animation:none;cursor:not-allowed}
+.vibe-toggle:disabled:before,.vibe-toggle:disabled:after{animation:none}
+.vibe-toggle:disabled:hover{transform:none}
+.vibe-toggle.unlocked{animation:vibrate .5s 4}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ring{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.35,1.9);opacity:0}}
+@keyframes vibrate{0%,78%,100%{transform:translate(0)}80%{transform:translate(-3px,1px) rotate(-1deg)}82%{transform:translate(3px,-1px) rotate(1deg)}84%{transform:translate(-3px,-1px) rotate(-1deg)}86%{transform:translate(3px,1px) rotate(1deg)}88%{transform:translate(-2px,0)}90%{transform:translate(2px,0)}}
+.hint{font-size:14px;color:var(--mute)}
+.panel-shell{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s cubic-bezier(.2,.9,.3,1)}
+.panel-shell.open{grid-template-rows:1fr}
+.panel-shell>div{overflow:hidden}
+.panel{padding-top:26px;margin-top:20px;border-top:1px dashed var(--line);opacity:0;transform:translateY(20px);transition:all .6s .1s cubic-bezier(.2,.9,.3,1)}
+.panel-shell.open .panel{opacity:1;transform:none}
+.grid2{display:grid;grid-template-columns:1.1fr 1fr;gap:34px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}nav .links{display:none}}
+.sec{margin-bottom:24px}
+.sec h3{margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sec h3 span{letter-spacing:0;text-transform:none;font-size:14px;color:var(--mute);font-weight:500}
+.vibes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:560px){.vibes{grid-template-columns:repeat(2,1fr)}}
+.vibe{padding:16px 14px 14px;border-radius:18px;border:1.5px solid var(--line);text-align:left;background:#fff;transition:all .3s cubic-bezier(.3,1.5,.5,1);position:relative;overflow:hidden}
+.vibe .e{font-size:26px;display:block;transition:transform .4s cubic-bezier(.3,1.8,.5,1)}
+.vibe b{display:block;font-weight:600;margin-top:4px}
+.vibe small{color:var(--mute);font-size:12.5px;line-height:1.25;display:block}
+.vibe .whyv{margin-top:7px;font-size:11.5px;font-weight:600;color:var(--ink2);border-top:1px dashed var(--line);padding-top:6px;display:inline-flex;gap:4px;align-items:center}
+.vibe:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.vibe:hover .e{transform:scale(1.2) rotate(-8deg)}
+.vibe[aria-pressed=true]{background:var(--lime);border-color:var(--lime-d);transform:translateY(-3px)}
+.vibe[aria-pressed=true] small{color:var(--ink2)}
+.vibe[aria-pressed=true] .whyv{color:var(--ink);border-color:rgba(29,31,27,.2)}
+.vibe[aria-pressed=true] .e{animation:pop .6s}
+@keyframes pop{40%{transform:scale(1.55) rotate(12deg)}}
+.range{position:relative;height:36px;margin:6px 6px 0}
+.range .track{position:absolute;top:15px;left:0;right:0;height:6px;border-radius:9px;background:var(--line)}
+.range .fill{position:absolute;top:15px;height:6px;border-radius:9px;background:linear-gradient(90deg,var(--lime-d),var(--lime))}
+.range input{position:absolute;left:-6px;width:calc(100% + 12px);top:0;height:36px;background:none;-webkit-appearance:none;appearance:none;pointer-events:none}
+.range input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:all;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:grab;box-shadow:0 4px 10px rgba(0,0,0,.2);transition:transform .2s}
+.range input::-moz-range-thumb{pointer-events:all;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:grab}
+.range input:active::-webkit-slider-thumb{transform:scale(1.25);cursor:grabbing}
+.price-big{font-size:32px;font-weight:700;letter-spacing:-1px}
+.price-big small{font-size:15px;font-weight:400;color:var(--mute);letter-spacing:0}
+.live{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-top:20px;margin-top:8px;border-top:1px dashed var(--line)}
+.live .count{font-size:15px;color:var(--ink2)}
+.live .count b{font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.reset{margin-left:auto;padding:10px 18px;border-radius:99px;border:1.5px solid var(--line);transition:all .25s}
+.reset:hover{background:var(--ink);color:#fff}
+.go{padding:14px 26px;border-radius:99px;background:var(--lime);font-weight:700;transition:all .25s;box-shadow:0 8px 20px -6px rgba(155,224,47,.8)}
+.go:hover{transform:translateY(-2px) scale(1.04)}
+
+/* recommended rail */
+.reco{max-width:1240px;margin:34px auto 0;padding:0 32px}
+.reco-head{margin-bottom:14px}
+.reco-head h2{font-size:25px;letter-spacing:-.6px;margin-top:8px}
+.reco-head p{color:var(--mute);max-width:640px;font-size:15px}
+.badge-star{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;background:var(--ink);color:var(--lime);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.rail{display:flex;gap:16px;overflow-x:auto;padding:6px 4px 18px;scroll-snap-type:x proximity}
+.rail::-webkit-scrollbar{height:8px}.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+.rc{flex:0 0 280px;scroll-snap-align:start;border-radius:20px;background:linear-gradient(160deg,#f3ffd0,#fff 60%);border:1.5px solid var(--lime-d);padding:18px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;opacity:0;animation:rise .6s forwards;animation-delay:calc(var(--k)*80ms);transition:transform .3s,box-shadow .3s}
+.rc:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.rc:before{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:var(--lime);opacity:.5;filter:blur(8px)}
+.rc .amt{font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1;position:relative}
+.rc .amt small{display:block;font-size:12px;font-weight:500;letter-spacing:.3px;color:var(--ink2);text-transform:uppercase;margin-bottom:4px}
+.rc h4{font-size:17px;font-weight:600;line-height:1.2;position:relative}
+.rc p{font-size:13px;color:var(--ink2);position:relative}
+.rc .whyreco{position:relative;align-self:flex-start;font-size:12px;font-weight:600;color:var(--ink);background:rgba(255,255,255,.7);border:1px solid var(--lime-d);padding:4px 10px;border-radius:99px;display:inline-flex;gap:5px;align-items:center}
+.rc .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;position:relative;padding-top:6px}
+.rc .row a{padding:8px 14px;border-radius:99px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;transition:all .25s}
+.rc .row a:hover{background:var(--lime);color:var(--ink)}
+.rc .fromp{font-size:13px;color:var(--ink2)}.rc .fromp b{font-size:16px;color:var(--ink)}
+.noreco{padding:18px 22px;border:2px dashed var(--line);border-radius:18px;color:var(--mute)}
+
+/* results */
+.results{max-width:1240px;margin:0 auto;padding:30px 32px 40px}
+.rhead{display:flex;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.rhead h2{font-size:30px;letter-spacing:-.8px}
+.rhead p{color:var(--mute)}
+.rhead select{margin-left:auto;padding:10px 16px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font:inherit}
+.active-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;min-height:8px}
+.tag{padding:5px 12px;border-radius:99px;background:var(--warm);font-size:13px;animation:rise .4s both}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(372px,1fr));gap:26px}
+@media(max-width:480px){.cards{grid-template-columns:1fr}.results,.hero,.where,.reco,.personalise,.compare{padding-left:16px;padding-right:16px}}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(40px) scale(.96);animation:cardIn .7s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i)*60ms);transition:box-shadow .3s,transform .3s,border-color .3s;will-change:transform}
+@keyframes cardIn{to{opacity:1;transform:none}}
+.pcard:hover{box-shadow:var(--shadow);transform:translateY(-6px)}
+.pcard.cmp{border-color:var(--ink);box-shadow:0 0 0 2px var(--lime)}
+.cover{height:188px;position:relative;overflow:hidden}
+.cover .art{position:absolute;inset:0;transition:transform .8s cubic-bezier(.2,.9,.3,1)}
+.pcard:hover .art{transform:scale(1.1) rotate(1.5deg)}
+.cover .city{position:absolute;left:14px;bottom:12px;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.92);font-size:13px;font-weight:500}
+.ribbon{position:absolute;left:14px;top:12px;display:flex;gap:7px;flex-wrap:wrap;max-width:62%}
+.rb{padding:5px 11px;border-radius:99px;font-size:12px;font-weight:600;background:rgba(255,255,255,.94);display:inline-flex;align-items:center;gap:5px;cursor:help}
+.rb.reco{background:var(--ink);color:var(--lime)}
+.rb.block{background:var(--lime);color:var(--ink)}
+.iconbtns{position:absolute;right:12px;top:12px;display:flex;gap:8px}
+.ib{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.94);display:grid;place-items:center;transition:transform .3s cubic-bezier(.3,1.8,.5,1),background .25s}
+.ib:hover{transform:scale(1.18)}
+.ib svg{width:18px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:all .3s}
+.ib.save.on svg{fill:#ff5a6a;stroke:#ff5a6a}.ib.save.on{animation:pop .5s}
+.ib.compare.on{background:var(--ink)}.ib.compare.on svg{stroke:var(--lime)}.ib.compare.on{animation:pop .5s}
+.rating{position:absolute;right:12px;bottom:10px;display:flex;align-items:center;gap:6px;padding:6px 11px 6px 10px;border-radius:99px;background:rgba(255,255,255,.96);font-weight:700;font-size:14px;cursor:help}
+.rating .star{color:#f5a623}
+.rating .rc2{color:var(--mute);font-weight:500;font-size:12px}
+.rating .match{margin-left:4px;padding:2px 7px;border-radius:99px;background:var(--lime);color:var(--ink);font-size:12px}
+.pbody{padding:18px 20px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
+.ptitle h3{font-size:21px;font-weight:600;letter-spacing:-.4px;line-height:1.2;word-break:break-word}
+.ptitle h3 a:hover{text-decoration:underline;text-decoration-color:var(--lime-d);text-decoration-thickness:3px}
+.meta{font-size:14px;color:var(--ink2)}
+.am{display:flex;flex-wrap:wrap;gap:6px}
+.am .amx{font-size:12.5px;padding:4px 11px;border-radius:99px;background:#f2f4ec;color:var(--ink2);display:inline-flex;align-items:center;gap:5px;cursor:help;transition:background .2s}
+.am .amx:hover{background:var(--lime);color:var(--ink)}
+.am .amx .i{width:14px;height:14px;border-radius:50%;border:1.3px solid currentColor;display:grid;place-items:center;font-size:9px;font-weight:700;opacity:.7}
+.whyvibe{display:flex;flex-direction:column;gap:6px;background:linear-gradient(135deg,#f6ffe0,#fff);border:1px solid var(--lime-d);border-radius:14px;padding:11px 13px}
+.whyvibe .h{font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--ink2);font-weight:600;display:flex;justify-content:space-between}
+.whyvibe .h b{color:var(--ink)}
+.whyvibe .vrow{display:flex;gap:7px;font-size:13px;align-items:flex-start}
+.whyvibe .vrow .e{flex:none}
+.rooms{display:flex;flex-direction:column;gap:9px;margin-top:auto}
+.rooms h4{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mute);font-weight:600}
+.room{display:grid;grid-template-columns:auto 1fr auto;gap:3px 11px;align-items:center;padding:12px 14px;border-radius:16px;background:#f8f9f3;border:1px solid transparent;transition:all .3s;opacity:0;animation:roomIn .5s forwards;animation-delay:calc(var(--i)*60ms + 380ms + var(--j)*80ms)}
+@keyframes roomIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.room:hover{border-color:var(--lime-d);background:#fff}
+.room.rcmp{border-color:var(--ink);background:#fff}
+.rcbtn{grid-row:1/3;width:30px;height:30px;border-radius:9px;border:1.5px solid var(--line);display:grid;place-items:center;transition:all .25s;align-self:center}
+.rcbtn:hover{border-color:var(--ink)}
+.rcbtn svg{width:15px;fill:none;stroke:var(--ink2);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rcbtn.on{background:var(--ink);border-color:var(--ink)}.rcbtn.on svg{stroke:var(--lime)}
+.room .rname{font-weight:600}
+.room .rf{grid-column:2;font-size:12.5px;color:var(--mute)}
+.room .pay{grid-column:2;margin-top:4px;display:inline-flex;gap:6px;flex-wrap:wrap}
+.paychip{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:99px;background:#eef3e2;color:var(--ink2);cursor:help;display:inline-flex;align-items:center;gap:4px;transition:background .2s}
+.paychip:hover{background:var(--lime);color:var(--ink)}
+.room .price{grid-row:1/3;grid-column:3;text-align:right}
+.room .price strong{font-size:19px;font-weight:700;display:block;line-height:1;font-variant-numeric:tabular-nums}
+.room .price small{font-size:11.5px;color:var(--mute)}
+.book{margin-top:6px;padding:7px 14px;border-radius:99px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;display:inline-block;transition:all .25s}
+.book:hover{background:var(--lime);color:var(--ink);transform:scale(1.05)}
+.more{font-size:13px;color:var(--mute);text-align:center}
+.view{font-size:14px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.view i{transition:transform .3s;font-style:normal}
+.view:hover i{transform:translateX(6px)}
+.skel{height:540px;border-radius:var(--r);background:linear-gradient(100deg,#f0f1ea 30%,#fafbf6 50%,#f0f1ea 70%);background-size:300% 100%;animation:shimmer 1.2s infinite}
+@keyframes shimmer{to{background-position:-150% 0}}
+.empty{grid-column:1/-1;text-align:center;padding:64px 20px;border:2px dashed var(--line);border-radius:var(--r);animation:rise .6s both}
+.empty .big{font-size:52px;display:inline-block;animation:vibrate 1.6s infinite}
+.empty h3{font-size:24px;margin:10px 0 6px}
+.empty p{color:var(--mute);margin:0 auto 18px;max-width:520px}
+.foot{max-width:1240px;margin:0 auto;padding:0 32px 20px;color:var(--mute);font-size:12.5px;line-height:1.5}
+
+/* compare */
+.compare{max-width:1240px;margin:20px auto 130px;padding:0 32px;scroll-margin-top:84px}
+.cmp-card{background:var(--ink);color:#fff;border-radius:30px;padding:26px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.cmp-card:before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:var(--lime);opacity:.14;filter:blur(60px);right:-80px;top:-100px}
+.cmp-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;position:relative}
+.cmp-head h2{font-size:26px;letter-spacing:-.6px}
+.cmp-tabs{display:flex;gap:6px;background:#2a2d26;padding:5px;border-radius:99px}
+.cmp-tabs button{padding:8px 16px;border-radius:99px;color:#aab09c;font-weight:600;font-size:14px;transition:all .25s}
+.cmp-tabs button.on{background:var(--lime);color:var(--ink)}
+.cmp-clear{margin-left:auto;padding:9px 18px;border-radius:99px;border:1.5px solid #4a4d45;font-size:14px;transition:all .25s}
+.cmp-clear:hover{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.cmp-empty{padding:34px;border:2px dashed #4a4d45;border-radius:20px;text-align:center;color:#aab09c;position:relative}
+.cmp-empty svg{width:32px;stroke:var(--lime);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:8px}
+.cmp-scroll{overflow-x:auto;position:relative}
+.cmp-table{width:100%;border-collapse:separate;border-spacing:0;min-width:560px}
+.cmp-table th,.cmp-table td{padding:13px 15px;text-align:left;vertical-align:top;border-bottom:1px solid #34372f;font-size:14.5px}
+.cmp-table th.lab{color:#aab09c;font-weight:500;width:140px;font-size:12.5px;letter-spacing:.7px;text-transform:uppercase}
+.cmp-table tr:last-child td,.cmp-table tr:last-child th{border-bottom:0}
+.cmp-col{animation:rise .5s both}
+.cmp-col .nm{font-weight:600;font-size:16px;line-height:1.2}
+.cmp-col .ct{color:#aab09c;font-size:12.5px;margin-top:2px}
+.cmp-col .rm{float:right;width:25px;height:25px;border-radius:50%;background:#34372f;display:grid;place-items:center;font-size:13px;transition:all .2s;margin-left:6px}
+.cmp-col .rm:hover{background:#ff5a6a;transform:rotate(90deg)}
+.cmp-col a.bk{display:inline-block;margin-top:10px;padding:7px 14px;border-radius:99px;background:var(--lime);color:var(--ink);font-weight:600;font-size:13px}
+.best{color:var(--lime);font-weight:700}.yes{color:var(--lime)}.no{color:#6c7062}
+
+.fab{position:fixed;right:24px;bottom:24px;z-index:80;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:99px;background:var(--lime);color:var(--ink);font-weight:700;font-size:16px;box-shadow:0 12px 34px -8px rgba(110,170,10,.9);overflow:hidden;transform:translateY(120px) scale(.8);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.3,1.5,.5,1),opacity .3s;animation:glow 1.6s infinite}
+.fab.show{transform:none;opacity:1;pointer-events:auto}
+.fab:after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);transform:skewX(-20deg);animation:shine 2.2s infinite}
+.fab .dot{width:10px;height:10px;border-radius:50%;background:var(--ink);animation:blink 1s infinite}
+.fab .arr{display:inline-block;animation:bob 1s infinite}
+.fab:hover{transform:scale(1.06)}
+@keyframes shine{0%{left:-80px}60%,100%{left:130%}}
+@keyframes glow{0%,100%{box-shadow:0 12px 34px -8px rgba(110,170,10,.9),0 0 0 0 rgba(196,249,98,.8)}50%{box-shadow:0 12px 34px -8px rgba(110,170,10,.9),0 0 0 14px rgba(196,249,98,0)}}
+@keyframes blink{50%{opacity:.15}}
+@keyframes bob{50%{transform:translateY(4px)}}
+
+/* popover */
+.pop{position:fixed;z-index:120;max-width:300px;background:var(--ink);color:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 18px 50px -12px rgba(0,0,0,.55);font-size:13.5px;line-height:1.45;opacity:0;transform:translateY(6px) scale(.97);transition:opacity .18s,transform .18s;pointer-events:none}
+.pop.show{opacity:1;transform:none;pointer-events:auto}
+.pop .ph{font-weight:700;font-size:14.5px;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.pop .pf{margin-top:10px;padding-top:9px;border-top:1px solid #36392f;color:#9a9e90;font-size:11.5px}
+.pop ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:4px}
+.pop .bar{display:grid;grid-template-columns:78px 1fr 30px;gap:8px;align-items:center;margin:5px 0;font-size:12.5px}
+.pop .bar .tr{height:7px;border-radius:9px;background:#3a3d34;overflow:hidden}
+.pop .bar .fl{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--lime-d),var(--lime))}
+.pop .bar b{text-align:right;font-variant-numeric:tabular-nums;color:var(--lime)}
+.pop .mentions{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.pop .mentions span{font-size:11.5px;background:#2e3129;padding:3px 9px;border-radius:99px}
+.pop .sched{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.pop .srow{display:flex;gap:9px;align-items:flex-start}
+.pop .srow .n{flex:none;width:20px;height:20px;border-radius:50%;background:var(--lime);color:var(--ink);font-weight:700;font-size:11px;display:grid;place-items:center;margin-top:1px}
+.pop .quote{font-style:italic;color:#d6dac9}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;transition:transform .5s cubic-bezier(.3,1.5,.5,1);z-index:130}
+.toast.show{transform:translate(-50%,0)}
+.confetti{position:fixed;width:10px;height:14px;z-index:130;pointer-events:none;animation:fall 1.2s forwards ease-out}
+@keyframes fall{to{transform:translate(var(--x),var(--y)) rotate(720deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#"><i></i><span>HOUSE<small>OF STUDENT</small></span></a>
+  <div class="links"><a href="#">Countries</a><a href="#">Cities</a><a href="#">Universities</a><a href="#">Properties</a><a href="#">About</a></div>
+</nav>
+
+<header class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="eyebrow"><b></b> Verified student rooms in <span id="nCountries">10</span> countries</div>
+  <h1>Find a home that fits <em>your vibe</em></h1>
+  <p class="sub">Pick where you want to be, tell us your vibe, and see only the rooms that truly match — with the reasons behind every suggestion.</p>
+  <div class="steps-bar">
+    <div class="stepdot" id="sd1"><b>1</b> Where</div>
+    <div class="stepdot" id="sd2"><b>2</b> Make it yours</div>
+    <div class="stepdot" id="sd3"><b>3</b> Match &amp; compare</div>
+  </div>
+</header>
+
+<section class="where" aria-label="Where">
+  <div class="where-card">
+    <h2><span class="step">1</span> Where do you want to live?</h2>
+    <p class="lead">Pick a country, then a city. Add nearby cities if you are happy to commute.</p>
+    <div class="chips" id="countries"></div>
+    <div class="cities-wrap" id="citiesWrap"><div>
+      <div class="cities-head">
+        <h3 id="citiesTitle">Cities</h3>
+        <label class="csearch"><span>🔍</span><input id="csearch" placeholder="Search city…" autocomplete="off"></label>
+      </div>
+      <div class="chips city-grid" id="cities"></div>
+      <button class="morebtn" id="moreCities" hidden></button>
+      <div class="nearby" id="nearby" hidden>
+        <div class="cities-head"><h3 id="nearbyTitle">Nearby cities</h3></div>
+        <div class="chips" id="radius"></div>
+        <div class="chips nb-grid" id="nbList"></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="personalise" id="personalise" aria-label="Personalise">
+  <div class="p-card">
+    <div class="p-head">
+      <h2 class="p-title" style="justify-content:center"><span class="step">2</span> Then make it yours</h2>
+      <p class="lead" id="pLead">Choose a country above to unlock your personalised search.</p>
+    </div>
+    <div class="toggle-wrap">
+      <button class="vibe-toggle" id="toggle" aria-pressed="false" aria-controls="panelShell" disabled>
+        <span class="spark">✦</span><span id="toggleLabel">Personalise my search</span><span class="sw"></span>
+      </button>
+      <span class="hint" id="hint">Pick a country first</span>
+    </div>
+    <div class="panel-shell" id="panelShell"><div>
+      <div class="panel">
+        <div class="grid2">
+          <div>
+            <div class="sec">
+              <h3 id="budgetTitle">Budget per week </h3>
+              <div class="price-big" id="priceBig"></div>
+              <div class="range" id="range"><div class="track"></div><div class="fill" id="fill"></div>
+                <input type="range" id="rmin" aria-label="Minimum rent"><input type="range" id="rmax" aria-label="Maximum rent"></div>
+            </div>
+            <div class="sec"><h3>Stay length</h3><div class="chips" id="durations"></div></div>
+            <div class="sec"><h3>Property perks</h3><div class="chips" id="perks"></div></div>
+          </div>
+          <div>
+            <div class="sec"><h3>Your vibe <span>pick any — tap “why” to see the reason</span></h3><div class="vibes" id="vibes"></div></div>
+          </div>
+        </div>
+        <div class="live">
+          <div class="count"><b id="cProps">0</b> properties · <b id="cRooms">0</b> rooms match</div>
+          <button class="reset" id="reset">Reset</button>
+          <button class="go" id="show">Show my matches ↓</button>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="reco" id="reco"></section>
+
+<main class="results" id="results">
+  <div class="rhead">
+    <div><h2 id="rtitle">Student accommodation</h2><p id="rsub"></p></div>
+    <select id="sort" aria-label="Sort">
+      <option value="match">Best match</option>
+      <option value="low">Price: low to high</option>
+      <option value="high">Price: high to low</option>
+      <option value="near">Closest to centre</option>
+      <option value="block">Lowest blocking deposit</option>
+    </select>
+  </div>
+  <div class="active-tags" id="tags"></div>
+  <div class="cards" id="cards"></div>
+</main>
+<p class="foot" id="foot"></p>
+
+<section class="compare" id="compare" aria-label="Compare">
+  <div class="cmp-card">
+    <div class="cmp-head">
+      <h2>Compare</h2>
+      <div class="cmp-tabs"><button id="tabProp" class="on">Properties <span id="nProp"></span></button><button id="tabRoom">Rooms <span id="nRoom"></span></button></div>
+      <button class="cmp-clear" id="cmpClear" hidden>Clear</button>
+    </div>
+    <div id="cmpBody"></div>
+  </div>
+</section>
+
+<button class="fab" id="fab" aria-label="Jump to comparison"><span class="dot"></span><span id="fabLabel">Compare</span><span class="arr">↓</span></button>
+<div class="pop" id="pop" role="tooltip"></div>
+<div class="toast" id="toast"></div>
+
+<script src="vibe-data.js"></script>
+<script>
+/* =====================================================================
+   CONFIG — connect a live backend by setting apiBase (see vibe-data.js)
+   Ratings/review-reasons and amenity distances are NOT in BigQuery, so
+   the rating breakdown is clearly-labelled illustrative data. Everything
+   else (vibe reasons, recommended reasons, instalments, rooms) is real.
+   ===================================================================== */
+const CONFIG = {
+  apiBase: null,
+  site: "https://houseofstudent.com",
+  propertyUrl: p => `${CONFIG.site}/${p.co}/${p.c}/${p.s}`,
+  bookUrl: (p, r, wk) => `${CONFIG.propertyUrl(p)}?room=${r.rt}${wk?`&weeks=${wk}`:""}#book`,
+  maxCompare: 4
+};
+
+const FLAGS={uk:"🇬🇧",fr:"🇫🇷",de:"🇩🇪",au:"🇦🇺",ire:"🇮🇪",us:"🇺🇸",nz:"🇳🇿",es:"🇪🇸",ca:"🇨🇦",ae:"🇦🇪"};
+const VIBES=[
+  {id:"social",e:"🎉",label:"Social",desc:"Common rooms, events, nightlife"},
+  {id:"quiet",e:"📚",label:"Quiet study",desc:"Calm, study-friendly"},
+  {id:"budget",e:"💸",label:"Budget smart",desc:"Cheapest third in the country"},
+  {id:"luxury",e:"✨",label:"Premium",desc:"Premium & rooftop living"},
+  {id:"fit",e:"💪",label:"Fit & active",desc:"Gym, sport, green space"},
+  {id:"creative",e:"🎨",label:"Creative",desc:"Cinema, arts, studios"}
+];
+const VIBE_WHY={
+  social:"We tag Social when the listing describes common rooms, lounges, events or nightlife nearby.",
+  quiet:"We tag Quiet study when the listing highlights calm, study rooms or a library.",
+  budget:"We tag Budget smart when a room sits in the cheapest third of all rooms in that country.",
+  luxury:"We tag Premium when the listing mentions luxury, concierge, penthouse or rooftop living.",
+  fit:"We tag Fit & active when there is a gym, sports, bike storage or a park nearby.",
+  creative:"We tag Creative when the listing mentions a cinema, arts, galleries or studios."
+};
+const PERKS=[
+  {id:"bl",label:"Blocking deposit"},{id:"nv",label:"No visa · No pay"},{id:"np",label:"No place · No pay"},
+  {id:"ip",label:"Pay in instalments"},{id:"pl",label:"Pay later"},
+  {id:"gy",label:"Gym"},{id:"cn",label:"Cinema"},{id:"st",label:"Study space"}
+];
+const PERK_MAP=Object.fromEntries(PERKS.map(p=>[p.id,p.label]));
+const Api={async catalog(){ if(!CONFIG.apiBase) return window.HOS_DATA; return (await fetch(`${CONFIG.apiBase}/catalog`)).json(); }};
+const ENR=window.HOS_ENRICH||{};
+
+const $=s=>document.querySelector(s);
+let DB,C={},ALL=[],seq=0;
+const RADII=[0,25,50,100];
+const state={on:false,country:null,city:null,radius:0,nbOff:[],min:0,max:0,durations:[],vibes:[],perks:[],sort:"match",cmpP:[],cmpR:[],cmpTab:"prop"};
+const saved=new Set((()=>{try{return JSON.parse(localStorage.getItem("hos-saved")||"[]")}catch(e){return[]}})());
+const cur=()=>C[state.country];
+const money=n=>cur().cur+Math.round(n).toLocaleString();
+const moneyIn=(co,n)=>co.cur+Math.round(n).toLocaleString();
+const per=()=>cur().period;
+const unitWord=n=>per()==="week"?(n===1?"week":"weeks"):(n===1?"month":"months");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function prepare(){
+  DB.countries.forEach(c=>{
+    c.cityList=c.cities.split(";").map(x=>{const [name,slug,n]=x.split("|");return{name,slug,n:+n}});
+    c.cityBySlug=Object.fromEntries(c.cityList.map(x=>[x.slug,x]));
+    c.xy={};(c.ll||"").split(";").forEach(s=>{const [k,la,lo]=s.split("|");if(k)c.xy[k]=[+la,+lo]});
+    c.total=c.cityList.reduce((a,x)=>a+x.n,0);C[c.slug]=c;
+  });
+  ALL=DB.properties;
+  const byCountry={};
+  ALL.forEach(p=>{p.minp=Math.min(...p.r.map(r=>+r.mn));p.perks=new Set([...(p.pk||[]),...(p.bl>0?["bl"]:[])]);(byCountry[p.co]=byCountry[p.co]||[]).push(p)});
+  Object.values(byCountry).forEach(list=>{const s=list.map(p=>p.minp).sort((a,b)=>a-b),p33=s[Math.floor((s.length-1)/3)];list.forEach(p=>{p.vibes=new Set(p.v||[]);p.budgetCut=p33;if(p.minp<=p33)p.vibes.add("budget")})});
+}
+function km(a,b){const R=6371,r=Math.PI/180,dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r;const x=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function nearby(){if(!state.country||!state.city||!state.radius)return[];const c=cur(),o=c.xy[state.city];if(!o)return[];return c.cityList.filter(x=>x.slug!==state.city&&c.xy[x.slug]).map(x=>({...x,km:km(o,c.xy[x.slug])})).filter(x=>x.km<=state.radius).sort((a,b)=>a.km-b.km)}
+function allowedCities(){if(!state.city)return null;return new Set([state.city,...nearby().filter(x=>!state.nbOff.includes(x.slug)).map(x=>x.slug)])}
+function bounds(){const rows=ALL.filter(p=>p.co===state.country).flatMap(p=>p.r),step=per()==="week"?5:25;if(!rows.length)return{lo:0,hi:step*20,step};return{lo:Math.floor(Math.min(...rows.map(r=>+r.mn))/step)*step,hi:Math.ceil(Math.max(...rows.map(r=>+r.mx))/step)*step,step}}
+
+/* ---------- derived reasons ---------- */
+function ratingOf(p){ // illustrative, deterministic from id — real reviews pending
+  const base=3.7+((p.i*7)%12)/10,score=Math.min(4.9,base);
+  const cats=["Location","Value","Cleanliness","Facilities","Management"];
+  const seed=a=>((p.i*a)%97)/97;
+  const bd=cats.map((c,k)=>{const v=Math.max(3.4,Math.min(5,score+(seed((k+2)*31)-0.5)*0.9));return[c,Math.round(v*10)/10]});
+  const pool=[];
+  if(p.d&&p.d<1.5)pool.push("Close to campus");
+  if(p.perks.has("gy"))pool.push("Great gym");
+  if(p.perks.has("cn"))pool.push("Movie nights");
+  if(p.vibes.has("social"))pool.push("Friendly community");
+  if(p.vibes.has("quiet"))pool.push("Quiet to study");
+  if(p.perks.has("bl"))pool.push("Easy to book");
+  pool.push("Helpful staff","Good value");
+  return {score:Math.round(score*10)/10,reviews:60+(p.i*13)%440,bd,mentions:[...new Set(pool)].slice(0,4)};
+}
+function matchScore(p,rooms){
+  const v=state.vibes.length?state.vibes.filter(x=>p.vibes.has(x)).length/state.vibes.length:.6;
+  const mid=(state.min+state.max)/2,span=(state.max-state.min)||1,fit=Math.max(0,1-Math.abs(rooms[0].mn-mid)/span);
+  return Math.round(100*(.6*v+.25*fit+.15*Math.min(1,p.perks.size/6)));
+}
+function matchReasons(p,rooms){
+  const out=[];
+  state.vibes.filter(x=>p.vibes.has(x)).forEach(id=>{const v=VIBES.find(x=>x.id===id);out.push({e:v.e,t:vibeReason(p,id)})});
+  if(rooms[0].mn>=state.min&&rooms[0].mn<=state.max)out.push({e:"💷",t:`From ${money(rooms[0].mn)}/${per()} — inside your budget.`});
+  state.perks.filter(k=>p.perks.has(k)).slice(0,2).forEach(k=>out.push({e:"✓",t:`Has ${PERK_MAP[k].toLowerCase()}.`}));
+  return out.slice(0,4);
+}
+function vibeReason(p,id){
+  const e=ENR[p.i]||{};
+  if(id==="budget")return `From ${money(p.minp)}/${per()} — among the cheapest third of ${cur().name} on House of Student.`;
+  if(e.vr&&e.vr[id])return e.vr[id];
+  return VIBE_WHY[id];
+}
+function amenityReason(p,code){const e=ENR[p.i]||{};if(e.amr&&e.amr[code])return e.amr[code];return `${PERK_MAP[code]} listed for this property. Exact distance and count will show once the amenities data is connected.`}
+function recoReasons(p,rooms){
+  const b=[];
+  if(p.bl>0)b.push(`Hold the room for just ${money(p.bl)} today, then decide.`);
+  const inst=(ENR[p.i]||{}).pay&&ENR[p.i].pay.inst;
+  if(inst&&inst.length)b.push(`Spread the rest across up to ${Math.max(...inst)} instalments.`);
+  if(p.d&&p.d<2.5)b.push(`Only ${p.d} ${cur().unit} from the city centre.`);
+  b.push(`Rooms from ${money(rooms[0].mn)}/${per()}.`);
+  if(p.perks.has("nv")||p.perks.has("np"))b.push(`No-visa / no-place cancellation protection.`);
+  return b.slice(0,4);
+}
+function installmentPlan(p,room,weeks){
+  const e=ENR[p.i]||{},pay=e.pay||{},co=cur();
+  const inst=pay.inst&&pay.inst.length?Math.max(...pay.inst):0;
+  const total=room.mn*weeks,block=p.bl||0,rest=Math.max(0,total-block);
+  const lines=[];
+  if(block>0)lines.push(`Pay <b>${moneyIn(co,block)}</b> now to block the room${pay.pld?` — nothing more for ${pay.pld} days`:""}.`);
+  if(inst){const each=Math.round(rest/inst);lines.push(`Then <b>${inst}×</b> instalments of about <b>${moneyIn(co,each)}</b> across your ${weeks}-${co.period} tenancy.`);}
+  else lines.push(`Then the balance of <b>${moneyIn(co,rest)}</b> for the ${weeks}-${co.period} tenancy.`);
+  if(pay.fn)lines.push(`A fortnightly payment option is available.`);
+  return {inst,block,total,lines};
+}
+
+/* ---------- matching engine ---------- */
+function roomOk(r){if(!state.on)return true;if(+r.mn>state.max||+r.mx<state.min)return false;if(state.durations.length&&!state.durations.some(w=>r.wk.includes(w)))return false;return true}
+function compute(){
+  if(!state.country)return[];
+  const allowed=allowedCities(),out=[];
+  for(const p of ALL){
+    if(p.co!==state.country)continue;
+    if(allowed&&!allowed.has(p.c))continue;
+    if(state.on&&!state.perks.every(k=>p.perks.has(k)))continue;
+    const rooms=p.r.filter(roomOk).slice().sort((a,b)=>a.mn-b.mn);
+    if(!rooms.length)continue;
+    out.push({p,rooms,score:state.on?matchScore(p,rooms):Math.round((ratingOf(p).score/5)*100)});
+  }
+  const s=state.sort,low=x=>x.rooms[0].mn;
+  out.sort((a,b)=>s==="low"?low(a)-low(b):s==="high"?low(b)-low(a):s==="near"?(a.p.d||99)-(b.p.d||99):s==="block"?((a.p.bl||1e9)-(b.p.bl||1e9)):(b.score-a.score)||low(a)-low(b));
+  return out;
+}
+
+/* ====================== POPOVER SYSTEM ====================== */
+const pop=$("#pop");let popFor=null;
+function showPop(el,html){
+  pop.innerHTML=html;pop.classList.add("show");popFor=el;
+  const r=el.getBoundingClientRect();pop.style.left="0px";pop.style.top="0px";
+  const pr=pop.getBoundingClientRect(),gap=10;
+  let left=r.left+r.width/2-pr.width/2;left=Math.max(10,Math.min(left,innerWidth-pr.width-10));
+  let top=r.bottom+gap;if(top+pr.height>innerHeight-10)top=r.top-pr.height-gap;if(top<10)top=10;
+  pop.style.left=left+"px";pop.style.top=top+"px";
+}
+function hidePop(){pop.classList.remove("show");popFor=null}
+function bindPop(el,builder){
+  let t;
+  const open=()=>{clearTimeout(t);showPop(el,builder())};
+  const close=()=>{t=setTimeout(hidePop,120)};
+  el.addEventListener("mouseenter",open);el.addEventListener("mouseleave",close);
+  el.addEventListener("mousemove",()=>{if(popFor!==el)open()});
+  el.addEventListener("focus",open);el.addEventListener("blur",hidePop);
+  el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();popFor===el?hidePop():showPop(el,builder())});
+}
+pop.addEventListener("mouseenter",()=>pop.classList.add("show"));
+pop.addEventListener("mouseleave",hidePop);
+addEventListener("scroll",()=>popFor&&hidePop(),true);
+
+/* ====================== WHERE UI ====================== */
+let showAllCities=false;
+function setSteps(){
+  $("#sd1").className="stepdot"+(state.country?" done":" on");
+  $("#sd2").className="stepdot"+(state.on?" done":state.country?" on":"");
+  $("#sd3").className="stepdot"+(state.country&&(state.cmpP.length||state.cmpR.length)?" done":state.on?" on":"");
+}
+function buildCountries(){
+  const el=$("#countries");el.innerHTML="";
+  DB.countries.slice().sort((a,b)=>b.total-a.total).forEach(c=>{
+    const b=document.createElement("button");b.className="chip";b.type="button";b.setAttribute("aria-pressed",state.country===c.slug);
+    b.innerHTML=`<span class="country"><span class="fl">${FLAGS[c.slug]||"🌍"}</span> ${esc(c.name)}<small>${c.total.toLocaleString()}</small></span>`;
+    b.onclick=e=>{if(state.country===c.slug)return;const first=!state.country;state.country=c.slug;state.city=null;state.radius=0;state.nbOff=[];state.durations=[];showAllCities=false;$("#csearch").value="";resetBudget();buildCountries();buildCities();buildDurations();unlock(first);refresh(true);burst(e.clientX,e.clientY,8)};
+    el.appendChild(b);
+  });
+}
+function buildCities(){
+  if(!state.country){$("#citiesWrap").classList.remove("open");return}
+  const c=cur(),q=$("#csearch").value.trim().toLowerCase();
+  $("#citiesWrap").classList.add("open");
+  $("#citiesTitle").textContent=`Cities in ${c.name} · ${c.cityList.length}`;
+  let list=c.cityList.filter(x=>!q||x.name.toLowerCase().includes(q));
+  const LIMIT=14,collapsed=!showAllCities&&!q&&list.length>LIMIT,shown=collapsed?list.slice(0,LIMIT):list;
+  const el=$("#cities");el.innerHTML="";
+  shown.forEach((x,k)=>{const b=document.createElement("button");b.className="chip";b.type="button";b.style.setProperty("--k",k);b.setAttribute("aria-pressed",state.city===x.slug);b.innerHTML=`${esc(x.name)}<small>${x.n}</small>`;b.onclick=()=>{state.city=state.city===x.slug?null:x.slug;state.radius=0;state.nbOff=[];buildCities();refresh(true)};el.appendChild(b)});
+  if(!shown.length)el.innerHTML=`<span class="hint">No city matches “${esc(q)}”.</span>`;
+  const mb=$("#moreCities");mb.hidden=!collapsed&&!(showAllCities&&!q&&list.length>LIMIT);mb.textContent=collapsed?`Show all ${list.length} cities ↓`:"Show fewer ↑";mb.onclick=()=>{showAllCities=!showAllCities;buildCities()};
+  buildNearby();
+}
+function buildNearby(){
+  const box=$("#nearby");if(!state.city){box.hidden=true;return}
+  const c=cur(),name=c.cityBySlug[state.city].name;box.hidden=false;
+  $("#nearbyTitle").textContent=`Nearby cities around ${name}`;
+  const rd=$("#radius");rd.innerHTML="";
+  RADII.forEach(r=>{const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=r?`+ within ${r} km`:`Only ${name}`;b.setAttribute("aria-pressed",state.radius===r);b.onclick=()=>{state.radius=r;state.nbOff=[];buildNearby();refresh(true)};rd.appendChild(b)});
+  const list=nearby(),el=$("#nbList");el.innerHTML="";
+  if(state.radius&&!list.length)el.innerHTML=`<span class="hint">No other cities within ${state.radius} km of ${esc(name)}. Try a wider radius.</span>`;
+  list.forEach((x,k)=>{const b=document.createElement("button");b.className="chip nb";b.type="button";b.style.setProperty("--k",k);b.setAttribute("aria-pressed",!state.nbOff.includes(x.slug));b.innerHTML=`${esc(x.name)}<small>${Math.round(x.km)} km · ${x.n}</small>`;b.onclick=()=>{const a=state.nbOff,i=a.indexOf(x.slug);i<0?a.push(x.slug):a.splice(i,1);b.setAttribute("aria-pressed",i>=0);refresh(true)};el.appendChild(b)});
+}
+
+/* ====================== PERSONALISE UI ====================== */
+function unlock(first){const t=$("#toggle");t.disabled=false;$("#pLead").textContent=`Tune ${cur().name} to your budget, stay length, perks and vibe.`;if(!state.on)$("#hint").textContent="Tap to switch on — takes 20 seconds";if(first){t.classList.remove("unlocked");void t.offsetWidth;t.classList.add("unlocked");setTimeout(()=>t.classList.remove("unlocked"),2200)}}
+function resetBudget(){const {lo,hi,step}=bounds();["#rmin","#rmax"].forEach(s=>{const e=$(s);e.min=lo;e.max=hi;e.step=step});$("#rmin").value=lo;$("#rmax").value=hi;syncRange();$("#budgetTitle").firstChild.textContent=`Budget per ${per()} `}
+function syncRange(){const lo=+$("#rmin").min,hi=+$("#rmin").max,a=+$("#rmin").value,b=+$("#rmax").value;state.min=Math.min(a,b);state.max=Math.max(a,b);const pct=v=>hi===lo?0:(v-lo)/(hi-lo)*100;$("#fill").style.left=pct(state.min)+"%";$("#fill").style.right=(100-pct(state.max))+"%";$("#priceBig").innerHTML=`${money(state.min)} – ${money(state.max)}<small> /${per()}</small>`}
+function buildDurations(){if(!state.country){$("#durations").innerHTML="";return}const counts={};ALL.filter(p=>p.co===state.country).forEach(p=>p.r.forEach(r=>r.wk.forEach(w=>counts[w]=(counts[w]||0)+1)));const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7).map(x=>+x[0]).sort((a,b)=>b-a);const el=$("#durations");el.innerHTML="";top.forEach(w=>{const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=`${w} ${unitWord(w)}`;b.setAttribute("aria-pressed",state.durations.includes(w));b.onclick=()=>{const a=state.durations,i=a.indexOf(w);i<0?a.push(w):a.splice(i,1);b.setAttribute("aria-pressed",i<0);refresh()};el.appendChild(b)})}
+function buildPerks(){const el=$("#perks");el.innerHTML="";PERKS.forEach(k=>{const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=k.label;b.setAttribute("aria-pressed",state.perks.includes(k.id));b.onclick=()=>{const a=state.perks,i=a.indexOf(k.id);i<0?a.push(k.id):a.splice(i,1);b.setAttribute("aria-pressed",i<0);refresh()};el.appendChild(b)})}
+function buildVibes(){
+  const el=$("#vibes");el.innerHTML="";
+  VIBES.forEach(v=>{
+    const b=document.createElement("button");b.className="vibe";b.type="button";b.setAttribute("aria-pressed",state.vibes.includes(v.id));
+    b.innerHTML=`<span class="e">${v.e}</span><b>${v.label}</b><small>${v.desc}</small><span class="whyv" tabindex="0">ⓘ why this?</span>`;
+    b.onclick=e=>{if(e.target.closest(".whyv"))return;const a=state.vibes,i=a.indexOf(v.id);i<0?a.push(v.id):a.splice(i,1);b.setAttribute("aria-pressed",i<0);if(i<0)burst(e.clientX,e.clientY,10);refresh()};
+    bindPop(b.querySelector(".whyv"),()=>`<div class="ph">${v.e} Why “${v.label}”?</div>${esc(VIBE_WHY[v.id])}<div class="pf">Reasons are drawn from each property's own listing details.</div>`);
+    el.appendChild(b);
+  });
+}
+
+/* ====================== CARD RENDER ====================== */
+const ICON={heart:'<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg>',cmp:'<svg viewBox="0 0 24 24"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg>'};
+function hueOf(id){const a=(id*47)%360;return[a,(a+55)%360]}
+function cover(p){const [a,b]=hueOf(p.i);return `<div class="art" style="background:radial-gradient(circle at 20% 25%,hsla(${a},85%,78%,.95),transparent 55%),radial-gradient(circle at 85% 80%,hsla(${b},80%,70%,.95),transparent 55%),linear-gradient(135deg,hsl(${a},60%,88%),hsl(${b},60%,82%))"><svg width="100%" height="100%" viewBox="0 0 360 190" preserveAspectRatio="xMidYMax slice"><g fill="rgba(29,31,27,.82)"><rect x="30" y="${70+p.i%4*8}" width="64" height="150"/><rect x="104" y="${40+p.i%3*10}" width="78" height="180"/><rect x="192" y="${80+p.i%5*6}" width="58" height="140"/><rect x="260" y="${55+p.i%4*7}" width="72" height="170"/></g><g fill="rgba(255,236,150,.95)">${Array.from({length:22},(_,i)=>`<rect x="${42+(i%4)*20}" y="${100+Math.floor(i/4)*20}" width="8" height="10" opacity="${(i*7+p.i)%3?0.9:0.15}"/>`).join("")}</g></svg></div>`}
+const cityName=p=>(C[p.co].cityBySlug[p.c]||{name:p.c}).name;
+const distTxt=p=>p.d?`${p.d} ${C[p.co].unit} from centre`:"";
+const roomKey=(p,r)=>p.i+"-"+r.rt;
+
+function card(entry,i){
+  const {p,rooms,score}=entry,co=C[p.co];
+  const rating=ratingOf(p);
+  const amCodes=["gy","cn","st","nv","np","ip","pl"].filter(k=>p.perks.has(k));
+  const shown=rooms.slice(0,3),extra=rooms.length-shown.length;
+  const isReco=p.bl>0;
+  const el=document.createElement("article");el.className="pcard"+(state.cmpP.includes(p.i)?" cmp":"");el.style.setProperty("--i",i);el.dataset.id=p.i;
+  el.innerHTML=`
+   <div class="cover">${cover(p)}
+     <div class="ribbon">
+       ${isReco?`<span class="rb reco" data-pop="reco">★ Recommended</span>`:""}
+       ${p.bl>0?`<span class="rb block">Block for ${money(p.bl)}</span>`:""}
+     </div>
+     <div class="iconbtns">
+       <button class="ib compare ${state.cmpP.includes(p.i)?"on":""}" aria-label="Compare property" title="Compare property">${ICON.cmp}</button>
+       <button class="ib save ${saved.has(p.i)?"on":""}" aria-label="Save" title="Save">${ICON.heart}</button>
+     </div>
+     <button class="rating" data-pop="rating" aria-label="Rating details"><span class="star">★</span>${rating.score}<span class="rc2">(${rating.reviews})</span>${state.on?`<span class="match">${score}% match</span>`:""}</button>
+   </div>
+   <div class="pbody">
+     <div class="ptitle"><h3><a href="${CONFIG.propertyUrl(p)}">${esc(p.n)}</a></h3></div>
+     <div class="meta">${esc(cityName(p))}, ${esc(co.name)}${p.d?" · "+distTxt(p):""}</div>
+     <div class="am">${amCodes.map(k=>`<span class="amx" data-am="${k}">${PERK_MAP[k]}<span class="i">i</span></span>`).join("")}</div>
+     ${state.on&&matchReasons(p,rooms).length?`<div class="whyvibe"><div class="h">Why it matches you <b>${score}%</b></div>${matchReasons(p,rooms).map(r=>`<div class="vrow"><span class="e">${r.e}</span><span>${esc(r.t)}</span></div>`).join("")}</div>`:""}
+     <div class="rooms"><h4>${rooms.length} matching room type${rooms.length>1?"s":""}</h4>
+     ${shown.map((r,j)=>{
+       const w=state.durations.find(d=>r.wk.includes(d))||r.wk[0];
+       const rk=roomKey(p,r),onR=state.cmpR.includes(rk);
+       const pays=[];
+       if(p.perks.has("ip"))pays.push(`<span class="paychip" data-pay="${r.rt}">Instalments</span>`);
+       if(p.bl>0)pays.push(`<span class="paychip" data-pay="${r.rt}">Block ${money(p.bl)}</span>`);
+       return `<div class="room${onR?" rcmp":""}" style="--j:${j}" data-rk="${rk}">
+         <button class="rcbtn ${onR?"on":""}" data-rcmp="${r.rt}" aria-label="Compare room">${ICON.cmp}</button>
+         <div class="rname">Room type #${r.rt}</div>
+         <div class="rf">${r.wk.slice(0,3).map(x=>x+" "+unitWord(x)).join(" · ")}${+r.mn!==+r.mx?" · varies by term":""}${r.dep>0?` · deposit ${money(r.dep)}`:""}</div>
+         ${pays.length?`<div class="pay">${pays.join("")}</div>`:""}
+         <div class="price"><strong data-to="${r.mn}">${money(0)}</strong><small>per ${co.period}${+r.mn!==+r.mx?` · up to ${money(r.mx)}`:""}</small><br><a class="book" href="${CONFIG.bookUrl(p,r,w)}">Book now</a></div>
+       </div>`}).join("")}
+     ${extra>0?`<div class="more">+ ${extra} more room type${extra>1?"s":""} at this property</div>`:""}</div>
+     <a class="view" href="${CONFIG.propertyUrl(p)}">View property <i>→</i></a>
+   </div>`;
+
+  el.querySelector(".save").onclick=e=>{const b=e.currentTarget;saved.has(p.i)?saved.delete(p.i):saved.add(p.i);b.classList.toggle("on");try{localStorage.setItem("hos-saved",JSON.stringify([...saved]))}catch(_){}if(saved.has(p.i))burst(e.clientX,e.clientY,8);toast(saved.has(p.i)?"Saved to your shortlist":"Removed from shortlist")};
+  el.querySelector(".compare").onclick=e=>toggleCompareProp(p.i,e);
+  bindPop(el.querySelector('[data-pop="rating"]'),()=>`<div class="ph">★ ${rating.score} · ${rating.reviews} reviews</div>${rating.bd.map(([c,v])=>`<div class="bar"><span>${c}</span><div class="tr"><div class="fl" style="width:${v/5*100}%"></div></div><b>${v}</b></div>`).join("")}<div class="mentions">${rating.mentions.map(m=>`<span>“${esc(m)}”</span>`).join("")}</div><div class="pf">Illustrative score — live reviews data is being connected.</div>`);
+  const rec=el.querySelector('[data-pop="reco"]');if(rec)bindPop(rec,()=>`<div class="ph">★ Why we recommend this</div><ul>${recoReasons(p,rooms).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`);
+  el.querySelectorAll("[data-am]").forEach(a=>bindPop(a,()=>{const code=a.dataset.am;return `<div class="ph">${PERK_MAP[code]}</div><div class="quote">“${esc(amenityReason(p,code))}”</div>`}));
+  el.querySelectorAll("[data-pay]").forEach(a=>bindPop(a,()=>{const r=p.r.find(x=>String(x.rt)===a.dataset.pay)||rooms[0];const w=state.durations.find(d=>r.wk.includes(d))||r.wk[0];const pl=installmentPlan(p,r,w);return `<div class="ph">💳 How you pay</div><div class="sched">${pl.lines.map((l,n)=>`<div class="srow"><span class="n">${n+1}</span><span>${l}</span></div>`).join("")}</div><div class="pf">Based on ${money(r.mn)}/${co.period} × ${w} ${co.period}s. Final figures are confirmed at checkout.</div>`}));
+  el.querySelectorAll("[data-rcmp]").forEach(btn=>btn.onclick=e=>{const r=p.r.find(x=>String(x.rt)===btn.dataset.rcmp);toggleCompareRoom(p,r,e)});
+  el.addEventListener("mousemove",e=>{if(e.target.closest(".room,.am,.rating,.ib,.rb"))return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*4}deg) rotateX(${-y*4}deg) translateY(-6px)`});
+  el.addEventListener("mouseleave",()=>el.style.transform="");
+  setTimeout(()=>el.querySelectorAll("[data-to]").forEach(s=>{const to=+s.dataset.to,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900),e=1-Math.pow(1-k,3);s.textContent=money(to*e);if(k<1)requestAnimationFrame(f)})(t0)}),i*60+400);
+  return el;
+}
+
+function renderReco(res){
+  const el=$("#reco"),co=cur();
+  const list=res.filter(r=>r.p.bl>0).sort((a,b)=>a.p.bl-b.p.bl||a.rooms[0].mn-b.rooms[0].mn).slice(0,10);
+  const where=state.city?cityName({co:state.country,c:state.city}):co.name;
+  let body;
+  if(!list.length){body=`<div class="noreco">No properties with a blocking deposit match here${state.on?" with your current filters":""}. Blocking deposits are currently set up for UK and Ireland properties — try a city there.</div>`}
+  else body=`<div class="rail">${list.map((r,k)=>`<article class="rc" style="--k:${k}">
+      <div class="amt"><small>Reserve with</small>${money(r.p.bl)}</div>
+      <h4>${esc(r.p.n)}</h4><p>${esc(cityName(r.p))}${r.p.d?" · "+distTxt(r.p):""}</p>
+      <button class="whyreco" data-reco="${r.p.i}">★ Why recommended</button>
+      <div class="row"><span class="fromp">from <b>${money(r.rooms[0].mn)}</b>/${co.period}</span><a href="${CONFIG.bookUrl(r.p,r.rooms[0],r.rooms[0].wk[0])}">Block room →</a></div>
+    </article>`).join("")}</div>`;
+  el.innerHTML=`<div class="reco-head"><span class="badge-star">★ Recommended</span><h2>Hold your room with a small blocking deposit</h2><p>Reserve a room with a small blocking deposit now and settle the rest later. Properties in ${esc(where)} that offer this, smallest deposit first — tap “why recommended” on any card.</p></div>${body}`;
+  el.querySelectorAll("[data-reco]").forEach(btn=>{const r=list.find(x=>x.p.i===+btn.dataset.reco);bindPop(btn,()=>`<div class="ph">★ Why we recommend this</div><ul>${recoReasons(r.p,r.rooms).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)});
+}
+
+/* ====================== COMPARE (properties + rooms) ====================== */
+const findP=id=>ALL.find(p=>p.i===id);
+function refreshCardCompareState(id){document.querySelectorAll(`.pcard[data-id="${id}"]`).forEach(c=>{const on=state.cmpP.includes(id);c.classList.toggle("cmp",on);c.querySelector(".compare").classList.toggle("on",on)})}
+function toggleCompareProp(id,e){
+  const i=state.cmpP.indexOf(id);
+  if(i>=0){state.cmpP.splice(i,1);toast("Removed from comparison")}
+  else{if(state.cmpP.length>=CONFIG.maxCompare){toast(`Compare up to ${CONFIG.maxCompare} properties`);return}state.cmpP.push(id);if(e)burst(e.clientX,e.clientY,8);toast(`Added — ${state.cmpP.length}/${CONFIG.maxCompare} properties`)}
+  state.cmpTab="prop";refreshCardCompareState(id);renderCompare();setSteps();
+}
+function toggleCompareRoom(p,r,e){
+  const k=roomKey(p,r),i=state.cmpR.indexOf(k);
+  if(i>=0){state.cmpR.splice(i,1);toast("Room removed")}
+  else{if(state.cmpR.length>=CONFIG.maxCompare){toast(`Compare up to ${CONFIG.maxCompare} rooms`);return}state.cmpR.push(k);if(e)burst(e.clientX,e.clientY,8);toast(`Room added — ${state.cmpR.length}/${CONFIG.maxCompare}`)}
+  state.cmpTab="room";
+  document.querySelectorAll(`.room[data-rk="${k}"]`).forEach(ro=>{const on=state.cmpR.includes(k);ro.classList.toggle("rcmp",on);ro.querySelector(".rcbtn").classList.toggle("on",on)});
+  renderCompare();setSteps();
+}
+function roomFromKey(k){const pid=+k.split("-")[0],rt=k.slice(String(pid).length+1);const p=findP(pid);if(!p)return null;const r=p.r.find(x=>String(x.rt)===rt);return r?{p,r}:null}
+function renderCompare(){
+  const nP=state.cmpP.length,nR=state.cmpR.length;
+  $("#nProp").textContent=nP?`(${nP})`:"";$("#nRoom").textContent=nR?`(${nR})`:"";
+  $("#tabProp").classList.toggle("on",state.cmpTab==="prop");$("#tabRoom").classList.toggle("on",state.cmpTab==="room");
+  $("#cmpClear").hidden=!(nP||nR);
+  $("#fabLabel").textContent=`Compare (${nP+nR})`;updateFab();
+  state.cmpTab==="prop"?renderCompareProps($("#cmpBody")):renderCompareRooms($("#cmpBody"));
+}
+function renderCompareProps(body){
+  if(!state.cmpP.length){body.innerHTML=`<div class="cmp-empty">${ICON.cmp}<div>No properties yet. Tap the ⇄ icon on a property card's image.</div></div>`;return}
+  const ps=state.cmpP.map(findP).filter(Boolean),best=Math.min(...ps.map(p=>p.minp)),bestD=Math.min(...ps.map(p=>p.d||1e9)),sameCo=ps.every(p=>p.co===ps[0].co);
+  const cell=f=>ps.map((p,k)=>`<td class="cmp-col" style="animation-delay:${k*60}ms">${f(p)}</td>`).join("");
+  const yn=(p,k)=>p.perks.has(k)?'<span class="yes">✔</span>':'<span class="no">—</span>';
+  body.innerHTML=`<div class="cmp-scroll"><table class="cmp-table"><tbody>
+    <tr><th class="lab"></th>${ps.map((p,k)=>`<td class="cmp-col" style="animation-delay:${k*60}ms"><button class="rm" data-rmp="${p.i}" aria-label="Remove">✕</button><div class="nm"><a href="${CONFIG.propertyUrl(p)}">${esc(p.n)}</a></div><div class="ct">${esc(cityName(p))}, ${esc(C[p.co].name)}</div><a class="bk" href="${CONFIG.propertyUrl(p)}">View</a></td>`).join("")}</tr>
+    <tr><th class="lab">Rating</th>${cell(p=>{const r=ratingOf(p);return `★ ${r.score} <span style="color:#aab09c">(${r.reviews})</span>`})}</tr>
+    <tr><th class="lab">From price</th>${cell(p=>`<span class="${sameCo&&p.minp===best?"best":""}">${moneyIn(C[p.co],p.minp)}</span> <span style="color:#aab09c">/${C[p.co].period}</span>`)}</tr>
+    <tr><th class="lab">Room types</th>${cell(p=>p.r.length)}</tr>
+    <tr><th class="lab">To centre</th>${cell(p=>p.d?`<span class="${p.d===bestD?"best":""}">${p.d} ${C[p.co].unit}</span>`:"—")}</tr>
+    <tr><th class="lab">Blocking deposit</th>${cell(p=>p.bl>0?moneyIn(C[p.co],p.bl):'<span class="no">—</span>')}</tr>
+    <tr><th class="lab">Instalments</th>${cell(p=>{const ip=(ENR[p.i]||{}).pay&&ENR[p.i].pay.inst;return ip&&ip.length?`up to ${Math.max(...ip)}×`:(p.perks.has("ip")?"Yes":'<span class="no">—</span>')})}</tr>
+    ${["nv","np","gy","cn","st"].map(k=>`<tr><th class="lab">${PERK_MAP[k]}</th>${cell(p=>yn(p,k))}</tr>`).join("")}
+    <tr><th class="lab">Vibes</th>${cell(p=>[...p.vibes].map(v=>(VIBES.find(x=>x.id===v)||{}).e).join(" ")||'<span class="no">—</span>')}</tr>
+  </tbody></table></div>`;
+  body.querySelectorAll("[data-rmp]").forEach(b=>b.onclick=()=>toggleCompareProp(+b.dataset.rmp));
+}
+function renderCompareRooms(body){
+  if(!state.cmpR.length){body.innerHTML=`<div class="cmp-empty">${ICON.cmp}<div>No rooms yet. Tap the ⇄ button on any room row inside a property card.</div></div>`;return}
+  const items=state.cmpR.map(roomFromKey).filter(Boolean);
+  const bestW=Math.min(...items.map(x=>x.r.mn));
+  const totalFor=(p,r)=>r.mn*(r.wk.slice().sort((a,b)=>b-a)[0]);
+  const bestT=Math.min(...items.map(x=>totalFor(x.p,x.r)));
+  const cell=f=>items.map((x,k)=>`<td class="cmp-col" style="animation-delay:${k*60}ms">${f(x.p,x.r)}</td>`).join("");
+  body.innerHTML=`<div class="cmp-scroll"><table class="cmp-table"><tbody>
+    <tr><th class="lab"></th>${items.map((x,k)=>`<td class="cmp-col" style="animation-delay:${k*60}ms"><button class="rm" data-rmr="${roomKey(x.p,x.r)}" aria-label="Remove">✕</button><div class="nm">Room type #${x.r.rt}</div><div class="ct">${esc(x.p.n)}, ${esc(cityName(x.p))}</div><a class="bk" href="${CONFIG.bookUrl(x.p,x.r,x.r.wk[0])}">Book now</a></td>`).join("")}</tr>
+    <tr><th class="lab">Per ${cur().period}</th>${cell((p,r)=>`<span class="${r.mn===bestW?"best":""}">${moneyIn(C[p.co],r.mn)}</span>${+r.mn!==+r.mx?` <span style="color:#aab09c">– ${moneyIn(C[p.co],r.mx)}</span>`:""}`)}</tr>
+    <tr><th class="lab">Longest-term cost</th>${cell((p,r)=>{const t=totalFor(p,r);return `<span class="${t===bestT?"best":""}">${moneyIn(C[p.co],t)}</span> <span style="color:#aab09c">(${r.wk.slice().sort((a,b)=>b-a)[0]} ${C[p.co].period}s)</span>`})}</tr>
+    <tr><th class="lab">Stay lengths</th>${cell((p,r)=>r.wk.slice().sort((a,b)=>b-a).slice(0,5).join(", ")+" "+(C[p.co].period==="week"?"wk":"mo"))}</tr>
+    <tr><th class="lab">Deposit</th>${cell((p,r)=>r.dep>0?moneyIn(C[p.co],r.dep):'<span class="no">—</span>')}</tr>
+    <tr><th class="lab">Blocking deposit</th>${cell((p,r)=>p.bl>0?moneyIn(C[p.co],p.bl):'<span class="no">—</span>')}</tr>
+    <tr><th class="lab">Instalments</th>${cell((p,r)=>{const ip=(ENR[p.i]||{}).pay&&ENR[p.i].pay.inst;return ip&&ip.length?`up to ${Math.max(...ip)}×`:'<span class="no">—</span>'})}</tr>
+  </tbody></table></div>`;
+  body.querySelectorAll("[data-rmr]").forEach(b=>b.onclick=()=>{const it=roomFromKey(b.dataset.rmr);if(it)toggleCompareRoom(it.p,it.r)});
+}
+let cmpVisible=false;
+function updateFab(){$("#fab").classList.toggle("show",(state.cmpP.length+state.cmpR.length)>0&&!cmpVisible)}
+new IntersectionObserver(es=>{cmpVisible=es[0].isIntersecting;updateFab()},{threshold:.2}).observe($("#compare"));
+
+/* ====================== ORCHESTRATION ====================== */
+function tween(el,to){const from=+el.dataset.v||0;el.dataset.v=to;const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/500),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(f)})(t0)}
+async function render(){
+  const my=++seq,box=$("#cards");box.innerHTML=Array(3).fill('<div class="skel"></div>').join("");
+  await new Promise(r=>setTimeout(r,300));if(my!==seq)return;
+  if(!state.country){box.innerHTML=`<div class="empty"><div class="big">👆</div><h3>Start with a country</h3><p>Pick where you want to study in the box above and your matching rooms will appear here.</p></div>`;$("#reco").innerHTML="";$("#rtitle").textContent="Student accommodation";$("#rsub").textContent="";return}
+  const res=compute(),co=cur();box.innerHTML="";
+  const cname=state.city?(co.cityBySlug[state.city]||{}).name:null,nbN=nearby().filter(x=>!state.nbOff.includes(x.slug)).length;
+  $("#rtitle").textContent=`Student accommodation ${cname||co.name}${nbN?` + ${nbN} nearby`:""}`;
+  $("#rsub").textContent=res.length?`${res.length} propert${res.length===1?"y":"ies"} · from ${money(Math.min(...res.map(r=>r.rooms[0].mn)))}/${co.period}`:"";
+  renderReco(res);
+  if(!res.length){
+    const ci=state.city&&co.cityBySlug[state.city],al=allowedCities(),noSample=ci&&!ALL.some(p=>p.co===state.country&&al&&al.has(p.c));
+    box.innerHTML=noSample?`<div class="empty"><div class="big">🗺️</div><h3>${ci.n} propert${ci.n===1?"y":"ies"} in ${esc(ci.name)}</h3><p>This demo ships with a sample of listings and none fall in ${esc(ci.name)}. Connect the live API to list all ${ci.n}.</p><button class="go" id="clr">Back to all of ${esc(co.name)}</button></div>`:`<div class="empty"><div class="big">🫠</div><h3>No rooms match every filter</h3><p>Try loosening one and we'll find you a home.</p><button class="go" id="wid">Widen budget</button> <button class="reset" id="clr">Clear perks &amp; city</button></div>`;
+    const w=$("#wid");if(w)w.onclick=()=>{const b=bounds();$("#rmax").value=Math.min(+$("#rmax").max,state.max+b.step*8);$("#rmin").value=Math.max(+$("#rmin").min,state.min-b.step*4);syncRange();refresh(true)};
+    $("#clr").onclick=()=>{state.perks=[];state.city=null;state.radius=0;state.nbOff=[];state.durations=[];buildPerks();buildCities();buildDurations();refresh(true)};
+    return;
+  }
+  res.forEach((r,i)=>box.appendChild(card(r,i)));
+}
+function renderTags(){const t=[];if(state.on){t.push(`${money(state.min)}–${money(state.max)}/${per()}`);state.durations.forEach(x=>t.push(x+" "+unitWord(x)));state.vibes.forEach(id=>{const v=VIBES.find(x=>x.id===id);t.push(v.e+" "+v.label)});state.perks.forEach(id=>t.push(PERK_MAP[id]))}$("#tags").innerHTML=t.map((x,i)=>`<span class="tag" style="animation-delay:${i*30}ms">${esc(x)}</span>`).join("")}
+let debounce;
+function refresh(now){const res=compute();tween($("#cProps"),res.length);tween($("#cRooms"),res.reduce((n,r)=>n+r.rooms.length,0));renderTags();setSteps();clearTimeout(debounce);debounce=setTimeout(render,now?0:260)}
+
+function burst(x,y,n=14){const cols=["#c4f962","#ffe27a","#9be02f","#1d1f1b","#b9f0e0"];for(let i=0;i<n;i++){const c=document.createElement("i");c.className="confetti";c.style.cssText=`left:${x}px;top:${y}px;background:${cols[i%5]};border-radius:${i%2?"50%":"2px"};--x:${(Math.random()-.5)*220}px;--y:${-40-Math.random()*140+Math.random()*180}px`;document.body.appendChild(c);setTimeout(()=>c.remove(),1300)}}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),1800)}
+
+(async function init(){
+  DB=await Api.catalog();prepare();$("#nCountries").textContent=DB.countries.length;
+  ["#rmin","#rmax"].forEach(s=>{$(s).oninput=()=>{syncRange();refresh()}});
+  buildCountries();buildCities();buildDurations();buildPerks();buildVibes();renderCompare();setSteps();
+  $("#csearch").oninput=()=>buildCities();
+  $("#toggle").onclick=()=>{state.on=!state.on;const t=$("#toggle");t.setAttribute("aria-pressed",state.on);$("#panelShell").classList.toggle("open",state.on);$("#toggleLabel").textContent=state.on?"Personalised search is ON":"Personalise my search";$("#hint").textContent=state.on?"Results now follow your vibe. Toggle off for all listings.":"Tap to switch on — takes 20 seconds";if(state.on){const r=t.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,22)}refresh(true)};
+  $("#reset").onclick=()=>{Object.assign(state,{durations:[],vibes:[],perks:[]});if(state.country)resetBudget();buildDurations();buildPerks();buildVibes();refresh(true);toast("Filters reset")};
+  $("#show").onclick=()=>$("#results").scrollIntoView({behavior:"smooth"});
+  $("#sort").onchange=e=>{state.sort=e.target.value;refresh(true)};
+  $("#fab").onclick=()=>$("#compare").scrollIntoView({behavior:"smooth",block:"center"});
+  $("#cmpClear").onclick=()=>{state.cmpP.slice().forEach(id=>toggleCompareProp(id));state.cmpR.slice().forEach(k=>{const it=roomFromKey(k);if(it)toggleCompareRoom(it.p,it.r)})};
+  $("#tabProp").onclick=()=>{state.cmpTab="prop";renderCompare()};
+  $("#tabRoom").onclick=()=>{state.cmpTab="room";renderCompare()};
+  $("#foot").textContent="Data: BigQuery houseofstudent-ga (warehouse). Vibe reasons, recommended reasons, instalment options, pay-later windows and all room data are real, drawn from each property's own listing. Star ratings and review mentions are illustrative placeholders until the reviews table is connected, and amenity pop-ups show the listing's own wording because exact gym/cinema distances are not yet in the data. Prices are per week for UK, Ireland, Australia and New Zealand and per month elsewhere. Room types show as IDs until the room-type dictionary is available.";
+  refresh(true);
+})();
+</script>
+</body>
+</html>

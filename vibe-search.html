@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House of Student – Vibe Match</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lime:#c4f962; --lime-d:#9be02f; --ink:#1d1f1b; --ink2:#4a4d45; --mute:#8a8d83;
+  --bg:#fbfbf7; --card:#fff; --line:#e8e8e0; --warm:#fff3c4; --shadow:0 10px 40px -12px rgba(30,40,10,.18);
+  --r:22px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:24px;padding:14px 32px;background:rgba(251,251,247,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;line-height:1;letter-spacing:.5px}
+.logo i{width:38px;height:38px;border-radius:11px;background:var(--lime);display:grid;place-items:center;position:relative}
+.logo i:before,.logo i:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.logo i:before{left:10px;bottom:11px}.logo i:after{right:11px;top:11px}
+.logo small{display:block;font-weight:400}
+nav .links{margin-left:auto;display:flex;gap:26px;color:var(--ink2)}
+nav .links a{position:relative;padding:4px 0}
+nav .links a:after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--lime-d);transition:width .3s}
+nav .links a:hover:after{width:100%}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:70px 32px 40px;text-align:center;isolation:isolate;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;z-index:-1;animation:float 14s ease-in-out infinite}
+.b1{width:420px;height:420px;background:var(--lime);left:-80px;top:-60px}
+.b2{width:380px;height:380px;background:#ffe27a;right:-60px;top:20px;animation-delay:-5s}
+.b3{width:320px;height:320px;background:#b9f0e0;left:40%;bottom:-160px;animation-delay:-9s}
+@keyframes float{50%{transform:translate(40px,30px) scale(1.12)}}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:6px 14px;border-radius:99px;background:#fff;border:1px solid var(--line);font-size:14px;color:var(--ink2);animation:rise .8s both}
+.eyebrow b{width:8px;height:8px;border-radius:50%;background:var(--lime-d);animation:pulse 1.6s infinite}
+h1{font-size:clamp(36px,6vw,68px);font-weight:700;line-height:1.04;letter-spacing:-1.5px;margin:18px auto 14px;max-width:880px;animation:rise .8s .08s both}
+h1 em{font-style:normal;position:relative;white-space:nowrap}
+h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:.36em;background:var(--lime);z-index:-1;border-radius:8px;transform-origin:left;animation:grow 1s .7s both cubic-bezier(.2,.9,.3,1)}
+.sub{color:var(--ink2);font-size:18px;animation:rise .8s .16s both}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(155,224,47,0)}0%{box-shadow:0 0 0 0 rgba(155,224,47,.7)}}
+
+/* ---------- vibe toggle ---------- */
+.toggle-wrap{margin:38px auto 0;display:flex;flex-direction:column;align-items:center;gap:12px;animation:rise .8s .26s both}
+.vibe-toggle{position:relative;display:flex;align-items:center;gap:16px;padding:10px 12px 10px 26px;border-radius:99px;background:var(--ink);color:#fff;font-size:20px;font-weight:600;box-shadow:0 14px 40px -10px rgba(0,0,0,.45);transition:transform .25s,background .4s;animation:vibrate 3.6s infinite;overflow:visible}
+.vibe-toggle:before,.vibe-toggle:after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--lime-d);opacity:0;animation:ring 2.4s infinite}
+.vibe-toggle:after{animation-delay:1.2s}
+.vibe-toggle:hover{transform:scale(1.05)}
+.vibe-toggle:active{transform:scale(.97)}
+.vibe-toggle .sw{width:62px;height:34px;border-radius:99px;background:#43463f;position:relative;transition:background .35s}
+.vibe-toggle .sw:after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.vibe-toggle[aria-pressed=true]{background:#22251e;animation:none}
+.vibe-toggle[aria-pressed=true]:before,.vibe-toggle[aria-pressed=true]:after{animation:none}
+.vibe-toggle[aria-pressed=true] .sw{background:var(--lime)}
+.vibe-toggle[aria-pressed=true] .sw:after{transform:translateX(28px);background:var(--ink)}
+.vibe-toggle .spark{display:inline-block;animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ring{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.35,1.9);opacity:0}}
+@keyframes vibrate{0%,78%,100%{transform:translate(0)}80%{transform:translate(-3px,1px) rotate(-1deg)}82%{transform:translate(3px,-1px) rotate(1deg)}84%{transform:translate(-3px,-1px) rotate(-1deg)}86%{transform:translate(3px,1px) rotate(1deg)}88%{transform:translate(-2px,0)}90%{transform:translate(2px,0)}}
+.hint{font-size:14px;color:var(--mute)}
+
+/* ---------- personalise panel ---------- */
+.panel-shell{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s cubic-bezier(.2,.9,.3,1)}
+.panel-shell.open{grid-template-rows:1fr}
+.panel-shell>div{overflow:hidden}
+.panel{max-width:1180px;margin:34px auto 0;padding:34px;background:var(--card);border:1px solid var(--line);border-radius:32px;box-shadow:var(--shadow);text-align:left;opacity:0;transform:translateY(30px) scale(.98);transition:all .7s .1s cubic-bezier(.2,.9,.3,1)}
+.panel-shell.open .panel{opacity:1;transform:none}
+.grid2{display:grid;grid-template-columns:1.1fr 1fr;gap:34px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}nav .links{display:none}.panel{padding:22px}}
+.sec{margin-bottom:26px}
+.sec h3{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline}
+.sec h3 span{letter-spacing:0;text-transform:none;font-size:15px;color:var(--ink);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{padding:9px 16px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-size:15px;transition:all .25s cubic-bezier(.3,1.5,.5,1);position:relative;overflow:hidden}
+.chip:hover{border-color:var(--lime-d);transform:translateY(-2px)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--lime);border-color:var(--ink);transform:scale(1.05)}
+.chip[aria-pressed=true]:before{content:"✓ "}
+.vibes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:560px){.vibes{grid-template-columns:repeat(2,1fr)}}
+.vibe{padding:16px 14px;border-radius:18px;border:1.5px solid var(--line);text-align:left;background:#fff;transition:all .3s cubic-bezier(.3,1.5,.5,1);position:relative;overflow:hidden}
+.vibe .e{font-size:28px;display:block;transition:transform .4s cubic-bezier(.3,1.8,.5,1)}
+.vibe b{display:block;font-weight:600;margin-top:6px}
+.vibe small{color:var(--mute);font-size:13px;line-height:1.25;display:block}
+.vibe:hover{transform:translateY(-4px) rotate(-1deg);box-shadow:var(--shadow)}
+.vibe:hover .e{transform:scale(1.25) rotate(-8deg)}
+.vibe[aria-pressed=true]{background:var(--lime);border-color:var(--lime-d);transform:translateY(-3px)}
+.vibe[aria-pressed=true] small{color:var(--ink2)}
+.vibe[aria-pressed=true] .e{animation:pop .6s}
+@keyframes pop{40%{transform:scale(1.6) rotate(12deg)}}
+
+/* dual range */
+.range{position:relative;height:36px;margin:6px 6px 0}
+.range .track{position:absolute;top:15px;left:0;right:0;height:6px;border-radius:9px;background:var(--line)}
+.range .fill{position:absolute;top:15px;height:6px;border-radius:9px;background:linear-gradient(90deg,var(--lime-d),var(--lime))}
+.range input{position:absolute;left:-6px;width:calc(100% + 12px);top:0;height:36px;background:none;-webkit-appearance:none;appearance:none;pointer-events:none}
+.range input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:all;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:grab;box-shadow:0 4px 10px rgba(0,0,0,.2);transition:transform .2s}
+.range input::-moz-range-thumb{pointer-events:all;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:grab}
+.range input:active::-webkit-slider-thumb{transform:scale(1.25);cursor:grabbing}
+.price-big{font-size:34px;font-weight:700;letter-spacing:-1px}
+.price-big small{font-size:15px;font-weight:400;color:var(--mute);letter-spacing:0}
+.live{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px dashed var(--line)}
+.live .count{font-size:15px;color:var(--ink2)}
+.live .count b{font-size:22px;color:var(--ink)}
+.reset{margin-left:auto;padding:10px 18px;border-radius:99px;border:1.5px solid var(--line);transition:all .25s}
+.reset:hover{background:var(--ink);color:#fff}
+.go{padding:14px 26px;border-radius:99px;background:var(--lime);font-weight:700;transition:all .25s;box-shadow:0 8px 20px -6px rgba(155,224,47,.8)}
+.go:hover{transform:translateY(-2px) scale(1.04)}
+
+/* ---------- results ---------- */
+.results{max-width:1240px;margin:0 auto;padding:30px 32px 90px}
+.rhead{display:flex;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.rhead h2{font-size:32px;letter-spacing:-.8px}
+.rhead p{color:var(--mute)}
+.rhead select{margin-left:auto;padding:10px 16px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font:inherit}
+.active-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;min-height:8px}
+.tag{padding:5px 12px;border-radius:99px;background:var(--warm);font-size:13px;animation:rise .4s both}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:26px}
+@media(max-width:480px){.cards{grid-template-columns:1fr}.results,.hero{padding-left:16px;padding-right:16px}}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(40px) scale(.96);animation:cardIn .7s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i)*70ms);transition:box-shadow .3s,transform .3s;will-change:transform}
+@keyframes cardIn{to{opacity:1;transform:none}}
+.pcard:hover{box-shadow:var(--shadow);transform:translateY(-6px)}
+.cover{height:190px;position:relative;overflow:hidden}
+.cover .art{position:absolute;inset:0;transition:transform .8s cubic-bezier(.2,.9,.3,1)}
+.pcard:hover .art{transform:scale(1.12) rotate(1.5deg)}
+.cover .city{position:absolute;left:14px;bottom:12px;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.9);font-size:13px;font-weight:500}
+.save{position:absolute;right:12px;top:12px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;transition:transform .3s cubic-bezier(.3,1.8,.5,1)}
+.save:hover{transform:scale(1.2)}
+.save svg{width:18px;fill:none;stroke:var(--ink);stroke-width:2;transition:all .3s}
+.save.on svg{fill:#ff5a6a;stroke:#ff5a6a}
+.save.on{animation:pop .5s}
+.match{position:absolute;right:12px;bottom:10px;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center}
+.match svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.match circle{fill:none;stroke-width:4.5}
+.match .bg{stroke:var(--line)}
+.match .fg{stroke:var(--lime-d);stroke-linecap:round;stroke-dasharray:157;stroke-dashoffset:157;transition:stroke-dashoffset 1.3s .4s cubic-bezier(.2,.9,.3,1)}
+.match span{font-size:14px;font-weight:700;position:relative}
+.match small{position:absolute;bottom:-1px;font-size:8px;letter-spacing:.5px;color:var(--mute);text-transform:uppercase}
+.pbody{padding:18px 20px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
+.ptitle{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.ptitle h3{font-size:22px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
+.ptitle h3 a:hover{text-decoration:underline;text-decoration-color:var(--lime-d);text-decoration-thickness:3px}
+.rate{white-space:nowrap;font-size:14px;color:var(--ink2)}
+.meta{font-size:14px;color:var(--ink2)}
+.am{display:flex;flex-wrap:wrap;gap:6px}
+.am span{font-size:12.5px;padding:4px 10px;border-radius:99px;background:#f2f4ec;color:var(--ink2)}
+.am span.hit{background:var(--lime);color:var(--ink);font-weight:500}
+.offer{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)}
+.offer b{padding:4px 10px;border-radius:99px;background:var(--lime);font-weight:600;color:var(--ink)}
+.rooms{display:flex;flex-direction:column;gap:9px;margin-top:auto}
+.rooms h4{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mute);font-weight:600}
+.room{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 14px;border-radius:16px;background:#f8f9f3;border:1px solid transparent;transition:all .3s;opacity:0;animation:roomIn .5s forwards;animation-delay:calc(var(--i)*70ms + 400ms + var(--j)*90ms)}
+@keyframes roomIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.room:hover{border-color:var(--lime-d);background:#fff;transform:translateX(4px)}
+.room b{font-weight:600}
+.room .rf{grid-column:1;font-size:12.5px;color:var(--mute)}
+.room .price{grid-row:1/3;grid-column:2;text-align:right}
+.room .price strong{font-size:20px;font-weight:700;display:block;line-height:1}
+.room .price small{font-size:12px;color:var(--mute)}
+.book{margin-top:6px;padding:7px 14px;border-radius:99px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;display:inline-block;position:relative;overflow:hidden;transition:all .25s}
+.book:hover{background:var(--lime);color:var(--ink);transform:scale(1.06)}
+.more{font-size:13px;color:var(--mute);text-align:center}
+.view{font-size:14px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.view i{transition:transform .3s;font-style:normal}
+.view:hover i{transform:translateX(6px)}
+
+.skel{height:520px;border-radius:var(--r);background:linear-gradient(100deg,#f0f1ea 30%,#fafbf6 50%,#f0f1ea 70%);background-size:300% 100%;animation:shimmer 1.2s infinite}
+@keyframes shimmer{to{background-position:-150% 0}}
+.empty{grid-column:1/-1;text-align:center;padding:70px 20px;border:2px dashed var(--line);border-radius:var(--r);animation:rise .6s both}
+.empty .big{font-size:56px;display:inline-block;animation:vibrate 1.6s infinite}
+.empty h3{font-size:26px;margin:10px 0 6px}
+.empty p{color:var(--mute);margin-bottom:18px}
+.empty .go{margin:0 5px}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;transition:transform .5s cubic-bezier(.3,1.5,.5,1);z-index:99}
+.toast.show{transform:translate(-50%,0)}
+.confetti{position:fixed;width:10px;height:14px;z-index:99;pointer-events:none;animation:fall 1.2s forwards ease-out}
+@keyframes fall{to{transform:translate(var(--x),var(--y)) rotate(720deg);opacity:0}}
+.sr{position:absolute;left:-9999px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#"><i></i><span>HOUSE<small>OF STUDENT</small></span></a>
+  <div class="links"><a href="#">Countries</a><a href="#">Cities</a><a href="#">Universities</a><a href="#">Properties</a><a href="#">About</a></div>
+</nav>
+
+<header class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="eyebrow"><b></b> 2.5M+ verified student rooms · 10M+ students served</div>
+  <h1>Find a home that fits <em>your vibe</em></h1>
+  <p class="sub">Tell us your budget and lifestyle. We'll show only the rooms that actually match.</p>
+
+  <div class="toggle-wrap">
+    <button class="vibe-toggle" id="toggle" aria-pressed="false" aria-controls="panelShell">
+      <span class="spark">✦</span><span id="toggleLabel">Personalise my search</span><span class="sw"></span>
+    </button>
+    <span class="hint" id="hint">Tap to switch on — takes 20 seconds</span>
+  </div>
+
+  <div class="panel-shell" id="panelShell"><div>
+    <section class="panel" aria-label="Personalise">
+      <div class="grid2">
+        <div>
+          <div class="sec"><h3>Where <span id="cityLabel"></span></h3><div class="chips" id="cities"></div></div>
+          <div class="sec">
+            <h3>Weekly budget <span id="budgetLabel"></span></h3>
+            <div class="price-big" id="priceBig"></div>
+            <div class="range" id="range"><div class="track"></div><div class="fill" id="fill"></div>
+              <input type="range" id="rmin" aria-label="Minimum rent"><input type="range" id="rmax" aria-label="Maximum rent"></div>
+          </div>
+          <div class="sec"><h3>Room type</h3><div class="chips" id="roomTypes"></div></div>
+          <div class="sec"><h3>Stay length</h3><div class="chips" id="durations"></div></div>
+        </div>
+        <div>
+          <div class="sec"><h3>Your vibe <span>pick any</span></h3><div class="vibes" id="vibes"></div></div>
+          <div class="sec"><h3>Room must-haves</h3><div class="chips" id="roomFeatures"></div></div>
+          <div class="sec"><h3>Property perks</h3><div class="chips" id="amenities"></div></div>
+        </div>
+      </div>
+      <div class="live">
+        <div class="count"><b id="cProps">0</b> properties · <b id="cRooms">0</b> rooms match</div>
+        <button class="reset" id="reset">Reset</button>
+        <button class="go" id="show">Show my matches ↓</button>
+      </div>
+    </section>
+  </div></div>
+</header>
+
+<main class="results" id="results">
+  <div class="rhead">
+    <div><h2 id="rtitle">Student accommodation</h2><p id="rsub"></p></div>
+    <select id="sort" aria-label="Sort">
+      <option value="match">Best vibe match</option>
+      <option value="low">Price: low to high</option>
+      <option value="high">Price: high to low</option>
+      <option value="rating">Top rated</option>
+    </select>
+  </div>
+  <div class="active-tags" id="tags"></div>
+  <div class="cards" id="cards"></div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   1. CONFIG — the only block you edit to connect the real database
+   ---------------------------------------------------------------------
+   Set apiBase to your backend. The page calls:
+     GET {apiBase}/filters      -> schema (see SAMPLE_SCHEMA shape below)
+     GET {apiBase}/properties   -> array of properties (see SAMPLE_DATA)
+   Query params sent to /properties: city,min,max,roomTypes,durations,
+   roomFeatures,amenities,vibes  (comma separated). If you return the
+   full list instead, client-side filtering below gives identical results.
+   ===================================================================== */
+const CONFIG = {
+  apiBase: null,                        // e.g. "https://houseofstudent.com/api"
+  site: "https://houseofstudent.com",
+  propertyUrl: p => `${CONFIG.site}/${p.country}/${p.citySlug}/${p.slug}`,
+  bookUrl: (p, r, weeks) => `${CONFIG.propertyUrl(p)}?room=${encodeURIComponent(r.id)}${weeks?`&weeks=${weeks}`:""}#book`,
+  currency: "£"
+};
+
+/* =====================================================================
+   2. SAMPLE DATA — same shape your DB rows should be mapped to
+   ===================================================================== */
+const SAMPLE_SCHEMA = {
+  budget:{min:100,max:500,step:5},
+  roomTypes:["Private Room","Ensuite","Studio","Twin Room","Premium Studio"],
+  durations:[51,44,39,25],
+  vibes:[
+    {id:"social",e:"🎉",label:"Social",desc:"Events, big common rooms"},
+    {id:"quiet",e:"📚",label:"Quiet study",desc:"Calm floors, study pods"},
+    {id:"budget",e:"💸",label:"Budget smart",desc:"Bills in, no surprises"},
+    {id:"luxury",e:"✨",label:"Luxury",desc:"Hotel-style living"},
+    {id:"fit",e:"💪",label:"Fit & active",desc:"Gym, yoga, bike storage"},
+    {id:"creative",e:"🎨",label:"Creative",desc:"Studios, rooftop, cinema"}
+  ],
+  roomFeatures:[
+    {id:"ensuite",label:"Ensuite bathroom"},{id:"kitchen",label:"Private kitchen"},
+    {id:"double",label:"Double bed"},{id:"aircon",label:"Air-con"},{id:"desk",label:"Large desk"}
+  ],
+  amenities:[
+    {id:"billsIncl",label:"Bills included"},{id:"gym",label:"Gym"},{id:"cinema",label:"Cinema room"},
+    {id:"study",label:"Study rooms"},{id:"freeCancel",label:"Free cancellation"},
+    {id:"noVisaNoPay",label:"No visa · No pay"},{id:"pets",label:"Pet friendly"},{id:"security",label:"24h security"}
+  ]
+};
+const R=(id,type,price,feat,weeks,beds)=>({id,type,price,features:feat,weeks});
+const SAMPLE_DATA = [
+ {id:1,slug:"north-lodge",name:"North Lodge",country:"uk",city:"London",citySlug:"london",rating:4.1,reviews:231,distance:"7.75 miles from centre",verified:true,
+  hue:[120,175],vibes:["social","fit","budget"],amenities:["billsIncl","gym","freeCancel","noVisaNoPay","security","cinema"],offers:2,cashback:1247,
+  rooms:[R("nl-1","Private Room",271,["desk"],[45,38,16,15]),R("nl-2","Ensuite",318,["ensuite","double","desk"],[45,38]),R("nl-3","Studio",402,["ensuite","kitchen","double","desk"],[51,44])]},
+ {id:2,slug:"emily-bowes-court",name:"Emily Bowes Court",country:"uk",city:"London",citySlug:"london",rating:3.5,reviews:283,distance:"7.74 miles from centre",verified:true,
+  hue:[8,38],vibes:["social","budget","creative"],amenities:["billsIncl","freeCancel","noVisaNoPay","security","study"],offers:3,cashback:2927,
+  rooms:[R("eb-1","Private Room",284,["desk"],[51,44,39,45]),R("eb-2","Twin Room",229,["desk"],[51,44]),R("eb-3","Ensuite",349,["ensuite","double"],[51,44,39])]},
+ {id:3,slug:"the-orchard-london",name:"The Orchard",country:"uk",city:"London",citySlug:"london",rating:4.6,reviews:412,distance:"1.9 miles from centre",verified:true,
+  hue:[255,300],vibes:["luxury","quiet","creative"],amenities:["billsIncl","gym","cinema","study","security","freeCancel"],offers:1,cashback:900,
+  rooms:[R("or-1","Ensuite",455,["ensuite","double","aircon","desk"],[51,44]),R("or-2","Studio",589,["ensuite","kitchen","double","aircon","desk"],[51,44,39]),R("or-3","Premium Studio",712,["ensuite","kitchen","double","aircon","desk"],[51])]},
+ {id:4,slug:"kings-yard",name:"King's Yard",country:"uk",city:"London",citySlug:"london",rating:4.3,reviews:176,distance:"3.2 miles from centre",verified:true,
+  hue:[190,230],vibes:["quiet","fit"],amenities:["gym","study","security","pets","freeCancel"],offers:0,cashback:0,
+  rooms:[R("ky-1","Private Room",262,["desk"],[44,39,25]),R("ky-2","Ensuite",331,["ensuite","desk"],[51,44]),R("ky-3","Studio",438,["ensuite","kitchen","double"],[51,44])]},
+ {id:5,slug:"canal-street-house",name:"Canal Street House",country:"uk",city:"Manchester",citySlug:"manchester",rating:4.4,reviews:530,distance:"0.8 miles from centre",verified:true,
+  hue:[75,140],vibes:["social","budget","creative"],amenities:["billsIncl","cinema","gym","noVisaNoPay","freeCancel","security"],offers:2,cashback:760,
+  rooms:[R("cs-1","Private Room",148,["desk"],[51,44,39]),R("cs-2","Ensuite",189,["ensuite","double","desk"],[51,44]),R("cs-3","Studio",245,["ensuite","kitchen","double"],[51,44,39])]},
+ {id:6,slug:"vimto-lofts",name:"Vimto Lofts",country:"uk",city:"Manchester",citySlug:"manchester",rating:4.7,reviews:318,distance:"0.4 miles from centre",verified:true,
+  hue:[330,20],vibes:["luxury","creative","social"],amenities:["billsIncl","gym","cinema","study","security","pets"],offers:1,cashback:500,
+  rooms:[R("vl-1","Ensuite",262,["ensuite","double","aircon","desk"],[51,44]),R("vl-2","Premium Studio",389,["ensuite","kitchen","double","aircon","desk"],[51,44])]},
+ {id:7,slug:"oxford-road-hall",name:"Oxford Road Hall",country:"uk",city:"Manchester",citySlug:"manchester",rating:3.9,reviews:204,distance:"1.5 miles from centre",verified:true,
+  hue:[40,90],vibes:["budget","quiet"],amenities:["billsIncl","study","freeCancel","security"],offers:0,cashback:0,
+  rooms:[R("or2-1","Private Room",119,["desk"],[51,44,39,25]),R("or2-2","Twin Room",104,["desk"],[51,44]),R("or2-3","Ensuite",157,["ensuite","desk"],[51,44])]},
+ {id:8,slug:"jewel-quarter-point",name:"Jewel Quarter Point",country:"uk",city:"Birmingham",citySlug:"birmingham",rating:4.2,reviews:289,distance:"0.9 miles from centre",verified:true,
+  hue:[160,210],vibes:["budget","social","fit"],amenities:["billsIncl","gym","noVisaNoPay","freeCancel","security"],offers:1,cashback:420,
+  rooms:[R("jq-1","Private Room",131,["desk"],[51,44,39]),R("jq-2","Ensuite",172,["ensuite","double","desk"],[51,44]),R("jq-3","Studio",228,["ensuite","kitchen","double"],[51])]},
+ {id:9,slug:"bull-ring-heights",name:"Bull Ring Heights",country:"uk",city:"Birmingham",citySlug:"birmingham",rating:4.5,reviews:147,distance:"0.2 miles from centre",verified:true,
+  hue:[270,320],vibes:["luxury","quiet","fit"],amenities:["billsIncl","gym","study","cinema","security","pets"],offers:2,cashback:610,
+  rooms:[R("bh-1","Ensuite",214,["ensuite","double","aircon","desk"],[51,44]),R("bh-2","Premium Studio",334,["ensuite","kitchen","double","aircon","desk"],[51,44,39])]},
+ {id:10,slug:"royal-mile-residence",name:"Royal Mile Residence",country:"uk",city:"Edinburgh",citySlug:"edinburgh",rating:4.6,reviews:366,distance:"0.3 miles from centre",verified:true,
+  hue:[215,260],vibes:["luxury","creative","quiet"],amenities:["billsIncl","cinema","study","security","freeCancel"],offers:1,cashback:800,
+  rooms:[R("rm-1","Ensuite",268,["ensuite","double","desk"],[51,44]),R("rm-2","Studio",346,["ensuite","kitchen","double","desk"],[51,44,39]),R("rm-3","Premium Studio",455,["ensuite","kitchen","double","aircon","desk"],[51])]},
+ {id:11,slug:"arthurs-seat-house",name:"Arthur's Seat House",country:"uk",city:"Edinburgh",citySlug:"edinburgh",rating:4.0,reviews:198,distance:"1.1 miles from centre",verified:true,
+  hue:[100,160],vibes:["budget","social","fit"],amenities:["billsIncl","gym","freeCancel","noVisaNoPay","pets"],offers:0,cashback:0,
+  rooms:[R("as-1","Private Room",172,["desk"],[51,44,39]),R("as-2","Twin Room",149,["desk"],[51,44]),R("as-3","Ensuite",216,["ensuite","double"],[51,44])]},
+ {id:12,slug:"headingley-court",name:"Headingley Court",country:"uk",city:"Leeds",citySlug:"leeds",rating:4.3,reviews:251,distance:"2.4 miles from centre",verified:true,
+  hue:[50,100],vibes:["social","budget","fit"],amenities:["billsIncl","gym","cinema","noVisaNoPay","freeCancel"],offers:2,cashback:540,
+  rooms:[R("hc-1","Private Room",122,["desk"],[51,44,39]),R("hc-2","Ensuite",159,["ensuite","double","desk"],[51,44]),R("hc-3","Studio",214,["ensuite","kitchen","double"],[51,44])]},
+ {id:13,slug:"university-quarter-leeds",name:"University Quarter",country:"uk",city:"Leeds",citySlug:"leeds",rating:4.5,reviews:122,distance:"0.6 miles from centre",verified:true,
+  hue:[290,340],vibes:["quiet","luxury","creative"],amenities:["billsIncl","study","gym","security","pets"],offers:1,cashback:300,
+  rooms:[R("uq-1","Ensuite",196,["ensuite","double","aircon","desk"],[51,44]),R("uq-2","Premium Studio",298,["ensuite","kitchen","double","aircon","desk"],[51,44])]}
+];
+
+/* =====================================================================
+   3. DATA ADAPTER — API when configured, sample data otherwise
+   ===================================================================== */
+const Api = {
+  async schema(){
+    if(!CONFIG.apiBase) return {...SAMPLE_SCHEMA, cities:[...new Set(SAMPLE_DATA.map(p=>p.city))]};
+    return (await fetch(`${CONFIG.apiBase}/filters`)).json();
+  },
+  async properties(f){
+    if(!CONFIG.apiBase){ await new Promise(r=>setTimeout(r,380)); return SAMPLE_DATA; }
+    const q=new URLSearchParams({city:f.city||"",min:f.min,max:f.max,roomTypes:f.roomTypes.join(),durations:f.durations.join(),
+      roomFeatures:f.roomFeatures.join(),amenities:f.amenities.join(),vibes:f.vibes.join()});
+    return (await fetch(`${CONFIG.apiBase}/properties?${q}`)).json();
+  }
+};
+
+/* =====================================================================
+   4. STATE + MATCHING ENGINE
+   ===================================================================== */
+const $=s=>document.querySelector(s), money=n=>CONFIG.currency+Math.round(n).toLocaleString();
+let schema, data=[], seq=0;
+const state={on:false,city:null,min:0,max:0,roomTypes:[],durations:[],vibes:[],roomFeatures:[],amenities:[],sort:"match"};
+const saved=new Set(JSON.parse((()=>{try{return localStorage.getItem("hos-saved")}catch(e){}})()||"[]"));
+
+function roomOk(r){
+  if(state.on){
+    if(r.price<state.min||r.price>state.max) return false;
+    if(state.roomTypes.length&&!state.roomTypes.includes(r.type)) return false;
+    if(state.durations.length&&!state.durations.some(w=>r.weeks.includes(w))) return false;
+    if(!state.roomFeatures.every(f=>r.features.includes(f))) return false;
+  }
+  return true;
+}
+function compute(){
+  const out=[];
+  for(const p of data){
+    if(state.city&&p.city!==state.city) continue;
+    if(state.on&&!state.amenities.every(a=>p.amenities.includes(a))) continue;
+    const rooms=p.rooms.filter(roomOk).sort((a,b)=>a.price-b.price);
+    if(!rooms.length) continue;
+    let score=0;
+    if(state.on){
+      const v=state.vibes.length?state.vibes.filter(x=>p.vibes.includes(x)).length/state.vibes.length:0.6;
+      const mid=(state.min+state.max)/2, price=Math.max(0,1-Math.abs(rooms[0].price-mid)/(state.max-state.min||1));
+      score=Math.round(55*v+25*price+20*(p.rating/5));
+    } else score=Math.round(p.rating/5*100);
+    out.push({p,rooms,score});
+  }
+  const s=state.sort;
+  out.sort((a,b)=>s==="low"?a.rooms[0].price-b.rooms[0].price:s==="high"?b.rooms[0].price-a.rooms[0].price:s==="rating"?b.p.rating-a.p.rating:b.score-a.score);
+  return out;
+}
+
+/* =====================================================================
+   5. UI BUILDERS
+   ===================================================================== */
+function chips(el,items,key,multi=true,labelOf=x=>x.label||x,idOf=x=>x.id||x){
+  el.innerHTML="";
+  items.forEach(it=>{
+    const b=document.createElement("button");b.className="chip";b.type="button";
+    const id=idOf(it);b.textContent=labelOf(it);b.setAttribute("aria-pressed",multi?state[key].includes(id):state[key]===id);
+    b.onclick=()=>{
+      if(multi){const a=state[key],i=a.indexOf(id);i<0?a.push(id):a.splice(i,1)}
+      else state[key]=state[key]===id?null:id;
+      chips(el,items,key,multi,labelOf,idOf);refresh();
+    };
+    el.appendChild(b);
+  });
+}
+function buildVibes(){
+  const el=$("#vibes");el.innerHTML="";
+  schema.vibes.forEach(v=>{
+    const b=document.createElement("button");b.className="vibe";b.type="button";
+    b.setAttribute("aria-pressed",state.vibes.includes(v.id));
+    b.innerHTML=`<span class="e">${v.e}</span><b>${v.label}</b><small>${v.desc}</small>`;
+    b.onclick=e=>{const a=state.vibes,i=a.indexOf(v.id);i<0?a.push(v.id):a.splice(i,1);b.setAttribute("aria-pressed",i<0);if(i<0)burst(e.clientX,e.clientY,10);refresh()};
+    el.appendChild(b);
+  });
+}
+function syncRange(){
+  const {min,max}=schema.budget,lo=+$("#rmin").value,hi=+$("#rmax").value;
+  state.min=Math.min(lo,hi);state.max=Math.max(lo,hi);
+  const pct=v=>(v-min)/(max-min)*100;
+  $("#fill").style.left=pct(state.min)+"%";$("#fill").style.right=(100-pct(state.max))+"%";
+  $("#priceBig").innerHTML=`${money(state.min)} – ${money(state.max)}<small> /week</small>`;
+  $("#budgetLabel").textContent=`≈ ${money(state.max*4.33)}/mo max`;
+}
+function tween(el,to){
+  const from=+el.dataset.v||0;el.dataset.v=to;const t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/500),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(f)})(t0);
+}
+
+/* =====================================================================
+   6. RENDER
+   ===================================================================== */
+const heart='<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg>';
+function cover(p){
+  const [a,b]=p.hue;
+  return `<div class="art" style="background:
+    radial-gradient(circle at 20% 25%,hsla(${a},85%,78%,.95),transparent 55%),
+    radial-gradient(circle at 85% 80%,hsla(${b},80%,70%,.95),transparent 55%),
+    linear-gradient(135deg,hsl(${a},60%,88%),hsl(${b},60%,82%))">
+    <svg width="100%" height="100%" viewBox="0 0 360 190" preserveAspectRatio="xMidYMax slice"><g fill="rgba(29,31,27,.82)">
+    <rect x="30" y="${70+p.id%4*8}" width="64" height="150"/><rect x="104" y="${40+p.id%3*10}" width="78" height="180"/><rect x="192" y="${80+p.id%5*6}" width="58" height="140"/><rect x="260" y="${55+p.id%4*7}" width="72" height="170"/></g>
+    <g fill="rgba(255,236,150,.95)">${Array.from({length:22},(_,i)=>`<rect x="${42+(i%4)*20+Math.floor(i/11)*0}" y="${100+Math.floor(i/4)*20}" width="8" height="10" opacity="${(i*7+p.id)%3?0.9:0.15}"/>`).join("")}
+    </g></svg></div>`;
+}
+function card({p,rooms,score},i){
+  const hits=new Set(state.on?state.amenities:[]);
+  const am=p.amenities.slice().sort((a,b)=>hits.has(b)-hits.has(a)).slice(0,6)
+    .map(id=>{const m=schema.amenities.find(x=>x.id===id);return m?`<span class="${hits.has(id)?"hit":""}">${m.label}</span>`:""}).join("");
+  const shown=rooms.slice(0,3), extra=rooms.length-shown.length;
+  const el=document.createElement("article");el.className="pcard";el.style.setProperty("--i",i);
+  el.innerHTML=`
+   <div class="cover">${cover(p)}<span class="city">📍 ${p.city}</span>
+     <button class="save ${saved.has(p.id)?"on":""}" aria-label="Save">${heart}</button>
+     <div class="match" title="Vibe match"><svg viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="25"/><circle class="fg" cx="29" cy="29" r="25"/></svg><span>${score}%</span></div></div>
+   <div class="pbody">
+     <div class="ptitle"><h3><a href="${CONFIG.propertyUrl(p)}">${p.name}, ${p.city}</a></h3><span class="rate">★ ${p.rating} (${p.reviews})</span></div>
+     <div class="meta">${p.verified?"✔ Verified · ":""}${p.distance}</div>
+     <div class="am">${am}</div>
+     ${p.offers?`<div class="offer"><b>${p.offers} Offer${p.offers>1?"s":""}</b> Up to ${money(p.cashback)} cashback</div>`:""}
+     <div class="rooms"><h4>${rooms.length} matching room type${rooms.length>1?"s":""}</h4>
+     ${shown.map((r,j)=>{const w=state.durations.find(d=>r.weeks.includes(d))||r.weeks[0];
+       const ff=r.features.map(id=>(schema.roomFeatures.find(x=>x.id===id)||{}).label).filter(Boolean).join(" · ");
+       return `<div class="room" style="--j:${j}"><div><b>${r.type}</b></div><div class="rf">${ff||"Standard room"} · ${w} weeks</div>
+        <div class="price"><strong data-to="${r.price}">${money(0)}</strong><small>per week</small><br><a class="book" href="${CONFIG.bookUrl(p,r,w)}">Book now</a></div></div>`}).join("")}
+     ${extra>0?`<div class="more">+ ${extra} more room type${extra>1?"s":""} at this property</div>`:""}</div>
+     <a class="view" href="${CONFIG.propertyUrl(p)}">View property <i>→</i></a>
+   </div>`;
+  el.querySelector(".save").onclick=e=>{
+    const b=e.currentTarget;saved.has(p.id)?saved.delete(p.id):saved.add(p.id);b.classList.toggle("on");
+    try{localStorage.setItem("hos-saved",JSON.stringify([...saved]))}catch(_){}
+    if(saved.has(p.id))burst(e.clientX,e.clientY,8);toast(saved.has(p.id)?"Saved to your shortlist":"Removed from shortlist");
+  };
+  // 3D tilt
+  el.addEventListener("mousemove",e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    el.style.transform=`perspective(900px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-6px)`});
+  el.addEventListener("mouseleave",()=>el.style.transform="");
+  // animate rings + prices once card is revealed
+  requestAnimationFrame(()=>setTimeout(()=>{
+    el.querySelector(".fg").style.strokeDashoffset=157*(1-score/100);
+    el.querySelectorAll("[data-to]").forEach(s=>{const to=+s.dataset.to,t0=performance.now();
+      (function f(t){const k=Math.min(1,(t-t0)/900),e=1-Math.pow(1-k,3);s.textContent=money(to*e);if(k<1)requestAnimationFrame(f)})(t0)});
+  },i*70+450));
+  return el;
+}
+
+async function render(){
+  const my=++seq,box=$("#cards");
+  box.innerHTML=Array(3).fill('<div class="skel"></div>').join("");
+  if(CONFIG.apiBase||!data.length) data=await Api.properties({city:state.city,...state});
+  else await new Promise(r=>setTimeout(r,320));
+  if(my!==seq) return;
+  const res=compute();
+  box.innerHTML="";
+  $("#rtitle").textContent=state.city?`Student accommodation ${state.city}`:"Student accommodation";
+  $("#rsub").textContent=`${res.length} propert${res.length===1?"y":"ies"} · from ${res.length?money(Math.min(...res.map(r=>r.rooms[0].price))):"–"}/week`;
+  if(!res.length){
+    box.innerHTML=`<div class="empty"><div class="big">🫠</div><h3>No rooms match every filter</h3><p>Try loosening one of these and we'll find you a home.</p>
+      <button class="go" id="wid">Add +£50 to budget</button><button class="reset" id="clr">Clear amenities</button></div>`;
+    $("#wid").onclick=()=>{setBudget(state.min,Math.min(schema.budget.max,state.max+50));refresh()};
+    $("#clr").onclick=()=>{state.amenities=[];state.roomFeatures=[];buildChips();refresh()};
+    return;
+  }
+  res.forEach((r,i)=>box.appendChild(card(r,i)));
+}
+
+function renderTags(){
+  const t=[];
+  if(state.on){
+    if(state.city)t.push(state.city);
+    t.push(`${money(state.min)}–${money(state.max)}/wk`);
+    state.roomTypes.forEach(x=>t.push(x));state.durations.forEach(x=>t.push(x+" weeks"));
+    state.vibes.forEach(id=>{const v=schema.vibes.find(x=>x.id===id);t.push(v.e+" "+v.label)});
+    state.roomFeatures.forEach(id=>t.push(schema.roomFeatures.find(x=>x.id===id).label));
+    state.amenities.forEach(id=>t.push(schema.amenities.find(x=>x.id===id).label));
+  }
+  $("#tags").innerHTML=t.map((x,i)=>`<span class="tag" style="animation-delay:${i*30}ms">${x}</span>`).join("");
+}
+let debounce;
+function refresh(now){
+  const res=compute();
+  tween($("#cProps"),res.length);tween($("#cRooms"),res.reduce((n,r)=>n+r.rooms.length,0));
+  $("#cityLabel").textContent=state.city?`· ${state.city}`:"· anywhere";
+  renderTags();
+  clearTimeout(debounce);debounce=setTimeout(render,now?0:260);
+}
+function setBudget(lo,hi){$("#rmin").value=lo;$("#rmax").value=hi;syncRange()}
+function buildChips(){
+  chips($("#cities"),schema.cities,"city",false);
+  chips($("#roomTypes"),schema.roomTypes,"roomTypes");
+  chips($("#durations"),schema.durations,"durations",true,x=>x+" weeks",x=>x);
+  chips($("#roomFeatures"),schema.roomFeatures,"roomFeatures");
+  chips($("#amenities"),schema.amenities,"amenities");
+  buildVibes();
+}
+
+/* ---------- fx ---------- */
+function burst(x,y,n=14){
+  const cols=["#c4f962","#ffe27a","#9be02f","#1d1f1b","#b9f0e0"];
+  for(let i=0;i<n;i++){const c=document.createElement("i");c.className="confetti";c.style.cssText=`left:${x}px;top:${y}px;background:${cols[i%5]};border-radius:${i%2?"50%":"2px"};--x:${(Math.random()-.5)*220}px;--y:${-40-Math.random()*140+Math.random()*180}px`;
+    document.body.appendChild(c);setTimeout(()=>c.remove(),1300)}
+}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),1800)}
+
+/* ---------- init ---------- */
+(async function init(){
+  schema=await Api.schema();
+  const {min,max,step}=schema.budget;
+  ["#rmin","#rmax"].forEach(s=>{const e=$(s);e.min=min;e.max=max;e.step=step;e.oninput=()=>{syncRange();refresh()}});
+  setBudget(min,max);buildChips();
+
+  $("#toggle").onclick=e=>{
+    state.on=!state.on;const t=$("#toggle");t.setAttribute("aria-pressed",state.on);
+    $("#panelShell").classList.toggle("open",state.on);
+    $("#toggleLabel").textContent=state.on?"Personalised search is ON":"Personalise my search";
+    $("#hint").textContent=state.on?"Results now follow your vibe. Toggle off for all listings.":"Tap to switch on — takes 20 seconds";
+    if(state.on){const r=t.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,22)}
+    refresh(true);
+  };
+  $("#reset").onclick=()=>{Object.assign(state,{city:null,roomTypes:[],durations:[],vibes:[],roomFeatures:[],amenities:[]});setBudget(min,max);buildChips();refresh(true);toast("Filters reset")};
+  $("#show").onclick=()=>$("#results").scrollIntoView({behavior:"smooth"});
+  $("#sort").onchange=e=>{state.sort=e.target.value;refresh(true)};
+  refresh(true);
+})();
+</script>
+</body>
+</html>

@@ -370,6 +370,7 @@ const money=n=>cur().cur+Math.round(n).toLocaleString();
 const moneyIn=(co,n)=>co.cur+Math.round(n).toLocaleString();
 const money1=(co,n)=>co.cur+(Math.round(n*10)/10).toLocaleString();
 const per=()=>cur().period, unitW=n=>n===1?"week":"weeks";
+const propUrl=p=>`https://houseofstudent.com/${p.co}/${p.c}/${p.s}`;
 
 const VIBES=[
   {id:"social",e:"🎉",label:"Social"},{id:"quiet",e:"📚",label:"Quiet study"},
@@ -565,7 +566,7 @@ function renderDetail(p){
         <h2 style="margin-top:8px">${esc(p.n)}</h2>
         <div class="addr">📍 ${r?esc(r.address):esc(cityName(p))+", "+esc(co.name)}${p.d!=null?" · "+p.d+" "+co.unit+" from centre":""}</div>
         ${r?`<div class="billrow" style="margin-top:11px">${r.bills.map(x=>`<span class="bill">✓ ${esc(x)} incl.</span>`).join("")}</div>`:""}
-        <div class="bookrow" style="margin-top:12px"><button class="reset" id="dAddCmp" style="margin:0">${state.cmpP.includes(p.i)?"✓ In comparison":"+ Add to compare"}</button><a class="redirect" href="${p.url}" target="_blank" rel="noopener">View live listing ↗</a></div>
+        <div class="bookrow" style="margin-top:12px"><button class="reset" id="dAddCmp" style="margin:0">${state.cmpP.includes(p.i)?"✓ In comparison":"+ Add to compare"}</button><a class="redirect" href="${propUrl(p)}" target="_blank" rel="noopener">View live listing ↗</a></div>
       </div>
       <div style="text-align:center"><div class="bigring">${ring(v.overall,104,9)}<div class="n"><b>${v.overall}</b><span>Vibe score</span></div></div></div></div>
       <div class="dgrid">
@@ -599,12 +600,12 @@ function fillRoom(p,r,i){
     <div class="offers"><div style="font-size:12px;color:var(--mute)">④ Offers${q.save>0?` — you save <b style="color:var(--good)">${money(q.save)}</b>`:""}</div>
       ${q.hasOffers?q.offers.map(o=>{const on=q.applied.includes(o);return `<div class="offer" style="${on?"":"opacity:.55"}"><span class="tag">${on?"Applied":"Offer"}</span><span>${esc(o.label)}${o.from?` <span style="color:var(--mute)">(min ${o.from} wks)</span>`:""}</span></div>`}).join("")
       :`<div class="offer"><span class="tag">Payment</span><span>${[p.perks.has("ip")?"Pay in instalments":"",p.perks.has("pl")?"pay later":"",p.perks.has("nv")?"no-visa-no-pay":"",p.perks.has("np")?"no-place-no-pay":""].filter(Boolean).join(" · ")||"Standard payment"}. Live promos load from the listing.</span></div>`}</div>
-    <div class="bookrow"><a class="bookbtn" href="${p.url}?room=${encodeURIComponent(roomName(p,r,i))}&weeks=${wk}#book" target="_blank" rel="noopener">Book ${esc(roomName(p,r,i))} →</a><span class="redirect">Redirects to the live room-type booking page.</span></div>`;
+    <div class="bookrow"><a class="bookbtn" href="${propUrl(p)}?room=${encodeURIComponent(roomName(p,r,i))}&weeks=${wk}#book" target="_blank" rel="noopener">Book ${esc(roomName(p,r,i))} →</a><span class="redirect">Redirects to the live room-type booking page.</span></div>`;
   inner.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{dTenure[i]=+b.dataset.t;fillRoom(p,r,i)});
 }
 function renderNbh(p){
   const area=$("#nbhArea"),r=p.rich;
-  if(!r){area.innerHTML=`<div class="richnote">On-site perks: ${["gy","cn","st","nv","np","ip","pl"].filter(k=>p.perks.has(k)).map(k=>PERK_MAP[k]).join(" · ")||"—"}.<br><br>Full nearby places (gyms, cinema, cafés, parks, transport…) with walking distance load from this property's listing doc. <a href="${p.url}" target="_blank" rel="noopener" style="font-weight:600;text-decoration:underline">View live listing ↗</a></div>`;return}
+  if(!r){area.innerHTML=`<div class="richnote">On-site perks: ${["gy","cn","st","nv","np","ip","pl"].filter(k=>p.perks.has(k)).map(k=>PERK_MAP[k]).join(" · ")||"—"}.<br><br>Full nearby places (gyms, cinema, cafés, parks, transport…) with walking distance load from this property's listing doc. <a href="${propUrl(p)}" target="_blank" rel="noopener" style="font-weight:600;text-decoration:underline">View live listing ↗</a></div>`;return}
   area.innerHTML=`<div class="amtabs" id="amtabs"></div><div class="amlist" id="amlist"></div><div class="distnote" id="distNote"></div>`;renderAmTabs(p);
 }
 function renderAmTabs(p){const el=$("#amtabs");el.innerHTML="";const a=p.rich.amenities;AM_TABS.filter(t=>a[t[0]]&&a[t[0]].length).forEach(([k,e,l])=>{const b=document.createElement("button");b.className="amtab"+(dAmTab===k?" on":"");b.innerHTML=`${e} ${l} <span class="c">${a[k].length}</span>`;b.onclick=()=>{dAmTab=k;renderAmTabs(p)};el.appendChild(b)});if(!a[dAmTab]||!a[dAmTab].length)dAmTab=AM_TABS.find(t=>a[t[0]]&&a[t[0]].length)[0];renderAmList(p)}
@@ -660,7 +661,7 @@ function renderCmpProps(){
   const yn=(p,k)=>p.perks.has(k)?'<span class="yes">✔</span>':'<span class="no">—</span>';
   const vrow=id=>`<tr><th class="lab">${V6LABEL[id][0]} ${V6LABEL[id][1]}</th>${cell(p=>{const sc=p.vibe6[id];return sc==null?'<span class="no">—</span>':`${sc}`})}</tr>`;
   body.innerHTML=`<div class="cmp-scroll"><table class="cmptable">
-    <thead><tr><th class="lab"></th>${ps.map(p=>`<td class="cmp-col"><button class="rm" data-rmp="${p.i}">✕</button><div style="font-weight:600;font-size:15px;line-height:1.2">${esc(p.n.slice(0,40))}</div><div style="color:#aab09c;font-size:12px">${esc(cityName(p))}, ${esc(C[p.co].name)}</div><a class="bk" href="${p.url}" target="_blank" rel="noopener">View ↗</a></td>`).join("")}</tr></thead>
+    <thead><tr><th class="lab"></th>${ps.map(p=>`<td class="cmp-col"><button class="rm" data-rmp="${p.i}">✕</button><div style="font-weight:600;font-size:15px;line-height:1.2">${esc(p.n.slice(0,40))}</div><div style="color:#aab09c;font-size:12px">${esc(cityName(p))}, ${esc(C[p.co].name)}</div><a class="bk" href="${propUrl(p)}" target="_blank" rel="noopener">View ↗</a></td>`).join("")}</tr></thead>
     <tbody>
       <tr><th class="lab">Vibe score</th>${cell(p=>`<span class="${p.vibe6.overall===bestV?"best":""}">✨ ${p.vibe6.overall}/100</span>`)}</tr>
       <tr><th class="lab">From / week</th>${cell(p=>`<span class="${sameCo&&p.minp===best?"best":""}">${moneyIn(C[p.co],p.minp)}</span>`)}</tr>
@@ -685,7 +686,7 @@ function renderCmpRooms(){
   const bestW=Math.min(...items.map(x=>x.r.mn));const totalFor=(p,r)=>r.mn*r.wk.slice().sort((a,b)=>b-a)[0];const bestT=Math.min(...items.map(x=>totalFor(x.p,x.r)));
   const cell=f=>items.map(x=>`<td class="cmp-col">${f(x.p,x.r,x.idx)}</td>`).join("");
   body.innerHTML=`<div class="cmp-scroll"><table class="cmptable"><tbody>
-    <tr><th class="lab"></th>${items.map(x=>`<td class="cmp-col"><button class="rm" data-rmr="${roomKey(x.p,x.r)}">✕</button><div style="font-weight:600;font-size:15px">${esc(roomName(x.p,x.r,x.idx))}</div><div style="color:#aab09c;font-size:12px">${esc(x.p.n.slice(0,30))}, ${esc(cityName(x.p))}</div><a class="bk" href="${x.p.url}?room=${encodeURIComponent(roomName(x.p,x.r,x.idx))}" target="_blank" rel="noopener">Book ↗</a></td>`).join("")}</tr>
+    <tr><th class="lab"></th>${items.map(x=>`<td class="cmp-col"><button class="rm" data-rmr="${roomKey(x.p,x.r)}">✕</button><div style="font-weight:600;font-size:15px">${esc(roomName(x.p,x.r,x.idx))}</div><div style="color:#aab09c;font-size:12px">${esc(x.p.n.slice(0,30))}, ${esc(cityName(x.p))}</div><a class="bk" href="${propUrl(x.p)}?room=${encodeURIComponent(roomName(x.p,x.r,x.idx))}" target="_blank" rel="noopener">Book ↗</a></td>`).join("")}</tr>
     <tr><th class="lab">Per week</th>${cell((p,r)=>`<span class="${r.mn===bestW?"best":""}">${moneyIn(C[p.co],r.mn)}</span>${+r.mn!==+r.mx?` <span style="color:#aab09c">– ${moneyIn(C[p.co],r.mx)}</span>`:""}`)}</tr>
     <tr><th class="lab">Longest-term cost</th>${cell((p,r)=>{const t=totalFor(p,r);return `<span class="${t===bestT?"best":""}">${moneyIn(C[p.co],t)}</span> <span style="color:#aab09c">(${r.wk.slice().sort((a,b)=>b-a)[0]} wk)</span>`})}</tr>
     <tr><th class="lab">Tenure options</th>${cell((p,r)=>r.wk.slice().sort((a,b)=>b-a).slice(0,5).join(", ")+" wk")}</tr>

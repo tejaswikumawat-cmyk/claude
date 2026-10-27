@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lime:#c4f962; --lime-d:#9be02f; --ink:#1d1f1b; --ink2:#4a4d45; --mute:#8a8d83;
+  --bg:#fbfbf7; --card:#fff; --line:#e8e8e0; --warm:#fff3c4; --shadow:0 10px 40px -12px rgba(30,40,10,.18);
+  --good:#2f9e6b; --blue:#4a7cff; --r:22px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+input,select{font:inherit}
+
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:24px;padding:14px 32px;background:rgba(251,251,247,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;line-height:1;letter-spacing:.5px}
+.logo i{width:38px;height:38px;border-radius:11px;background:var(--lime);display:grid;place-items:center;position:relative}
+.logo i:before,.logo i:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.logo i:before{left:10px;bottom:11px}.logo i:after{right:11px;top:11px}
+.logo small{display:block;font-weight:400}
+nav .links{margin-left:auto;display:flex;gap:26px;color:var(--ink2)}
+@media(max-width:820px){nav .links{display:none}}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+@media(max-width:480px){.wrap{padding:0 16px}}
+.hero{position:relative;padding:54px 0 20px;text-align:center;isolation:isolate;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;z-index:-1;animation:float 15s ease-in-out infinite}
+.b1{width:380px;height:380px;background:var(--lime);left:-60px;top:-60px}
+.b2{width:340px;height:340px;background:#ffe27a;right:-40px;top:0;animation-delay:-6s}
+@keyframes float{50%{transform:translate(34px,26px) scale(1.12)}}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:6px 14px;border-radius:99px;background:#fff;border:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.eyebrow b{width:8px;height:8px;border-radius:50%;background:var(--lime-d);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(155,224,47,0)}0%{box-shadow:0 0 0 0 rgba(155,224,47,.7)}}
+h1{font-size:clamp(32px,5.4vw,56px);font-weight:700;line-height:1.05;letter-spacing:-1.4px;margin:16px auto 12px;max-width:760px;text-wrap:balance}
+h1 em{font-style:normal;position:relative;white-space:nowrap}
+h1 em:after{content:"";position:absolute;left:-3px;right:-3px;bottom:3px;height:.34em;background:var(--lime);z-index:-1;border-radius:7px}
+.sub{color:var(--ink2);font-size:17px;max-width:620px;margin:0 auto}
+.steps-bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.stepdot{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute);padding:7px 13px;border-radius:99px;background:#fff;border:1px solid var(--line);transition:all .3s}
+.stepdot b{width:21px;height:21px;border-radius:50%;background:var(--line);color:var(--ink2);display:grid;place-items:center;font-size:11px}
+.stepdot.on{color:var(--ink);border-color:var(--ink)}.stepdot.on b{background:var(--ink);color:var(--lime)}
+.stepdot.done b{background:var(--good);color:#fff}
+
+.step{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--lime);font-size:16px;margin-right:9px;flex:none}
+section.block{margin-top:30px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:24px 26px;box-shadow:var(--shadow)}
+.panel h2{font-size:23px;letter-spacing:-.5px;display:flex;align-items:center}
+.lead{color:var(--mute);margin:6px 0 16px;font-size:15px}
+.h3{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mute);font-weight:600;margin:4px 0 11px}
+
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{padding:9px 15px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-size:15px;transition:all .25s cubic-bezier(.3,1.5,.5,1)}
+.chip small{color:var(--mute);margin-left:5px;font-size:12px}
+.chip:hover{border-color:var(--lime-d);transform:translateY(-2px)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--lime);border-color:var(--ink);transform:scale(1.04)}
+.chip[aria-pressed=true] small{color:#b7bfa8}
+.chip[aria-pressed=true]:before{content:"✓ "}
+
+.nbh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:14px}
+.nbh{text-align:left;border:1.5px solid var(--line);border-radius:18px;padding:15px 16px;background:#fff;transition:all .3s cubic-bezier(.3,1.4,.5,1);position:relative;overflow:hidden}
+.nbh:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--lime-d)}
+.nbh[aria-pressed=true]{background:var(--lime);border-color:var(--lime-d)}
+.nbh .cat{font-size:12px;color:var(--ink2);display:inline-flex;align-items:center;gap:5px;background:#f2f4ec;padding:3px 10px;border-radius:99px}
+.nbh[aria-pressed=true] .cat{background:rgba(255,255,255,.65)}
+.nbh b{display:block;font-size:19px;margin:9px 0 2px;letter-spacing:-.3px}
+.nbh span.n{font-size:13px;color:var(--ink2)}
+.nbh[aria-pressed=true] span.n{color:var(--ink)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px;margin-top:8px}
+@media(max-width:480px){.cards{grid-template-columns:1fr}}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(30px);animation:cardIn .6s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i)*70ms);transition:box-shadow .3s,transform .3s,border-color .3s}
+@keyframes cardIn{to{opacity:1;transform:none}}
+.pcard:hover{box-shadow:var(--shadow);transform:translateY(-5px)}
+.pcard.cmp{border-color:var(--ink);box-shadow:0 0 0 2px var(--lime)}
+.cover{height:150px;position:relative;overflow:hidden}
+.cover .art{position:absolute;inset:0}
+.cover .nb{position:absolute;left:13px;bottom:11px;padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.92);font-size:12.5px;font-weight:500}
+.vscore{position:absolute;right:12px;top:12px;width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.96);display:grid;place-items:center;cursor:help}
+.vscore svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.vscore circle{fill:none;stroke-width:5}.vscore .bg{stroke:var(--line)}.vscore .fg{stroke:var(--lime-d);stroke-linecap:round}
+.vscore .n{font-size:17px;font-weight:700;line-height:1}.vscore .l{font-size:8px;letter-spacing:.5px;text-transform:uppercase;color:var(--mute)}
+.pbody{padding:16px 18px 18px;display:flex;flex-direction:column;gap:11px;flex:1}
+.pbody h3{font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.3px}
+.pbody .addr{font-size:13px;color:var(--mute)}
+.vchips{display:flex;flex-wrap:wrap;gap:6px}
+.vchip{font-size:12px;padding:4px 10px;border-radius:99px;background:#f2f4ec;color:var(--ink2);cursor:help;display:inline-flex;gap:5px;align-items:center;transition:background .2s}
+.vchip:hover{background:var(--lime);color:var(--ink)}
+.prow{display:flex;align-items:baseline;gap:8px;margin-top:2px}
+.prow .from{font-size:13px;color:var(--mute)}.prow b{font-size:24px;letter-spacing:-.5px}.prow .pw{font-size:13px;color:var(--mute)}
+.billrow{display:flex;flex-wrap:wrap;gap:5px}
+.bill{font-size:11.5px;padding:3px 9px;border-radius:99px;background:#eef3e2;color:var(--ink2)}
+.cact{display:flex;gap:9px;margin-top:auto;padding-top:4px}
+.explore{flex:1;padding:11px;border-radius:99px;background:var(--ink);color:#fff;font-weight:600;text-align:center;transition:all .25s}
+.explore:hover{background:var(--lime);color:var(--ink)}
+.addcmp{padding:11px 15px;border-radius:99px;border:1.5px solid var(--line);font-weight:600;font-size:14px;transition:all .25s}
+.addcmp:hover{border-color:var(--ink)}
+.addcmp.on{background:var(--ink);color:var(--lime);border-color:var(--ink)}
+
+/* detail */
+.detail{display:none}
+.detail.show{display:block;animation:rise .4s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.back{display:inline-flex;align-items:center;gap:7px;font-weight:600;margin-bottom:14px}
+.back:hover{text-decoration:underline;text-decoration-color:var(--lime-d);text-decoration-thickness:3px}
+.dhead{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+.dhead .dh-main{flex:1;min-width:260px}
+.dhead h2{font-size:28px;letter-spacing:-.6px;line-height:1.1}
+.dhead .addr{color:var(--mute);margin-top:4px}
+.dhead .dh-score{text-align:center}
+.bigring{width:108px;height:108px;position:relative;margin:0 auto}
+.bigring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.bigring circle{fill:none;stroke-width:9}.bigring .bg{stroke:var(--line)}.bigring .fg{stroke:var(--lime-d);stroke-linecap:round}
+.bigring .n{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.bigring .n b{font-size:30px}.bigring .n span{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--mute)}
+.dgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;margin-top:22px}
+@media(max-width:860px){.dgrid{grid-template-columns:1fr}.dhead h2{font-size:24px}}
+.dsec{margin-bottom:22px}
+.vbars{display:flex;flex-direction:column;gap:9px}
+.vbar{cursor:help}
+.vbar .t{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:3px}
+.vbar .t b{font-variant-numeric:tabular-nums}
+.vbar .tr{height:9px;border-radius:9px;background:var(--line);overflow:hidden}
+.vbar .fl{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--lime-d),var(--lime));width:0;transition:width .9s cubic-bezier(.2,.9,.3,1)}
+
+/* room drill-down */
+.rooms{display:flex;flex-direction:column;gap:8px}
+.room{border:1.5px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .25s}
+.room.open{border-color:var(--ink)}
+.rhead{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;align-items:center;padding:13px 15px;cursor:pointer;transition:background .2s}
+.rhead:hover{background:#f8f9f3}
+.rhead .rn{font-weight:600}
+.rhead .rb{grid-column:1;font-size:12.5px;color:var(--mute)}
+.rhead .rp{text-align:right}.rhead .rp b{font-size:17px}.rhead .rp small{display:block;font-size:11px;color:var(--mute)}
+.rhead .caret{transition:transform .3s;color:var(--mute)}
+.room.open .caret{transform:rotate(180deg)}
+.rdetail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.room.open .rdetail{grid-template-rows:1fr}
+.rdetail>div{overflow:hidden}
+.rdinner{padding:4px 15px 15px;border-top:1px dashed var(--line)}
+.flow{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 4px}
+.flowstep{font-size:11px;color:var(--mute);display:inline-flex;align-items:center;gap:6px}
+.flowstep b{background:var(--ink);color:var(--lime);width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10px}
+.flowstep:after{content:"→";margin-left:3px;color:var(--line)}
+.flowstep:last-child:after{content:""}
+.tenure{display:flex;gap:7px;flex-wrap:wrap;margin:6px 0 14px}
+.tbtn{padding:7px 13px;border-radius:99px;border:1.5px solid var(--line);font-size:13.5px;transition:all .2s}
+.tbtn.on{background:var(--ink);color:var(--lime);border-color:var(--ink)}
+.quote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:560px){.quote-grid{grid-template-columns:1fr}}
+.qcell{background:#f8f9f3;border-radius:13px;padding:11px 13px}
+.qcell .lab{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--mute)}
+.qcell .val{font-size:20px;font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.qcell .val .was{font-size:13px;font-weight:500;color:var(--mute);text-decoration:line-through;margin-left:6px}
+.qcell.save{background:var(--lime)}.qcell.save .val{color:var(--ink)}
+.offers{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.offer{display:flex;gap:8px;align-items:flex-start;font-size:13px;background:#fff;border:1px dashed var(--lime-d);border-radius:12px;padding:9px 11px}
+.offer .tag{flex:none;font-size:11px;font-weight:700;background:var(--lime);color:var(--ink);padding:2px 8px;border-radius:99px}
+.bookrow{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.bookbtn{padding:11px 20px;border-radius:99px;background:var(--lime);font-weight:700;transition:all .25s;box-shadow:0 8px 18px -8px rgba(155,224,47,.9)}
+.bookbtn:hover{transform:translateY(-2px) scale(1.03)}
+.redirect{font-size:12px;color:var(--mute)}
+
+/* neighbourhood amenities */
+.amtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.amtab{padding:7px 13px;border-radius:99px;font-size:13.5px;border:1.5px solid var(--line);transition:all .2s;display:inline-flex;gap:6px;align-items:center}
+.amtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.amtab .c{font-size:11px;opacity:.7}
+.amlist{display:flex;flex-direction:column;gap:7px}
+.amitem{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:13px;background:#f8f9f3;animation:rise .4s both}
+.amitem .ae{width:34px;height:34px;border-radius:10px;background:#fff;display:grid;place-items:center;font-size:17px;flex:none}
+.amitem .an{flex:1;font-size:14.5px;font-weight:500;min-width:0}
+.amitem .ad{text-align:right;flex:none}
+.amitem .ad b{font-size:14px;font-variant-numeric:tabular-nums}
+.amitem .ad small{display:block;font-size:11px;color:var(--mute)}
+.distnote{font-size:11.5px;color:var(--mute);margin-top:10px;font-style:italic}
+
+/* compare */
+.cmpbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.msel{position:relative;flex:1;min-width:240px}
+.msel .box{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px;border:1.5px solid var(--line);border-radius:14px;padding:7px 10px;background:#fff;cursor:pointer}
+.msel .box:focus-within,.msel.open .box{border-color:var(--lime-d);box-shadow:0 0 0 4px rgba(196,249,98,.35)}
+.msel .ph{color:var(--mute);font-size:14.5px}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;font-size:13px;padding:5px 7px 5px 11px;border-radius:99px}
+.pill button{width:18px;height:18px;border-radius:50%;background:#44473f;color:#fff;font-size:11px;display:grid;place-items:center}
+.msel .dd{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:30;background:#fff;border:1.5px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px;max-height:280px;overflow:auto;display:none}
+.msel.open .dd{display:block}
+.ddopt{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;cursor:pointer}
+.ddopt:hover{background:#f2f4ec}
+.ddopt .ck{width:19px;height:19px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;flex:none}
+.ddopt.sel .ck{background:var(--ink);border-color:var(--ink);color:var(--lime)}
+.ddopt .nm{font-size:14.5px}.ddopt .ct{font-size:12px;color:var(--mute)}
+.cmp-scroll{overflow-x:auto}
+.cmptable{width:100%;border-collapse:separate;border-spacing:0;min-width:560px}
+.cmptable th,.cmptable td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px}
+.cmptable th.lab{color:var(--mute);font-weight:500;width:150px;font-size:12px;letter-spacing:.6px;text-transform:uppercase}
+.cmptable thead td{font-weight:700;font-size:15px}
+.cmptable tr:last-child td,.cmptable tr:last-child th{border-bottom:0}
+.best{color:var(--good);font-weight:700}
+.cbook{display:inline-block;margin-top:8px;padding:6px 13px;border-radius:99px;background:var(--lime);color:var(--ink);font-weight:600;font-size:13px}
+.rtmatrix{font-size:13px}.rtmatrix .rtrow{display:flex;justify-content:space-between;gap:10px;padding:3px 0}
+.rtmatrix .rtrow b{font-variant-numeric:tabular-nums}
+
+.foot{color:var(--mute);font-size:12.5px;line-height:1.5;margin:26px 0 90px}
+.pop{position:fixed;z-index:120;max-width:300px;background:var(--ink);color:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 18px 50px -12px rgba(0,0,0,.55);font-size:13px;line-height:1.45;opacity:0;transform:translateY(6px) scale(.97);transition:opacity .18s,transform .18s;pointer-events:none}
+.pop.show{opacity:1;transform:none;pointer-events:auto}
+.pop .ph{font-weight:700;font-size:14px;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.pop ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px}
+.pop .pf{margin-top:9px;padding-top:8px;border-top:1px solid #36392f;color:#9a9e90;font-size:11.5px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;transition:transform .5s cubic-bezier(.3,1.5,.5,1);z-index:130}
+.toast.show{transform:translate(-50%,0)}
+.confetti{position:fixed;width:9px;height:13px;z-index:130;pointer-events:none;animation:fall 1.2s forwards ease-out}
+@keyframes fall{to{transform:translate(var(--x),var(--y)) rotate(720deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#"><i></i><span>HOUSE<small>OF STUDENT</small></span></a>
+  <div class="links"><a href="#">Countries</a><a href="#">Cities</a><a href="#">Universities</a><a href="#">Properties</a><a href="#">About</a></div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="eyebrow"><b></b> Personalised student journey · live demo</div>
+    <h1>Your room, your vibe, <em>your neighbourhood</em></h1>
+    <p class="sub">Pick a neighbourhood, open a property, drill into any room type for tenure, rent, offers and discounted price, then compare properties side by side.</p>
+    <div class="steps-bar">
+      <div class="stepdot" id="sd1"><b>1</b> Neighbourhood</div>
+      <div class="stepdot" id="sd2"><b>2</b> Explore &amp; book</div>
+      <div class="stepdot" id="sd3"><b>3</b> Compare</div>
+    </div>
+  </header>
+
+  <!-- STEP 1: city + neighbourhood categorisation -->
+  <section class="block" id="browse">
+    <div class="panel">
+      <h2><span class="step">1</span> Choose your city &amp; neighbourhood</h2>
+      <p class="lead">Neighbourhoods are grouped by their character so you can pick the kind of area you want to live in.</p>
+      <div class="h3">City</div>
+      <div class="chips" id="cities"></div>
+      <div class="h3" style="margin-top:20px">Neighbourhoods in <span id="cityLbl"></span></div>
+      <div class="nbh-grid" id="nbhs"></div>
+    </div>
+  </section>
+
+  <!-- property grid -->
+  <section class="block" id="listWrap">
+    <div style="display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+      <h2 style="font-size:24px;letter-spacing:-.5px" id="listTitle">Properties</h2>
+      <span class="lead" style="margin:0" id="listSub"></span>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- detail view -->
+  <section class="block detail" id="detail"></section>
+
+  <!-- STEP 3: comparison -->
+  <section class="block" id="compareWrap">
+    <div class="panel">
+      <h2><span class="step">3</span> Compare properties</h2>
+      <p class="lead">Add properties from the dropdown (or the “+ Compare” button on any card) to line them up — including a room-type-by-type price view.</p>
+      <div class="cmpbar">
+        <div class="msel" id="msel">
+          <div class="box" id="mselBox" tabindex="0"><span class="ph" id="mselPh">Select properties to compare…</span></div>
+          <div class="dd" id="mselDd"></div>
+        </div>
+        <button class="addcmp" id="cmpClear" hidden>Clear all</button>
+      </div>
+      <div id="cmpBody"></div>
+    </div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<div class="pop" id="pop" role="tooltip"></div>
+<div class="toast" id="toast"></div>
+
+<script src="vibe-journey-data.js"></script>
+<script>
+const D=window.HOSJ, $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sym=p=>D.currency[p.ccy]||"$";
+const money=(p,n)=>sym(p)+Math.round(n).toLocaleString();
+const money1=(p,n)=>sym(p)+(Math.round(n*10)/10).toLocaleString(undefined,{minimumFractionDigits:0});
+const PROPS=D.properties;
+const state={city:D.cities[0].slug, nbh:null, cmp:[]};
+
+/* ---------- vibe logic (data-backed) ---------- */
+const VIBES=[
+  {id:"social",e:"🎉",label:"Social"},
+  {id:"study",e:"📚",label:"Study"},
+  {id:"fit",e:"💪",label:"Fit & active"},
+  {id:"foodie",e:"🍜",label:"Foodie"},
+  {id:"connected",e:"🚆",label:"Connected"},
+  {id:"value",e:"💸",label:"Value"}
+];
+const SOCIAL_FAC=/social|games|lounge|cinema|event|rooftop|terrace|dinner|trivia|cultural/i;
+const STUDY_FAC=/study|library|e-library/i;
+const FIT_FAC=/gym|pool|basketball|court|bike/i;
+const minWeeklyAll=Math.min(...PROPS.flatMap(p=>p.rooms.map(r=>r.weekly)));
+const maxWeeklyAll=Math.max(...PROPS.flatMap(p=>p.rooms.map(r=>r.weekly)));
+function cnt(arr){return arr?arr.length:0}
+function scale(v,max){return Math.max(6,Math.min(100,Math.round(v/max*100)))}
+function computeVibes(p){
+  const a=p.amenities, fac=p.facilities;
+  const socialFac=fac.filter(f=>SOCIAL_FAC.test(f)).length;
+  const studyFac=fac.filter(f=>STUDY_FAC.test(f)).length;
+  const fitFac=fac.filter(f=>FIT_FAC.test(f)).length;
+  const minW=Math.min(...p.rooms.map(r=>r.weekly));
+  const social={score:scale(socialFac*8+cnt(a.pubs)*6+cnt(a.cinemas)*6,90),f:[`${socialFac} social spaces on-site`,`${cnt(a.pubs)} pubs & ${cnt(a.cinemas)} cinemas nearby`]};
+  const study={score:scale(studyFac*12+cnt(a.libraries)*9,90),f:[`${studyFac} study spaces on-site`,`${cnt(a.libraries)} libraries nearby`]};
+  const fit={score:scale(fitFac*10+cnt(a.gyms)*7+cnt(a.parks)*5,90),f:[`${fitFac} fitness facilities on-site`,`${cnt(a.gyms)} gyms & ${cnt(a.parks)} parks nearby`]};
+  const foodie={score:scale(cnt(a.cafes)*9+cnt(a.restaurants)*8,95),f:[`${cnt(a.cafes)} cafés nearby`,`${cnt(a.restaurants)} restaurants nearby`]};
+  const connected={score:scale(cnt(a.transport)*12+cnt(a.universities)*6,95),f:[`${cnt(a.transport)} transport links`,`${cnt(a.universities)} universities reachable`]};
+  const valScore=scale((maxWeeklyAll-minW)/(maxWeeklyAll-minWeeklyAll||1)*70+cnt(p.bills)*7,100);
+  const value={score:valScore,f:[`from ${money(p,minW)}/week`,`${cnt(p.bills)} bills included`]};
+  const map={social,study,fit,foodie,connected,value};
+  map.overall=Math.round(VIBES.reduce((s,v)=>s+map[v.id].score,0)/VIBES.length);
+  map.top=VIBES.map(v=>({...v,score:map[v.id].score})).sort((a,b)=>b.score-a.score).slice(0,3);
+  return map;
+}
+PROPS.forEach(p=>{p.vibes=computeVibes(p);p.minWeekly=Math.min(...p.rooms.map(r=>r.weekly))});
+
+/* ---------- distance estimate (demo) ---------- */
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h}
+function dist(name){const onsite=/on-site|rooftop|\(on-site\)|on campus|\(unsw\)/i.test(name);if(onsite)return{min:0,km:0,onsite:true};const h=hash(name);const min=3+h%16;return{min,km:Math.round(min*0.08*10)/10}}
+
+/* ---------- offers / pricing ---------- */
+function quote(p,room,weeks){
+  const base=room.weekly*weeks;
+  let total=base, effWeeklyNote=[];
+  const applied=[];
+  // choose best of percent / free_weeks
+  let bestPct=0,bestPctOffer=null,bestFree=0,bestFreeOffer=null,cashback=0,cashOffer=null;
+  p.offers.forEach(o=>{
+    if(o.kind==="percent"&&o.value>bestPct){bestPct=o.value;bestPctOffer=o}
+    if(o.kind==="free_weeks"&&(!o.from||weeks>=o.from)&&o.value>bestFree){bestFree=o.value;bestFreeOffer=o}
+    if(o.kind==="cashback"){cashback+=o.value;cashOffer=o}
+  });
+  const pctSave=base*bestPct/100;
+  const freeSave=room.weekly*bestFree;
+  if(freeSave>=pctSave&&bestFreeOffer){total-=freeSave;applied.push(bestFreeOffer)}
+  else if(bestPctOffer){total-=pctSave;applied.push(bestPctOffer)}
+  if(cashOffer){total-=cashback;applied.push(cashOffer)}
+  total=Math.max(0,total);
+  return {base, total, save:base-total, effWeekly:total/weeks, weeks, applied, allOffers:p.offers};
+}
+
+/* ---------- popover ---------- */
+const pop=$("#pop");let popFor=null;
+function showPop(el,html){pop.innerHTML=html;pop.classList.add("show");popFor=el;const r=el.getBoundingClientRect();pop.style.left="0px";pop.style.top="0px";const pr=pop.getBoundingClientRect();let left=Math.max(10,Math.min(r.left+r.width/2-pr.width/2,innerWidth-pr.width-10));let top=r.bottom+10;if(top+pr.height>innerHeight-10)top=r.top-pr.height-10;if(top<10)top=10;pop.style.left=left+"px";pop.style.top=top+"px"}
+function hidePop(){pop.classList.remove("show");popFor=null}
+function bindPop(el,b){let t;const open=()=>{clearTimeout(t);showPop(el,b())};el.addEventListener("mouseenter",open);el.addEventListener("mousemove",()=>{if(popFor!==el)open()});el.addEventListener("mouseleave",()=>t=setTimeout(hidePop,120));el.addEventListener("focus",open);el.addEventListener("blur",hidePop);el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();popFor===el?hidePop():showPop(el,b())})}
+pop.addEventListener("mouseenter",()=>pop.classList.add("show"));pop.addEventListener("mouseleave",hidePop);
+addEventListener("scroll",()=>popFor&&hidePop(),true);
+
+/* ---------- fx ---------- */
+function burst(x,y,n=10){const c=["#c4f962","#ffe27a","#9be02f","#1d1f1b","#b9f0e0"];for(let i=0;i<n;i++){const e=document.createElement("i");e.className="confetti";e.style.cssText=`left:${x}px;top:${y}px;background:${c[i%5]};border-radius:${i%2?"50%":"2px"};--x:${(Math.random()-.5)*200}px;--y:${-40-Math.random()*130+Math.random()*160}px`;document.body.appendChild(e);setTimeout(()=>e.remove(),1300)}}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),1700)}
+
+/* ---------- step 1: cities + neighbourhoods ---------- */
+function setSteps(){$("#sd1").className="stepdot on";$("#sd2").className="stepdot"+($("#detail").classList.contains("show")?" on":"");$("#sd3").className="stepdot"+(state.cmp.length?" on":"")}
+function cityProps(){return PROPS.filter(p=>p.city===state.city)}
+function buildCities(){
+  const el=$("#cities");el.innerHTML="";
+  D.cities.forEach(c=>{
+    const n=PROPS.filter(p=>p.city===c.slug).length;
+    const b=document.createElement("button");b.className="chip";b.type="button";b.setAttribute("aria-pressed",state.city===c.slug);
+    b.innerHTML=`${esc(c.name)}<small>${n}</small>`;
+    b.onclick=e=>{state.city=c.slug;state.nbh=null;buildCities();buildNbhs();renderList();burst(e.clientX,e.clientY,6)};
+    el.appendChild(b);
+  });
+  $("#cityLbl").textContent=D.cities.find(c=>c.slug===state.city).name;
+}
+function buildNbhs(){
+  const el=$("#nbhs");el.innerHTML="";
+  const map={};
+  cityProps().forEach(p=>{(map[p.nbh]=map[p.nbh]||{cat:p.nbhCat,n:0}).n++});
+  Object.entries(map).forEach(([nbh,o])=>{
+    const cat=D.nbhCategories[o.cat]||{e:"📍",desc:""};
+    const b=document.createElement("button");b.className="nbh";b.type="button";b.setAttribute("aria-pressed",state.nbh===nbh);
+    b.innerHTML=`<span class="cat">${cat.e} ${esc(o.cat)}</span><b>${esc(nbh)}</b><span class="n">${o.n} propert${o.n===1?"y":"ies"} · ${esc(cat.desc)}</span>`;
+    b.onclick=()=>{state.nbh=state.nbh===nbh?null:nbh;buildNbhs();renderList()};
+    el.appendChild(b);
+  });
+}
+function renderList(){
+  const el=$("#cards");let list=cityProps();if(state.nbh)list=list.filter(p=>p.nbh===state.nbh);
+  const cname=D.cities.find(c=>c.slug===state.city).name;
+  $("#listTitle").textContent=`Properties in ${state.nbh||cname}`;
+  $("#listSub").textContent=`${list.length} shown · from ${money(list[0]||PROPS[0], Math.min(...list.map(p=>p.minWeekly)))}/week`;
+  el.innerHTML="";
+  list.forEach((p,i)=>el.appendChild(card(p,i)));
+  setSteps();
+}
+function ring(score,size,sw){const r=(size-sw)/2,c=2*Math.PI*r;return `<svg viewBox="0 0 ${size} ${size}"><circle class="bg" cx="${size/2}" cy="${size/2}" r="${r}"/><circle class="fg" cx="${size/2}" cy="${size/2}" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-score/100)}"/></svg>`}
+function hue(p){const h=hash(p.id)%360;return[h,(h+50)%360]}
+function card(p,i){
+  const [a,b]=hue(p),v=p.vibes;
+  const el=document.createElement("article");el.className="pcard"+(state.cmp.includes(p.id)?" cmp":"");el.style.setProperty("--i",i);el.dataset.id=p.id;
+  el.innerHTML=`
+    <div class="cover"><div class="art" style="background:radial-gradient(circle at 25% 25%,hsla(${a},80%,80%,.9),transparent 55%),radial-gradient(circle at 80% 85%,hsla(${b},75%,72%,.9),transparent 55%),linear-gradient(135deg,hsl(${a},55%,88%),hsl(${b},55%,82%))"></div>
+      <span class="nb">📍 ${esc(p.nbh)}</span>
+      <div class="vscore" data-vscore>${ring(v.overall,62,5)}<div style="text-align:center"><div class="n">${v.overall}</div><div class="l">vibe</div></div></div>
+    </div>
+    <div class="pbody">
+      <h3>${esc(p.name)}</h3>
+      <div class="addr">${esc(p.address)}</div>
+      <div class="vchips">${v.top.map(t=>`<span class="vchip" data-vchip="${t.id}">${t.e} ${t.label} ${t.score}</span>`).join("")}</div>
+      <div class="prow"><span class="from">from</span><b>${money(p,p.minWeekly)}</b><span class="pw">/week</span></div>
+      <div class="billrow">${p.bills.map(x=>`<span class="bill">${esc(x)}</span>`).join("")}</div>
+      <div class="cact"><button class="explore">Explore &amp; book →</button><button class="addcmp ${state.cmp.includes(p.id)?"on":""}">${state.cmp.includes(p.id)?"✓ Added":"+ Compare"}</button></div>
+    </div>`;
+  el.querySelector(".explore").onclick=()=>openDetail(p.id);
+  el.querySelector(".vscore").onclick=()=>openDetail(p.id);
+  el.querySelector(".addcmp").onclick=e=>toggleCmp(p.id,e);
+  bindPop(el.querySelector("[data-vscore]"),()=>vibePop(p));
+  el.querySelectorAll("[data-vchip]").forEach(c=>bindPop(c,()=>{const id=c.dataset.vchip,vb=v[id],vd=VIBES.find(x=>x.id===id);return `<div class="ph">${vd.e} ${vd.label} · ${vb.score}/100</div><ul>${vb.f.map(f=>`<li>${esc(f)}</li>`).join("")}</ul><div class="pf">Scored live from this property's real facilities & nearby places.</div>`}));
+  setTimeout(()=>{const fg=el.querySelector(".fg");if(fg){const c=2*Math.PI*((62-5)/2);fg.style.transition="stroke-dashoffset 1s cubic-bezier(.2,.9,.3,1)";}},50);
+  return el;
+}
+function vibePop(p){const v=p.vibes;return `<div class="ph">✨ Vibe score ${v.overall}/100</div><ul>${VIBES.map(vd=>`<li>${vd.e} ${vd.label}: <b>${v[vd.id].score}</b></li>`).join("")}</ul><div class="pf">Data-backed: computed from on-site facilities, nearby amenities, transport and price.</div>`}
+
+/* ---------- detail view ---------- */
+let detailRoomOpen=null, detailTenure={}, detailAmTab="gyms";
+function openDetail(id){
+  const p=PROPS.find(x=>x.id===id);detailRoomOpen=null;detailAmTab="gyms";
+  renderDetail(p);
+  $("#detail").classList.add("show");$("#listWrap").style.display="none";$("#browse").style.display="none";
+  $("#detail").scrollIntoView({behavior:"smooth",block:"start"});setSteps();
+}
+function closeDetail(){$("#detail").classList.remove("show");$("#listWrap").style.display="";$("#browse").style.display="";$("#browse").scrollIntoView({behavior:"smooth"});setSteps()}
+const AM_TABS=[["gyms","💪","Gyms"],["cinemas","🎬","Cinema"],["cafes","☕","Cafés"],["restaurants","🍽️","Restaurants"],["parks","🌳","Parks & activities"],["transport","🚆","Transport"],["universities","🎓","Universities"],["supermarkets","🛒","Groceries"],["libraries","📖","Libraries"],["pubs","🍺","Pubs"],["healthcare","⚕️","Healthcare"]];
+const AM_EMOJI=Object.fromEntries(AM_TABS.map(t=>[t[0],t[1]]));
+function renderDetail(p){
+  const v=p.vibes;
+  $("#detail").innerHTML=`
+    <button class="back" id="backBtn">← Back to properties</button>
+    <div class="panel">
+      <div class="dhead">
+        <div class="dh-main">
+          <span class="nbh" style="display:inline-flex"><span class="cat" style="background:#f2f4ec;padding:3px 10px;border-radius:99px;font-size:12px">${(D.nbhCategories[p.nbhCat]||{e:"📍"}).e} ${esc(p.nbhCat)} · ${esc(p.nbh)}</span></span>
+          <h2 style="margin-top:8px">${esc(p.name)}</h2>
+          <div class="addr">📍 ${esc(p.address)}</div>
+          <div class="billrow" style="margin-top:12px">${p.bills.map(x=>`<span class="bill">✓ ${esc(x)} included</span>`).join("")}</div>
+          <div class="bookrow" style="margin-top:14px">
+            <button class="addcmp ${state.cmp.includes(p.id)?"on":""}" id="dAddCmp">${state.cmp.includes(p.id)?"✓ In comparison":"+ Add to compare"}</button>
+            <a class="redirect" href="${p.url}" target="_blank" rel="noopener">View live listing ↗</a>
+          </div>
+        </div>
+        <div class="dh-score">
+          <div class="bigring">${ring(v.overall,108,9)}<div class="n"><b>${v.overall}</b><span>Vibe score</span></div></div>
+        </div>
+      </div>
+      <div class="dgrid">
+        <div>
+          <div class="dsec">
+            <div class="h3">Room types — tap to see tenure, rent, offers &amp; discounted price</div>
+            <div class="flow">
+              <span class="flowstep"><b>1</b> Room type</span><span class="flowstep"><b>2</b> Tenure</span><span class="flowstep"><b>3</b> Weekly rent</span><span class="flowstep"><b>4</b> Offers</span><span class="flowstep"><b>5</b> Discounted price</span>
+            </div>
+            <div class="rooms" id="rooms"></div>
+          </div>
+        </div>
+        <div>
+          <div class="dsec">
+            <div class="h3">Why this vibe — data-backed score</div>
+            <div class="vbars" id="vbars"></div>
+          </div>
+          <div class="dsec">
+            <div class="h3">Your neighbourhood — ${esc(p.nbh)}</div>
+            <div class="amtabs" id="amtabs"></div>
+            <div class="amlist" id="amlist"></div>
+            <div class="distnote" id="distNote"></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  $("#backBtn").onclick=closeDetail;
+  $("#dAddCmp").onclick=e=>{toggleCmp(p.id,e);$("#dAddCmp").className="addcmp "+(state.cmp.includes(p.id)?"on":"");$("#dAddCmp").textContent=state.cmp.includes(p.id)?"✓ In comparison":"+ Add to compare"};
+  renderRooms(p);renderVbars(p,v);renderAmTabs(p);
+}
+function renderVbars(p,v){
+  const el=$("#vbars");el.innerHTML="";
+  VIBES.forEach(vd=>{
+    const vb=v[vd.id];
+    const d=document.createElement("div");d.className="vbar";d.tabIndex=0;
+    d.innerHTML=`<div class="t"><span>${vd.e} ${vd.label}</span><b>${vb.score}</b></div><div class="tr"><div class="fl"></div></div>`;
+    bindPop(d,()=>`<div class="ph">${vd.e} ${vd.label} · ${vb.score}/100</div><ul>${vb.f.map(f=>`<li>${esc(f)}</li>`).join("")}</ul><div class="pf">Logic per vibe: on-site facilities + nearby places + (for value) price & bills.</div>`);
+    el.appendChild(d);
+    setTimeout(()=>d.querySelector(".fl").style.width=vb.score+"%",60);
+  });
+}
+function renderRooms(p){
+  const el=$("#rooms");el.innerHTML="";
+  p.rooms.forEach((r,i)=>{
+    const open=detailRoomOpen===i;
+    if(!detailTenure[i])detailTenure[i]=p.tenures[0];
+    const row=document.createElement("div");row.className="room"+(open?" open":"");
+    row.innerHTML=`
+      <div class="rhead" data-i="${i}">
+        <div class="rn">${esc(r.name)}</div>
+        <div class="rb">${esc(r.bed)}</div>
+        <div class="rp"><b>${money(p,r.weekly)}</b><small>from / week</small></div>
+        <div class="caret" style="grid-row:1/3">▾</div>
+      </div>
+      <div class="rdetail"><div><div class="rdinner" data-inner="${i}"></div></div></div>`;
+    row.querySelector(".rhead").onclick=()=>{detailRoomOpen=open?null:i;renderRooms(p)};
+    el.appendChild(row);
+    if(open)fillRoom(p,r,i);
+  });
+}
+function fillRoom(p,r,i){
+  const inner=$(`[data-inner="${i}"]`);if(!inner)return;
+  const wk=detailTenure[i], q=quote(p,r,wk);
+  inner.innerHTML=`
+    <div style="font-size:12px;color:var(--mute);margin-top:12px">① Choose your tenure</div>
+    <div class="tenure">${p.tenures.map(t=>`<button class="tbtn ${t===wk?"on":""}" data-t="${t}">${t} weeks</button>`).join("")}</div>
+    <div class="quote-grid">
+      <div class="qcell"><div class="lab">② Weekly rent</div><div class="val">${money(p,r.weekly)}</div></div>
+      <div class="qcell"><div class="lab">③ Full rent · ${wk} weeks</div><div class="val">${money(p,q.base)}</div></div>
+      <div class="qcell save"><div class="lab">⑤ Discounted price</div><div class="val">${money(p,q.total)}${q.save>0?`<span class="was">${money(p,q.base)}</span>`:""}</div></div>
+      <div class="qcell"><div class="lab">Effective weekly</div><div class="val">${money1(p,q.effWeekly)}<span style="font-size:12px;font-weight:500;color:var(--mute)"> /wk</span></div></div>
+    </div>
+    <div class="offers">
+      <div style="font-size:12px;color:var(--mute)">④ Offers${q.save>0?` — you save <b style="color:var(--good)">${money(p,q.save)}</b>`:""}</div>
+      ${q.allOffers.map(o=>{const on=q.applied.includes(o);return `<div class="offer" style="${on?"":"opacity:.55"}"><span class="tag">${on?"Applied":"Offer"}</span><span>${esc(o.label)}${o.from?` <span style="color:var(--mute)">(min ${o.from} wks)</span>`:""}</span></div>`}).join("")}
+    </div>
+    <div class="bookrow">
+      <a class="bookbtn" href="${p.url}?room=${encodeURIComponent(r.name)}&weeks=${wk}#book" target="_blank" rel="noopener">Book ${esc(r.name)} →</a>
+      <span class="redirect">Redirects to the live room-type booking page.</span>
+    </div>`;
+  inner.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{detailTenure[i]=+b.dataset.t;fillRoom(p,r,i)});
+}
+function renderAmTabs(p){
+  const el=$("#amtabs");el.innerHTML="";
+  AM_TABS.filter(t=>p.amenities[t[0]]&&p.amenities[t[0]].length).forEach(([k,e,lbl])=>{
+    const b=document.createElement("button");b.className="amtab"+(detailAmTab===k?" on":"");
+    b.innerHTML=`${e} ${lbl} <span class="c">${p.amenities[k].length}</span>`;
+    b.onclick=()=>{detailAmTab=k;renderAmTabs(p)};el.appendChild(b);
+  });
+  if(!p.amenities[detailAmTab]||!p.amenities[detailAmTab].length)detailAmTab=AM_TABS.find(t=>p.amenities[t[0]]&&p.amenities[t[0]].length)[0];
+  renderAmList(p);
+}
+function renderAmList(p){
+  const el=$("#amlist"),items=(p.amenities[detailAmTab]||[]).map(n=>({n,d:dist(n)})).sort((a,b)=>a.d.min-b.d.min);
+  el.innerHTML=items.map((x,i)=>`<div class="amitem" style="animation-delay:${i*35}ms"><div class="ae">${AM_EMOJI[detailAmTab]}</div><div class="an">${esc(x.n)}</div><div class="ad">${x.d.onsite?`<b style="color:var(--good)">On-site</b><small>in building</small>`:`<b>${x.d.min} min</b><small>${x.d.km} km walk</small>`}</div></div>`).join("");
+  $("#distNote").textContent="Walking distances are demo estimates — they become exact once a Maps/Places API is connected. Amenity names are real, from the property's listing.";
+}
+
+/* ---------- compare ---------- */
+function toggleCmp(id,e){
+  const i=state.cmp.indexOf(id);
+  if(i>=0){state.cmp.splice(i,1);toast("Removed from comparison")}
+  else{if(state.cmp.length>=4){toast("Compare up to 4 properties");return}state.cmp.push(id);if(e)burst(e.clientX,e.clientY,7);toast(`Added — ${state.cmp.length}/4`)}
+  document.querySelectorAll(`.pcard[data-id="${id}"] .addcmp`).forEach(b=>{const on=state.cmp.includes(id);b.className="addcmp "+(on?"on":"");b.textContent=on?"✓ Added":"+ Compare"});
+  document.querySelectorAll(`.pcard[data-id="${id}"]`).forEach(c=>c.classList.toggle("cmp",state.cmp.includes(id)));
+  buildMsel();renderCompare();setSteps();
+}
+function buildMsel(){
+  const box=$("#mselBox"),dd=$("#mselDd");
+  box.querySelectorAll(".pill").forEach(x=>x.remove());
+  if(state.cmp.length)$("#mselPh").style.display="none";else $("#mselPh").style.display="";
+  state.cmp.forEach(id=>{const p=PROPS.find(x=>x.id===id);const s=document.createElement("span");s.className="pill";s.innerHTML=`${esc(p.name.split(" – ")[0].split(":")[0])}<button data-x="${id}">✕</button>`;box.appendChild(s);s.querySelector("button").onclick=e=>{e.stopPropagation();toggleCmp(id)}});
+  dd.innerHTML=PROPS.map(p=>{const sel=state.cmp.includes(p.id);return `<div class="ddopt ${sel?"sel":""}" data-opt="${p.id}"><span class="ck">${sel?"✓":""}</span><span><span class="nm">${esc(p.name)}</span><br><span class="ct">${esc(p.nbh)}, ${esc(D.cities.find(c=>c.slug===p.city).name)} · from ${money(p,p.minWeekly)}/wk</span></span></div>`}).join("");
+  dd.querySelectorAll("[data-opt]").forEach(o=>o.onclick=e=>{e.stopPropagation();toggleCmp(o.dataset.opt)});
+  $("#cmpClear").hidden=!state.cmp.length;
+}
+$("#mselBox").onclick=()=>$("#msel").classList.toggle("open");
+document.addEventListener("click",e=>{if(!e.target.closest("#msel"))$("#msel").classList.remove("open")});
+$("#cmpClear").onclick=()=>{state.cmp.slice().forEach(id=>toggleCmp(id))};
+function bedBuckets(p){const m={};p.rooms.forEach(r=>{const k=r.bed.split(" ")[0];if(!m[k]||r.weekly<m[k])m[k]=r.weekly});return m}
+function renderCompare(){
+  const body=$("#cmpBody");
+  if(!state.cmp.length){body.innerHTML=`<div style="padding:26px;border:2px dashed var(--line);border-radius:16px;text-align:center;color:var(--mute)">Pick properties above to compare them on vibe, price, bills, room types and amenities.</div>`;return}
+  const ps=state.cmp.map(id=>PROPS.find(x=>x.id===id));
+  const best=Math.min(...ps.map(p=>p.minWeekly));
+  const bestV=Math.max(...ps.map(p=>p.vibes.overall));
+  // room-type (bed) buckets union
+  const buckets=[...new Set(ps.flatMap(p=>Object.keys(bedBuckets(p))))];
+  const cell=f=>ps.map(p=>`<td>${f(p)}</td>`).join("");
+  body.innerHTML=`<div class="cmp-scroll"><table class="cmptable">
+    <thead><tr><th class="lab"></th>${ps.map(p=>`<td>${esc(p.name.split(" – ")[0].split(":")[0])}<br><span style="font-weight:400;color:var(--mute);font-size:12px">${esc(p.nbh)}, ${esc(D.cities.find(c=>c.slug===p.city).name)}</span><br><a class="cbook" href="${p.url}" target="_blank" rel="noopener">View</a></td>`).join("")}</tr></thead>
+    <tbody>
+      <tr><th class="lab">Vibe score</th>${cell(p=>`<span class="${p.vibes.overall===bestV?"best":""}">✨ ${p.vibes.overall}/100</span>`)}</tr>
+      <tr><th class="lab">From / week</th>${cell(p=>`<span class="${p.minWeekly===best?"best":""}">${money(p,p.minWeekly)}</span>`)}</tr>
+      <tr><th class="lab">Room types</th>${cell(p=>p.rooms.length)}</tr>
+      <tr><th class="lab">By room type<br><span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">cheapest per type</span></th>${cell(p=>{const bb=bedBuckets(p);return `<div class="rtmatrix">${buckets.map(k=>`<div class="rtrow"><span style="color:${bb[k]?"var(--ink2)":"var(--line)"}">${esc(k)}</span><b>${bb[k]?money(p,bb[k]):"—"}</b></div>`).join("")}</div>`})}</tr>
+      <tr><th class="lab">Bills included</th>${cell(p=>p.bills.length+" <span style='color:var(--mute);font-size:12px'>("+p.bills.join(", ")+")</span>")}</tr>
+      <tr><th class="lab">Gyms nearby</th>${cell(p=>p.amenities.gyms.length)}</tr>
+      <tr><th class="lab">Cafés / restaurants</th>${cell(p=>p.amenities.cafes.length+" / "+p.amenities.restaurants.length)}</tr>
+      <tr><th class="lab">Transport links</th>${cell(p=>p.amenities.transport.length)}</tr>
+      <tr><th class="lab">Top vibes</th>${cell(p=>p.vibes.top.map(t=>t.e).join(" "))}</tr>
+      <tr><th class="lab">Best offer</th>${cell(p=>esc(p.offers[0].label))}</tr>
+    </tbody></table></div>`;
+}
+
+/* ---------- init ---------- */
+buildCities();buildNbhs();renderList();buildMsel();renderCompare();setSteps();
+$("#foot").innerHTML="<b>Data</b>: the “personalised student journey” Google Sheet (AUS Data) and the per-property Google Docs it links to. Room-type names &amp; weekly prices, included bills, facilities, neighbourhoods and every nearby place (gyms, cinema, cafés, restaurants, parks, transport, universities) are real, taken from each property's own listing. Tenures, offers and discounted prices are modelled for the demo; walking distances are demo estimates until a Maps/Places API is connected; and the vibe score is computed live in the page from the real counts (one scoring rule per vibe).";
+</script>
+</body>
+</html>

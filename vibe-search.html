@@ -32,7 +32,7 @@ nav .links a:after{content:"";position:absolute;left:0;bottom:0;height:2px;width
 nav .links a:hover:after{width:100%}
 
 /* ---------- hero ---------- */
-.hero{position:relative;padding:70px 32px 40px;text-align:center;isolation:isolate;overflow:hidden}
+.hero{position:relative;padding:70px 32px 36px;text-align:center;isolation:isolate;overflow:hidden}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;z-index:-1;animation:float 14s ease-in-out infinite}
 .b1{width:420px;height:420px;background:var(--lime);left:-80px;top:-60px}
 .b2{width:380px;height:380px;background:#ffe27a;right:-60px;top:20px;animation-delay:-5s}
@@ -116,6 +116,18 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .go{padding:14px 26px;border-radius:99px;background:var(--lime);font-weight:700;transition:all .25s;box-shadow:0 8px 20px -6px rgba(155,224,47,.8)}
 .go:hover{transform:translateY(-2px) scale(1.04)}
 
+.step{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--lime);font-size:17px;margin-right:8px;vertical-align:middle}
+.personalise{max-width:1240px;margin:38px auto 0;padding:0 32px;text-align:center}
+.p-title{font-size:26px;letter-spacing:-.6px}
+.personalise .lead{color:var(--mute);margin:4px 0 6px}
+.vibe-toggle:disabled{background:#8a8d83;box-shadow:none;animation:none;cursor:not-allowed}
+.vibe-toggle:disabled:before,.vibe-toggle:disabled:after{animation:none}
+.vibe-toggle:disabled:hover{transform:none}
+.vibe-toggle.unlocked{animation:vibrate .5s 4}
+.nearby{margin-top:22px;padding-top:4px;border-top:1px dashed var(--line);animation:rise .5s both}
+.nb-grid{margin-top:12px}
+.nb-grid .chip{animation:chipIn .45s both cubic-bezier(.2,.9,.3,1);animation-delay:calc(var(--k)*30ms)}
+.chip.nb[aria-pressed=false]{opacity:.55;text-decoration:line-through}
 /* ---------- where: country -> cities ---------- */
 .where{max-width:1240px;margin:46px auto 0;padding:0 32px}
 .where-card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:26px 28px;box-shadow:var(--shadow)}
@@ -165,7 +177,7 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .active-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;min-height:8px}
 .tag{padding:5px 12px;border-radius:99px;background:var(--warm);font-size:13px;animation:rise .4s both}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:26px}
-@media(max-width:480px){.cards{grid-template-columns:1fr}.results,.hero,.where,.reco{padding-left:16px;padding-right:16px}}
+@media(max-width:480px){.cards{grid-template-columns:1fr}.results,.hero,.where,.reco,.personalise{padding-left:16px;padding-right:16px}}
 .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(40px) scale(.96);animation:cardIn .7s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i)*70ms);transition:box-shadow .3s,transform .3s,border-color .3s;will-change:transform}
 @keyframes cardIn{to{opacity:1;transform:none}}
 .pcard:hover{box-shadow:var(--shadow);transform:translateY(-6px)}
@@ -278,11 +290,37 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
   <h1>Find a home that fits <em>your vibe</em></h1>
   <p class="sub">Tell us your budget and lifestyle. We'll show only the rooms that actually match.</p>
 
+</header>
+
+<section class="where" aria-label="Where">
+  <div class="where-card">
+    <h2><span class="step">1</span> Where do you want to live?</h2>
+    <p class="lead">Pick a country, then a city. Add nearby cities if you are happy to commute.</p>
+    <div class="chips" id="countries"></div>
+    <div class="cities-wrap" id="citiesWrap"><div>
+      <div class="cities-head">
+        <h3 id="citiesTitle">Cities</h3>
+        <label class="csearch"><span>🔍</span><input id="csearch" placeholder="Search city…" autocomplete="off"></label>
+      </div>
+      <div class="chips city-grid" id="cities"></div>
+      <button class="morebtn" id="moreCities" hidden></button>
+      <div class="nearby" id="nearby" hidden>
+        <div class="cities-head"><h3 id="nearbyTitle">Nearby cities</h3></div>
+        <div class="chips" id="radius"></div>
+        <div class="chips nb-grid" id="nbList"></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="personalise" id="personalise" aria-label="Personalise">
+  <h2 class="p-title"><span class="step">2</span> Then make it yours</h2>
+  <p class="lead" id="pLead">Choose a country above to unlock your personalised search.</p>
   <div class="toggle-wrap">
-    <button class="vibe-toggle" id="toggle" aria-pressed="false" aria-controls="panelShell">
+    <button class="vibe-toggle" id="toggle" aria-pressed="false" aria-controls="panelShell" disabled>
       <span class="spark">✦</span><span id="toggleLabel">Personalise my search</span><span class="sw"></span>
     </button>
-    <span class="hint" id="hint">Tap to switch on — takes 20 seconds</span>
+    <span class="hint" id="hint">Pick a country first</span>
   </div>
 
   <div class="panel-shell" id="panelShell"><div>
@@ -309,22 +347,6 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
       </div>
     </section>
   </div></div>
-</header>
-
-<section class="where" aria-label="Where">
-  <div class="where-card">
-    <h2>Where do you want to live?</h2>
-    <p class="lead">Pick a country — its cities appear right below.</p>
-    <div class="chips" id="countries"></div>
-    <div class="cities-wrap" id="citiesWrap"><div>
-      <div class="cities-head">
-        <h3 id="citiesTitle">Cities</h3>
-        <label class="csearch"><span>🔍</span><input id="csearch" placeholder="Search city…" autocomplete="off"></label>
-      </div>
-      <div class="chips city-grid" id="cities"></div>
-      <button class="morebtn" id="moreCities" hidden></button>
-    </div></div>
-  </div>
 </section>
 
 <section class="reco" id="reco"></section>
@@ -373,8 +395,7 @@ const CONFIG = {
   site: "https://houseofstudent.com",
   propertyUrl: p => `${CONFIG.site}/${p.co}/${p.c}/${p.s}`,
   bookUrl: (p, r, wk) => `${CONFIG.propertyUrl(p)}?room=${r.rt}${wk?`&weeks=${wk}`:""}#book`,
-  maxCompare: 4,
-  defaultCountry: "uk"
+  maxCompare: 4
 };
 
 /* =====================================================================
@@ -406,9 +427,10 @@ const Api={
    ===================================================================== */
 const $=s=>document.querySelector(s);
 let DB, C={}, ALL=[], seq=0;
-const state={on:false,country:null,city:null,min:0,max:0,durations:[],vibes:[],perks:[],sort:"match",cmp:[]};
+const state={on:false,country:null,city:null,radius:0,nbOff:[],min:0,max:0,durations:[],vibes:[],perks:[],sort:"match",cmp:[]};
 const saved=new Set((()=>{try{return JSON.parse(localStorage.getItem("hos-saved")||"[]")}catch(e){return[]}})());
 const cur=()=>C[state.country];
+const RADII=[0,25,50,100];
 const money=n=>cur().cur+Math.round(n).toLocaleString();
 const per=()=>cur().period;                 // "week" | "month"
 const unitWord=n=>per()==="week"?(n===1?"week":"weeks"):(n===1?"month":"months");
@@ -419,6 +441,7 @@ function prepare(){
     c.cityList=c.cities.split(";").map(x=>{const [name,slug,n]=x.split("|");return{name,slug,n:+n}});
     c.cityBySlug=Object.fromEntries(c.cityList.map(x=>[x.slug,x]));
     c.total=c.cityList.reduce((a,x)=>a+x.n,0);
+    c.xy={};(c.ll||"").split(";").forEach(s=>{const [k,la,lo]=s.split("|");if(k)c.xy[k]=[+la,+lo]});
     C[c.slug]=c;
   });
   ALL=DB.properties;
@@ -432,6 +455,18 @@ function prepare(){
     const s=list.map(p=>p.minp).sort((a,b)=>a-b),p33=s[Math.floor((s.length-1)/3)];
     list.forEach(p=>{p.vibes=new Set(p.v||[]);if(p.minp<=p33)p.vibes.add("budget")});
   });
+}
+function km(a,b){const R=6371,r=Math.PI/180,dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r;
+  const x=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function nearby(){
+  if(!state.country||!state.city||!state.radius) return [];
+  const c=cur(),o=c.xy[state.city];if(!o) return [];
+  return c.cityList.filter(x=>x.slug!==state.city&&c.xy[x.slug]).map(x=>({...x,km:km(o,c.xy[x.slug])}))
+    .filter(x=>x.km<=state.radius).sort((a,b)=>a.km-b.km);
+}
+function allowedCities(){
+  if(!state.city) return null;
+  return new Set([state.city,...nearby().filter(x=>!state.nbOff.includes(x.slug)).map(x=>x.slug)]);
 }
 function bounds(){
   const rows=ALL.filter(p=>p.co===state.country).flatMap(p=>p.r);
@@ -449,9 +484,11 @@ function roomOk(r){
 }
 function compute(){
   const out=[];
+  if(!state.country) return [];
+  const allowed=allowedCities();
   for(const p of ALL){
     if(p.co!==state.country) continue;
-    if(state.city&&p.c!==state.city) continue;
+    if(allowed&&!allowed.has(p.c)) continue;
     if(state.on&&!state.perks.every(k=>p.perks.has(k))) continue;
     const rooms=p.r.filter(roomOk).slice().sort((a,b)=>a.mn-b.mn);
     if(!rooms.length) continue;
@@ -481,14 +518,44 @@ function buildCountries(){
     b.innerHTML=`<span class="country"><span class="fl">${FLAGS[c.slug]||"🌍"}</span>${esc(c.name)}<small>${c.total.toLocaleString()}</small></span>`;
     b.onclick=e=>{
       if(state.country===c.slug) return;
-      state.country=c.slug;state.city=null;state.durations=[];showAllCities=false;$("#csearch").value="";
-      resetBudget();buildCountries();buildCities();buildDurations();refresh(true);
+      const first=!state.country;
+      state.country=c.slug;state.city=null;state.radius=0;state.nbOff=[];state.durations=[];showAllCities=false;$("#csearch").value="";
+      resetBudget();buildCountries();buildCities();buildDurations();unlock(first);refresh(true);
       burst(e.clientX,e.clientY,8);
     };
     el.appendChild(b);
   });
 }
+function unlock(first){
+  const t=$("#toggle");t.disabled=false;
+  $("#pLead").textContent=`Tune ${cur().name} to your budget, stay length, perks and vibe.`;
+  if(!state.on) $("#hint").textContent="Tap to switch on — takes 20 seconds";
+  if(first){t.classList.remove("unlocked");void t.offsetWidth;t.classList.add("unlocked");setTimeout(()=>t.classList.remove("unlocked"),2200)}
+}
+function buildNearby(){
+  const box=$("#nearby");
+  if(!state.city){box.hidden=true;return}
+  const c=cur(),name=c.cityBySlug[state.city].name;box.hidden=false;
+  $("#nearbyTitle").textContent=`Nearby cities around ${name}`;
+  const rd=$("#radius");rd.innerHTML="";
+  RADII.forEach(r=>{
+    const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=r?`+ within ${r} km`:`Only ${name}`;
+    b.setAttribute("aria-pressed",state.radius===r);
+    b.onclick=()=>{state.radius=r;state.nbOff=[];buildNearby();refresh(true)};
+    rd.appendChild(b);
+  });
+  const list=nearby(),el=$("#nbList");el.innerHTML="";
+  if(state.radius&&!list.length) el.innerHTML=`<span class="hint">No other cities within ${state.radius} km of ${esc(name)}. Try a wider radius.</span>`;
+  list.forEach((x,k)=>{
+    const b=document.createElement("button");b.className="chip nb";b.type="button";b.style.setProperty("--k",k);
+    b.setAttribute("aria-pressed",!state.nbOff.includes(x.slug));
+    b.innerHTML=`${esc(x.name)}<small>${Math.round(x.km)} km · ${x.n}</small>`;
+    b.onclick=()=>{const a=state.nbOff,i=a.indexOf(x.slug);i<0?a.push(x.slug):a.splice(i,1);b.setAttribute("aria-pressed",i>=0);refresh(true)};
+    el.appendChild(b);
+  });
+}
 function buildCities(){
+  if(!state.country){$("#citiesWrap").classList.remove("open");return}
   const c=cur(),q=$("#csearch").value.trim().toLowerCase();
   $("#citiesWrap").classList.add("open");
   $("#citiesTitle").textContent=`Cities in ${c.name} · ${c.cityList.length}`;
@@ -500,9 +567,10 @@ function buildCities(){
     const b=document.createElement("button");b.className="chip";b.type="button";b.style.setProperty("--k",k);
     b.setAttribute("aria-pressed",state.city===x.slug);
     b.innerHTML=`${esc(x.name)}<small>${x.n}</small>`;
-    b.onclick=()=>{state.city=state.city===x.slug?null:x.slug;buildCities();refresh(true)};
+    b.onclick=()=>{state.city=state.city===x.slug?null:x.slug;state.radius=0;state.nbOff=[];buildCities();refresh(true)};
     el.appendChild(b);
   });
+  buildNearby();
   if(!shown.length) el.innerHTML=`<span class="hint">No city matches “${esc(q)}”.</span>`;
   const mb=$("#moreCities");mb.hidden=!collapsed&&!(showAllCities&&!q&&list.length>LIMIT);
   mb.textContent=collapsed?`Show all ${list.length} cities ↓`:"Show fewer ↑";
@@ -527,6 +595,7 @@ function syncRange(){
   $("#budgetLabel").textContent=per()==="week"?`≈ ${money(state.max*4.33)}/mo max`:`≈ ${money(state.max/4.33)}/wk max`;
 }
 function buildDurations(){
+  if(!state.country){$("#durations").innerHTML="";return}
   const counts={};
   ALL.filter(p=>p.co===state.country).forEach(p=>p.r.forEach(r=>r.wk.forEach(w=>counts[w]=(counts[w]||0)+1)));
   const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7).map(x=>+x[0]).sort((a,b)=>b-a);
@@ -704,21 +773,27 @@ async function render(){
   box.innerHTML=Array(3).fill('<div class="skel"></div>').join("");
   await new Promise(r=>setTimeout(r,320));
   if(my!==seq) return;
+  if(!state.country){
+    box.innerHTML=`<div class="empty"><div class="big">👆</div><h3>Start with a country</h3><p>Pick where you want to study in the box above and your matching rooms will appear here.</p></div>`;
+    $("#reco").innerHTML="";$("#rtitle").textContent="Student accommodation";$("#rsub").textContent="";return;
+  }
   const res=compute(),co=cur();
   box.innerHTML="";
   const cname=state.city?(co.cityBySlug[state.city]||{}).name:null;
-  $("#rtitle").textContent=`Student accommodation ${cname||co.name}`;
+  const nbN=nearby().filter(x=>!state.nbOff.includes(x.slug)).length;
+  $("#rtitle").textContent=`Student accommodation ${cname||co.name}${nbN?` + ${nbN} nearby`:""}`;
   $("#rsub").textContent=res.length?`${res.length} propert${res.length===1?"y":"ies"} · from ${money(Math.min(...res.map(r=>r.rooms[0].mn)))}/${co.period}`:"";
   renderReco(res);
   if(!res.length){
     const cityInfo=state.city&&co.cityBySlug[state.city];
-    const noSample=cityInfo&&!ALL.some(p=>p.co===state.country&&p.c===state.city);
+    const al=allowedCities();
+    const noSample=cityInfo&&!ALL.some(p=>p.co===state.country&&al&&al.has(p.c));
     box.innerHTML=noSample
       ?`<div class="empty"><div class="big">🗺️</div><h3>${cityInfo.n} propert${cityInfo.n===1?"y":"ies"} in ${esc(cityInfo.name)}</h3><p>This demo ships with a sample of listings and none of them are in ${esc(cityInfo.name)}. Connect the live API (<code>CONFIG.apiBase</code>) to list all ${cityInfo.n}.</p><button class="go" id="clr">Back to all of ${esc(co.name)}</button></div>`
       :`<div class="empty"><div class="big">🫠</div><h3>No rooms match every filter</h3><p>Try loosening one of these and we'll find you a home.</p>
         <button class="go" id="wid">Widen budget</button><button class="reset" id="clr">Clear perks &amp; city</button></div>`;
     const w=$("#wid");if(w)w.onclick=()=>{const b=bounds();$("#rmax").value=Math.min(+$("#rmax").max,state.max+b.step*8);$("#rmin").value=Math.max(+$("#rmin").min,state.min-b.step*4);syncRange();refresh(true)};
-    $("#clr").onclick=()=>{state.perks=[];state.city=null;state.durations=[];buildPerks();buildCities();buildDurations();refresh(true)};
+    $("#clr").onclick=()=>{state.perks=[];state.city=null;state.radius=0;state.nbOff=[];state.durations=[];buildPerks();buildCities();buildDurations();refresh(true)};
     return;
   }
   res.forEach((r,i)=>box.appendChild(card(r,i)));
@@ -753,9 +828,8 @@ let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("sh
 (async function init(){
   DB=await Api.catalog();prepare();
   $("#nCountries").textContent=DB.countries.length;
-  state.country=C[CONFIG.defaultCountry]?CONFIG.defaultCountry:DB.countries[0].slug;
   ["#rmin","#rmax"].forEach(s=>{$(s).oninput=()=>{syncRange();refresh()}});
-  resetBudget();buildCountries();buildCities();buildDurations();buildPerks();buildVibes();renderCompare();
+  buildCountries();buildCities();buildDurations();buildPerks();buildVibes();renderCompare();
   $("#csearch").oninput=()=>buildCities();
   $("#toggle").onclick=()=>{
     state.on=!state.on;const t=$("#toggle");t.setAttribute("aria-pressed",state.on);
@@ -765,7 +839,7 @@ let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("sh
     if(state.on){const r=t.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,22)}
     refresh(true);
   };
-  $("#reset").onclick=()=>{Object.assign(state,{durations:[],vibes:[],perks:[]});resetBudget();buildDurations();buildPerks();buildVibes();refresh(true);toast("Filters reset")};
+  $("#reset").onclick=()=>{Object.assign(state,{durations:[],vibes:[],perks:[]});if(state.country)resetBudget();buildDurations();buildPerks();buildVibes();refresh(true);toast("Filters reset")};
   $("#show").onclick=()=>$("#results").scrollIntoView({behavior:"smooth"});
   $("#sort").onchange=e=>{state.sort=e.target.value;refresh(true)};
   $("#fab").onclick=()=>$("#compare").scrollIntoView({behavior:"smooth",block:"center"});

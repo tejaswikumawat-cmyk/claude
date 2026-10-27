@@ -17,6 +17,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 a{color:inherit;text-decoration:none}
+input{font:inherit}
 
 /* ---------- nav ---------- */
 nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:24px;padding:14px 32px;background:rgba(251,251,247,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -49,7 +50,7 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 
 /* ---------- vibe toggle ---------- */
 .toggle-wrap{margin:38px auto 0;display:flex;flex-direction:column;align-items:center;gap:12px;animation:rise .8s .26s both}
-.vibe-toggle{position:relative;display:flex;align-items:center;gap:16px;padding:10px 12px 10px 26px;border-radius:99px;background:var(--ink);color:#fff;font-size:20px;font-weight:600;box-shadow:0 14px 40px -10px rgba(0,0,0,.45);transition:transform .25s,background .4s;animation:vibrate 3.6s infinite;overflow:visible}
+.vibe-toggle{position:relative;display:flex;align-items:center;gap:16px;padding:10px 12px 10px 26px;border-radius:99px;background:var(--ink);color:#fff;font-size:20px;font-weight:600;box-shadow:0 14px 40px -10px rgba(0,0,0,.45);transition:transform .25s,background .4s;animation:vibrate 3.6s infinite}
 .vibe-toggle:before,.vibe-toggle:after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--lime-d);opacity:0;animation:ring 2.4s infinite}
 .vibe-toggle:after{animation-delay:1.2s}
 .vibe-toggle:hover{transform:scale(1.05)}
@@ -75,12 +76,14 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .grid2{display:grid;grid-template-columns:1.1fr 1fr;gap:34px}
 @media(max-width:900px){.grid2{grid-template-columns:1fr}nav .links{display:none}.panel{padding:22px}}
 .sec{margin-bottom:26px}
-.sec h3{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline}
+.sec h3{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .sec h3 span{letter-spacing:0;text-transform:none;font-size:15px;color:var(--ink);font-weight:600}
 .chips{display:flex;flex-wrap:wrap;gap:9px}
 .chip{padding:9px 16px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-size:15px;transition:all .25s cubic-bezier(.3,1.5,.5,1);position:relative;overflow:hidden}
+.chip small{color:var(--mute);margin-left:4px;font-size:12px}
 .chip:hover{border-color:var(--lime-d);transform:translateY(-2px)}
 .chip[aria-pressed=true]{background:var(--ink);color:var(--lime);border-color:var(--ink);transform:scale(1.05)}
+.chip[aria-pressed=true] small{color:#b7bfa8}
 .chip[aria-pressed=true]:before{content:"✓ "}
 .vibes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:560px){.vibes{grid-template-columns:repeat(2,1fr)}}
@@ -113,8 +116,48 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .go{padding:14px 26px;border-radius:99px;background:var(--lime);font-weight:700;transition:all .25s;box-shadow:0 8px 20px -6px rgba(155,224,47,.8)}
 .go:hover{transform:translateY(-2px) scale(1.04)}
 
+/* ---------- where: country -> cities ---------- */
+.where{max-width:1240px;margin:46px auto 0;padding:0 32px}
+.where-card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:26px 28px;box-shadow:var(--shadow)}
+.where h2{font-size:26px;letter-spacing:-.6px;margin-bottom:4px}
+.where .lead{color:var(--mute);margin-bottom:18px}
+.country{display:flex;align-items:center;gap:8px}
+.country .fl{font-size:20px}
+.cities-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s cubic-bezier(.2,.9,.3,1)}
+.cities-wrap.open{grid-template-rows:1fr}
+.cities-wrap>div{overflow:hidden}
+.cities-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:24px 0 12px}
+.cities-head h3{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mute);font-weight:600}
+.csearch{margin-left:auto;display:flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px solid var(--line);border-radius:99px;background:#fff;min-width:230px;transition:border-color .2s,box-shadow .2s}
+.csearch:focus-within{border-color:var(--lime-d);box-shadow:0 0 0 4px rgba(196,249,98,.4)}
+.csearch input{border:0;outline:0;background:none;width:100%}
+.city-grid .chip{animation:chipIn .45s both cubic-bezier(.2,.9,.3,1);animation-delay:calc(var(--k)*18ms)}
+@keyframes chipIn{from{opacity:0;transform:translateY(10px) scale(.9)}}
+.morebtn{margin-top:12px;font-weight:600;text-decoration:underline;text-decoration-color:var(--lime-d);text-decoration-thickness:3px;text-underline-offset:4px}
+
+/* ---------- recommended (blocking deposit) ---------- */
+.reco{max-width:1240px;margin:34px auto 0;padding:0 32px}
+.reco-head{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.reco-head h2{font-size:26px;letter-spacing:-.6px}
+.reco-head p{color:var(--mute);max-width:620px;font-size:15px}
+.badge-star{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;background:var(--ink);color:var(--lime);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.rail{display:flex;gap:16px;overflow-x:auto;padding:6px 4px 18px;scroll-snap-type:x proximity}
+.rail::-webkit-scrollbar{height:8px}.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+.rc{flex:0 0 270px;scroll-snap-align:start;border-radius:20px;background:linear-gradient(160deg,#f3ffd0,#fff 60%);border:1.5px solid var(--lime-d);padding:18px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;opacity:0;animation:rise .6s forwards;animation-delay:calc(var(--k)*80ms);transition:transform .3s,box-shadow .3s}
+.rc:hover{transform:translateY(-6px) rotate(-.6deg);box-shadow:var(--shadow)}
+.rc:before{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:var(--lime);opacity:.5;filter:blur(8px)}
+.rc .amt{font-size:32px;font-weight:700;letter-spacing:-1px;line-height:1;position:relative}
+.rc .amt small{display:block;font-size:12px;font-weight:500;letter-spacing:.3px;color:var(--ink2);text-transform:uppercase;margin-bottom:4px}
+.rc h4{font-size:18px;font-weight:600;line-height:1.2;position:relative}
+.rc p{font-size:13.5px;color:var(--ink2);position:relative}
+.rc .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;position:relative;padding-top:6px}
+.rc .row a{padding:8px 14px;border-radius:99px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;transition:all .25s}
+.rc .row a:hover{background:var(--lime);color:var(--ink)}
+.rc .fromp{font-size:13px;color:var(--ink2)}.rc .fromp b{font-size:17px;color:var(--ink)}
+.noreco{padding:18px 22px;border:2px dashed var(--line);border-radius:18px;color:var(--mute)}
+
 /* ---------- results ---------- */
-.results{max-width:1240px;margin:0 auto;padding:30px 32px 90px}
+.results{max-width:1240px;margin:0 auto;padding:30px 32px 40px}
 .rhead{display:flex;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .rhead h2{font-size:32px;letter-spacing:-.8px}
 .rhead p{color:var(--mute)}
@@ -122,37 +165,37 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .active-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;min-height:8px}
 .tag{padding:5px 12px;border-radius:99px;background:var(--warm);font-size:13px;animation:rise .4s both}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:26px}
-@media(max-width:480px){.cards{grid-template-columns:1fr}.results,.hero{padding-left:16px;padding-right:16px}}
-.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(40px) scale(.96);animation:cardIn .7s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i)*70ms);transition:box-shadow .3s,transform .3s;will-change:transform}
+@media(max-width:480px){.cards{grid-template-columns:1fr}.results,.hero,.where,.reco{padding-left:16px;padding-right:16px}}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(40px) scale(.96);animation:cardIn .7s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i)*70ms);transition:box-shadow .3s,transform .3s,border-color .3s;will-change:transform}
 @keyframes cardIn{to{opacity:1;transform:none}}
 .pcard:hover{box-shadow:var(--shadow);transform:translateY(-6px)}
+.pcard.cmp{border-color:var(--ink);box-shadow:0 0 0 2px var(--lime)}
 .cover{height:190px;position:relative;overflow:hidden}
 .cover .art{position:absolute;inset:0;transition:transform .8s cubic-bezier(.2,.9,.3,1)}
 .pcard:hover .art{transform:scale(1.12) rotate(1.5deg)}
 .cover .city{position:absolute;left:14px;bottom:12px;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.9);font-size:13px;font-weight:500}
-.save{position:absolute;right:12px;top:12px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;transition:transform .3s cubic-bezier(.3,1.8,.5,1)}
-.save:hover{transform:scale(1.2)}
-.save svg{width:18px;fill:none;stroke:var(--ink);stroke-width:2;transition:all .3s}
-.save.on svg{fill:#ff5a6a;stroke:#ff5a6a}
-.save.on{animation:pop .5s}
+.cover .blk{position:absolute;left:14px;top:12px;padding:5px 12px;border-radius:99px;background:var(--ink);color:var(--lime);font-size:12px;font-weight:600}
+.iconbtns{position:absolute;right:12px;top:12px;display:flex;gap:8px}
+.ib{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.94);display:grid;place-items:center;transition:transform .3s cubic-bezier(.3,1.8,.5,1),background .25s}
+.ib:hover{transform:scale(1.2)}
+.ib svg{width:18px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:all .3s}
+.ib.save.on svg{fill:#ff5a6a;stroke:#ff5a6a}
+.ib.save.on{animation:pop .5s}
+.ib.compare.on{background:var(--ink);animation:pop .5s}
+.ib.compare.on svg{stroke:var(--lime)}
 .match{position:absolute;right:12px;bottom:10px;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center}
 .match svg{position:absolute;inset:0;transform:rotate(-90deg)}
 .match circle{fill:none;stroke-width:4.5}
 .match .bg{stroke:var(--line)}
 .match .fg{stroke:var(--lime-d);stroke-linecap:round;stroke-dasharray:157;stroke-dashoffset:157;transition:stroke-dashoffset 1.3s .4s cubic-bezier(.2,.9,.3,1)}
 .match span{font-size:14px;font-weight:700;position:relative}
-.match small{position:absolute;bottom:-1px;font-size:8px;letter-spacing:.5px;color:var(--mute);text-transform:uppercase}
 .pbody{padding:18px 20px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
-.ptitle{display:flex;justify-content:space-between;gap:8px;align-items:start}
-.ptitle h3{font-size:22px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
+.ptitle h3{font-size:21px;font-weight:600;letter-spacing:-.4px;line-height:1.2;word-break:break-word}
 .ptitle h3 a:hover{text-decoration:underline;text-decoration-color:var(--lime-d);text-decoration-thickness:3px}
-.rate{white-space:nowrap;font-size:14px;color:var(--ink2)}
 .meta{font-size:14px;color:var(--ink2)}
 .am{display:flex;flex-wrap:wrap;gap:6px}
 .am span{font-size:12.5px;padding:4px 10px;border-radius:99px;background:#f2f4ec;color:var(--ink2)}
 .am span.hit{background:var(--lime);color:var(--ink);font-weight:500}
-.offer{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)}
-.offer b{padding:4px 10px;border-radius:99px;background:var(--lime);font-weight:600;color:var(--ink)}
 .rooms{display:flex;flex-direction:column;gap:9px;margin-top:auto}
 .rooms h4{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mute);font-weight:600}
 .room{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 14px;border-radius:16px;background:#f8f9f3;border:1px solid transparent;transition:all .3s;opacity:0;animation:roomIn .5s forwards;animation-delay:calc(var(--i)*70ms + 400ms + var(--j)*90ms)}
@@ -163,7 +206,7 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .room .price{grid-row:1/3;grid-column:2;text-align:right}
 .room .price strong{font-size:20px;font-weight:700;display:block;line-height:1}
 .room .price small{font-size:12px;color:var(--mute)}
-.book{margin-top:6px;padding:7px 14px;border-radius:99px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;display:inline-block;position:relative;overflow:hidden;transition:all .25s}
+.book{margin-top:6px;padding:7px 14px;border-radius:99px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;display:inline-block;transition:all .25s}
 .book:hover{background:var(--lime);color:var(--ink);transform:scale(1.06)}
 .more{font-size:13px;color:var(--mute);text-align:center}
 .view{font-size:14px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
@@ -175,14 +218,50 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 .empty{grid-column:1/-1;text-align:center;padding:70px 20px;border:2px dashed var(--line);border-radius:var(--r);animation:rise .6s both}
 .empty .big{font-size:56px;display:inline-block;animation:vibrate 1.6s infinite}
 .empty h3{font-size:26px;margin:10px 0 6px}
-.empty p{color:var(--mute);margin-bottom:18px}
+.empty p{color:var(--mute);margin:0 auto 18px;max-width:520px}
 .empty .go{margin:0 5px}
+.foot{max-width:1240px;margin:0 auto;padding:0 32px 20px;color:var(--mute);font-size:13px}
+
+/* ---------- compare ---------- */
+.compare{max-width:1240px;margin:20px auto 120px;padding:0 32px;scroll-margin-top:90px}
+.cmp-card{background:var(--ink);color:#fff;border-radius:30px;padding:28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.cmp-card:before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:var(--lime);opacity:.14;filter:blur(60px);right:-80px;top:-100px}
+.cmp-head{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin-bottom:18px;position:relative}
+.cmp-head h2{font-size:28px;letter-spacing:-.6px}
+.cmp-head p{color:#aab09c;font-size:15px}
+.cmp-clear{margin-left:auto;padding:9px 18px;border-radius:99px;border:1.5px solid #4a4d45;font-size:14px;transition:all .25s}
+.cmp-clear:hover{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.cmp-empty{padding:34px;border:2px dashed #4a4d45;border-radius:20px;text-align:center;color:#aab09c;position:relative}
+.cmp-empty svg{width:34px;stroke:var(--lime);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:8px}
+.cmp-scroll{overflow-x:auto;position:relative}
+.cmp-table{width:100%;border-collapse:separate;border-spacing:0;min-width:640px}
+.cmp-table th,.cmp-table td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid #34372f;font-size:15px}
+.cmp-table th.lab{color:#aab09c;font-weight:500;width:150px;font-size:13px;letter-spacing:.8px;text-transform:uppercase}
+.cmp-table tr:last-child td,.cmp-table tr:last-child th{border-bottom:0}
+.cmp-col{animation:rise .5s both}
+.cmp-col .nm{font-weight:600;font-size:17px;line-height:1.2}
+.cmp-col .ct{color:#aab09c;font-size:13px;margin-top:2px}
+.cmp-col .rm{float:right;width:26px;height:26px;border-radius:50%;background:#34372f;display:grid;place-items:center;font-size:14px;transition:all .2s;margin-left:6px}
+.cmp-col .rm:hover{background:#ff5a6a;transform:rotate(90deg)}
+.cmp-col a.bk{display:inline-block;margin-top:10px;padding:7px 14px;border-radius:99px;background:var(--lime);color:var(--ink);font-weight:600;font-size:13px}
+.best{color:var(--lime);font-weight:700}
+.yes{color:var(--lime)}.no{color:#6c7062}
+
+.fab{position:fixed;right:24px;bottom:24px;z-index:80;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:99px;background:var(--lime);color:var(--ink);font-weight:700;font-size:16px;box-shadow:0 12px 34px -8px rgba(110,170,10,.9);overflow:hidden;transform:translateY(120px) scale(.8);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.3,1.5,.5,1),opacity .3s;animation:glow 1.6s infinite}
+.fab.show{transform:none;opacity:1;pointer-events:auto}
+.fab:after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);transform:skewX(-20deg);animation:shine 2.2s infinite}
+.fab .dot{width:10px;height:10px;border-radius:50%;background:var(--ink);animation:blink 1s infinite}
+.fab .arr{display:inline-block;animation:bob 1s infinite}
+.fab:hover{transform:scale(1.06)}
+@keyframes shine{0%{left:-80px}60%,100%{left:130%}}
+@keyframes glow{0%,100%{box-shadow:0 12px 34px -8px rgba(110,170,10,.9),0 0 0 0 rgba(196,249,98,.8)}50%{box-shadow:0 12px 34px -8px rgba(110,170,10,.9),0 0 0 14px rgba(196,249,98,0)}}
+@keyframes blink{50%{opacity:.15}}
+@keyframes bob{50%{transform:translateY(4px)}}
 
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;transition:transform .5s cubic-bezier(.3,1.5,.5,1);z-index:99}
 .toast.show{transform:translate(-50%,0)}
 .confetti{position:fixed;width:10px;height:14px;z-index:99;pointer-events:none;animation:fall 1.2s forwards ease-out}
 @keyframes fall{to{transform:translate(var(--x),var(--y)) rotate(720deg);opacity:0}}
-.sr{position:absolute;left:-9999px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -195,7 +274,7 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
 
 <header class="hero">
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-  <div class="eyebrow"><b></b> 2.5M+ verified student rooms · 10M+ students served</div>
+  <div class="eyebrow"><b></b> Verified student rooms in <span id="nCountries">10</span> countries</div>
   <h1>Find a home that fits <em>your vibe</em></h1>
   <p class="sub">Tell us your budget and lifestyle. We'll show only the rooms that actually match.</p>
 
@@ -210,20 +289,17 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
     <section class="panel" aria-label="Personalise">
       <div class="grid2">
         <div>
-          <div class="sec"><h3>Where <span id="cityLabel"></span></h3><div class="chips" id="cities"></div></div>
           <div class="sec">
-            <h3>Weekly budget <span id="budgetLabel"></span></h3>
+            <h3 id="budgetTitle">Budget <span id="budgetLabel"></span></h3>
             <div class="price-big" id="priceBig"></div>
             <div class="range" id="range"><div class="track"></div><div class="fill" id="fill"></div>
               <input type="range" id="rmin" aria-label="Minimum rent"><input type="range" id="rmax" aria-label="Maximum rent"></div>
           </div>
-          <div class="sec"><h3>Room type</h3><div class="chips" id="roomTypes"></div></div>
           <div class="sec"><h3>Stay length</h3><div class="chips" id="durations"></div></div>
+          <div class="sec"><h3>Property perks</h3><div class="chips" id="perks"></div></div>
         </div>
         <div>
           <div class="sec"><h3>Your vibe <span>pick any</span></h3><div class="vibes" id="vibes"></div></div>
-          <div class="sec"><h3>Room must-haves</h3><div class="chips" id="roomFeatures"></div></div>
-          <div class="sec"><h3>Property perks</h3><div class="chips" id="amenities"></div></div>
         </div>
       </div>
       <div class="live">
@@ -235,180 +311,245 @@ h1 em:after{content:"";position:absolute;left:-4px;right:-4px;bottom:4px;height:
   </div></div>
 </header>
 
+<section class="where" aria-label="Where">
+  <div class="where-card">
+    <h2>Where do you want to live?</h2>
+    <p class="lead">Pick a country — its cities appear right below.</p>
+    <div class="chips" id="countries"></div>
+    <div class="cities-wrap" id="citiesWrap"><div>
+      <div class="cities-head">
+        <h3 id="citiesTitle">Cities</h3>
+        <label class="csearch"><span>🔍</span><input id="csearch" placeholder="Search city…" autocomplete="off"></label>
+      </div>
+      <div class="chips city-grid" id="cities"></div>
+      <button class="morebtn" id="moreCities" hidden></button>
+    </div></div>
+  </div>
+</section>
+
+<section class="reco" id="reco"></section>
+
 <main class="results" id="results">
   <div class="rhead">
     <div><h2 id="rtitle">Student accommodation</h2><p id="rsub"></p></div>
     <select id="sort" aria-label="Sort">
-      <option value="match">Best vibe match</option>
+      <option value="match">Best match</option>
       <option value="low">Price: low to high</option>
       <option value="high">Price: high to low</option>
-      <option value="rating">Top rated</option>
+      <option value="near">Closest to centre</option>
+      <option value="block">Lowest blocking deposit</option>
     </select>
   </div>
   <div class="active-tags" id="tags"></div>
   <div class="cards" id="cards"></div>
 </main>
+<p class="foot" id="foot"></p>
+
+<section class="compare" id="compare" aria-label="Compare properties">
+  <div class="cmp-card">
+    <div class="cmp-head">
+      <div><h2>Compare properties <span id="cmpCount" style="color:var(--lime)"></span></h2><p>Tap the ⇄ icon on up to 4 property cards to line them up side by side.</p></div>
+      <button class="cmp-clear" id="cmpClear" hidden>Clear all</button>
+    </div>
+    <div id="cmpBody"></div>
+  </div>
+</section>
+
+<button class="fab" id="fab" aria-label="Jump to comparison"><span class="dot"></span><span id="fabLabel">Compare</span><span class="arr">↓</span></button>
 <div class="toast" id="toast"></div>
 
+<script src="vibe-data.js"></script>
 <script>
 /* =====================================================================
-   1. CONFIG — the only block you edit to connect the real database
+   1. CONFIG — the only block you edit to connect a live backend
    ---------------------------------------------------------------------
-   Set apiBase to your backend. The page calls:
-     GET {apiBase}/filters      -> schema (see SAMPLE_SCHEMA shape below)
-     GET {apiBase}/properties   -> array of properties (see SAMPLE_DATA)
-   Query params sent to /properties: city,min,max,roomTypes,durations,
-   roomFeatures,amenities,vibes  (comma separated). If you return the
-   full list instead, client-side filtering below gives identical results.
+   apiBase = null  -> uses window.HOS_DATA (BigQuery snapshot, vibe-data.js)
+   apiBase = "..." -> GET {apiBase}/catalog  must return the same shape as HOS_DATA:
+                      { countries:[{slug,name,cur,unit,period,cities}], properties:[...] }
+   See vibe-data.js for the exact property fields.
    ===================================================================== */
 const CONFIG = {
-  apiBase: null,                        // e.g. "https://houseofstudent.com/api"
+  apiBase: null,
   site: "https://houseofstudent.com",
-  propertyUrl: p => `${CONFIG.site}/${p.country}/${p.citySlug}/${p.slug}`,
-  bookUrl: (p, r, weeks) => `${CONFIG.propertyUrl(p)}?room=${encodeURIComponent(r.id)}${weeks?`&weeks=${weeks}`:""}#book`,
-  currency: "£"
+  propertyUrl: p => `${CONFIG.site}/${p.co}/${p.c}/${p.s}`,
+  bookUrl: (p, r, wk) => `${CONFIG.propertyUrl(p)}?room=${r.rt}${wk?`&weeks=${wk}`:""}#book`,
+  maxCompare: 4,
+  defaultCountry: "uk"
 };
 
 /* =====================================================================
-   2. SAMPLE DATA — same shape your DB rows should be mapped to
+   2. DATA
    ===================================================================== */
-const SAMPLE_SCHEMA = {
-  budget:{min:100,max:500,step:5},
-  roomTypes:["Private Room","Ensuite","Studio","Twin Room","Premium Studio"],
-  durations:[51,44,39,25],
-  vibes:[
-    {id:"social",e:"🎉",label:"Social",desc:"Events, big common rooms"},
-    {id:"quiet",e:"📚",label:"Quiet study",desc:"Calm floors, study pods"},
-    {id:"budget",e:"💸",label:"Budget smart",desc:"Bills in, no surprises"},
-    {id:"luxury",e:"✨",label:"Luxury",desc:"Hotel-style living"},
-    {id:"fit",e:"💪",label:"Fit & active",desc:"Gym, yoga, bike storage"},
-    {id:"creative",e:"🎨",label:"Creative",desc:"Studios, rooftop, cinema"}
-  ],
-  roomFeatures:[
-    {id:"ensuite",label:"Ensuite bathroom"},{id:"kitchen",label:"Private kitchen"},
-    {id:"double",label:"Double bed"},{id:"aircon",label:"Air-con"},{id:"desk",label:"Large desk"}
-  ],
-  amenities:[
-    {id:"billsIncl",label:"Bills included"},{id:"gym",label:"Gym"},{id:"cinema",label:"Cinema room"},
-    {id:"study",label:"Study rooms"},{id:"freeCancel",label:"Free cancellation"},
-    {id:"noVisaNoPay",label:"No visa · No pay"},{id:"pets",label:"Pet friendly"},{id:"security",label:"24h security"}
-  ]
-};
-const R=(id,type,price,feat,weeks,beds)=>({id,type,price,features:feat,weeks});
-const SAMPLE_DATA = [
- {id:1,slug:"north-lodge",name:"North Lodge",country:"uk",city:"London",citySlug:"london",rating:4.1,reviews:231,distance:"7.75 miles from centre",verified:true,
-  hue:[120,175],vibes:["social","fit","budget"],amenities:["billsIncl","gym","freeCancel","noVisaNoPay","security","cinema"],offers:2,cashback:1247,
-  rooms:[R("nl-1","Private Room",271,["desk"],[45,38,16,15]),R("nl-2","Ensuite",318,["ensuite","double","desk"],[45,38]),R("nl-3","Studio",402,["ensuite","kitchen","double","desk"],[51,44])]},
- {id:2,slug:"emily-bowes-court",name:"Emily Bowes Court",country:"uk",city:"London",citySlug:"london",rating:3.5,reviews:283,distance:"7.74 miles from centre",verified:true,
-  hue:[8,38],vibes:["social","budget","creative"],amenities:["billsIncl","freeCancel","noVisaNoPay","security","study"],offers:3,cashback:2927,
-  rooms:[R("eb-1","Private Room",284,["desk"],[51,44,39,45]),R("eb-2","Twin Room",229,["desk"],[51,44]),R("eb-3","Ensuite",349,["ensuite","double"],[51,44,39])]},
- {id:3,slug:"the-orchard-london",name:"The Orchard",country:"uk",city:"London",citySlug:"london",rating:4.6,reviews:412,distance:"1.9 miles from centre",verified:true,
-  hue:[255,300],vibes:["luxury","quiet","creative"],amenities:["billsIncl","gym","cinema","study","security","freeCancel"],offers:1,cashback:900,
-  rooms:[R("or-1","Ensuite",455,["ensuite","double","aircon","desk"],[51,44]),R("or-2","Studio",589,["ensuite","kitchen","double","aircon","desk"],[51,44,39]),R("or-3","Premium Studio",712,["ensuite","kitchen","double","aircon","desk"],[51])]},
- {id:4,slug:"kings-yard",name:"King's Yard",country:"uk",city:"London",citySlug:"london",rating:4.3,reviews:176,distance:"3.2 miles from centre",verified:true,
-  hue:[190,230],vibes:["quiet","fit"],amenities:["gym","study","security","pets","freeCancel"],offers:0,cashback:0,
-  rooms:[R("ky-1","Private Room",262,["desk"],[44,39,25]),R("ky-2","Ensuite",331,["ensuite","desk"],[51,44]),R("ky-3","Studio",438,["ensuite","kitchen","double"],[51,44])]},
- {id:5,slug:"canal-street-house",name:"Canal Street House",country:"uk",city:"Manchester",citySlug:"manchester",rating:4.4,reviews:530,distance:"0.8 miles from centre",verified:true,
-  hue:[75,140],vibes:["social","budget","creative"],amenities:["billsIncl","cinema","gym","noVisaNoPay","freeCancel","security"],offers:2,cashback:760,
-  rooms:[R("cs-1","Private Room",148,["desk"],[51,44,39]),R("cs-2","Ensuite",189,["ensuite","double","desk"],[51,44]),R("cs-3","Studio",245,["ensuite","kitchen","double"],[51,44,39])]},
- {id:6,slug:"vimto-lofts",name:"Vimto Lofts",country:"uk",city:"Manchester",citySlug:"manchester",rating:4.7,reviews:318,distance:"0.4 miles from centre",verified:true,
-  hue:[330,20],vibes:["luxury","creative","social"],amenities:["billsIncl","gym","cinema","study","security","pets"],offers:1,cashback:500,
-  rooms:[R("vl-1","Ensuite",262,["ensuite","double","aircon","desk"],[51,44]),R("vl-2","Premium Studio",389,["ensuite","kitchen","double","aircon","desk"],[51,44])]},
- {id:7,slug:"oxford-road-hall",name:"Oxford Road Hall",country:"uk",city:"Manchester",citySlug:"manchester",rating:3.9,reviews:204,distance:"1.5 miles from centre",verified:true,
-  hue:[40,90],vibes:["budget","quiet"],amenities:["billsIncl","study","freeCancel","security"],offers:0,cashback:0,
-  rooms:[R("or2-1","Private Room",119,["desk"],[51,44,39,25]),R("or2-2","Twin Room",104,["desk"],[51,44]),R("or2-3","Ensuite",157,["ensuite","desk"],[51,44])]},
- {id:8,slug:"jewel-quarter-point",name:"Jewel Quarter Point",country:"uk",city:"Birmingham",citySlug:"birmingham",rating:4.2,reviews:289,distance:"0.9 miles from centre",verified:true,
-  hue:[160,210],vibes:["budget","social","fit"],amenities:["billsIncl","gym","noVisaNoPay","freeCancel","security"],offers:1,cashback:420,
-  rooms:[R("jq-1","Private Room",131,["desk"],[51,44,39]),R("jq-2","Ensuite",172,["ensuite","double","desk"],[51,44]),R("jq-3","Studio",228,["ensuite","kitchen","double"],[51])]},
- {id:9,slug:"bull-ring-heights",name:"Bull Ring Heights",country:"uk",city:"Birmingham",citySlug:"birmingham",rating:4.5,reviews:147,distance:"0.2 miles from centre",verified:true,
-  hue:[270,320],vibes:["luxury","quiet","fit"],amenities:["billsIncl","gym","study","cinema","security","pets"],offers:2,cashback:610,
-  rooms:[R("bh-1","Ensuite",214,["ensuite","double","aircon","desk"],[51,44]),R("bh-2","Premium Studio",334,["ensuite","kitchen","double","aircon","desk"],[51,44,39])]},
- {id:10,slug:"royal-mile-residence",name:"Royal Mile Residence",country:"uk",city:"Edinburgh",citySlug:"edinburgh",rating:4.6,reviews:366,distance:"0.3 miles from centre",verified:true,
-  hue:[215,260],vibes:["luxury","creative","quiet"],amenities:["billsIncl","cinema","study","security","freeCancel"],offers:1,cashback:800,
-  rooms:[R("rm-1","Ensuite",268,["ensuite","double","desk"],[51,44]),R("rm-2","Studio",346,["ensuite","kitchen","double","desk"],[51,44,39]),R("rm-3","Premium Studio",455,["ensuite","kitchen","double","aircon","desk"],[51])]},
- {id:11,slug:"arthurs-seat-house",name:"Arthur's Seat House",country:"uk",city:"Edinburgh",citySlug:"edinburgh",rating:4.0,reviews:198,distance:"1.1 miles from centre",verified:true,
-  hue:[100,160],vibes:["budget","social","fit"],amenities:["billsIncl","gym","freeCancel","noVisaNoPay","pets"],offers:0,cashback:0,
-  rooms:[R("as-1","Private Room",172,["desk"],[51,44,39]),R("as-2","Twin Room",149,["desk"],[51,44]),R("as-3","Ensuite",216,["ensuite","double"],[51,44])]},
- {id:12,slug:"headingley-court",name:"Headingley Court",country:"uk",city:"Leeds",citySlug:"leeds",rating:4.3,reviews:251,distance:"2.4 miles from centre",verified:true,
-  hue:[50,100],vibes:["social","budget","fit"],amenities:["billsIncl","gym","cinema","noVisaNoPay","freeCancel"],offers:2,cashback:540,
-  rooms:[R("hc-1","Private Room",122,["desk"],[51,44,39]),R("hc-2","Ensuite",159,["ensuite","double","desk"],[51,44]),R("hc-3","Studio",214,["ensuite","kitchen","double"],[51,44])]},
- {id:13,slug:"university-quarter-leeds",name:"University Quarter",country:"uk",city:"Leeds",citySlug:"leeds",rating:4.5,reviews:122,distance:"0.6 miles from centre",verified:true,
-  hue:[290,340],vibes:["quiet","luxury","creative"],amenities:["billsIncl","study","gym","security","pets"],offers:1,cashback:300,
-  rooms:[R("uq-1","Ensuite",196,["ensuite","double","aircon","desk"],[51,44]),R("uq-2","Premium Studio",298,["ensuite","kitchen","double","aircon","desk"],[51,44])]}
+const FLAGS={uk:"🇬🇧",fr:"🇫🇷",de:"🇩🇪",au:"🇦🇺",ire:"🇮🇪",us:"🇺🇸",nz:"🇳🇿",es:"🇪🇸",ca:"🇨🇦",ae:"🇦🇪"};
+const VIBES=[
+  {id:"social",e:"🎉",label:"Social",desc:"Common rooms, events, nightlife"},
+  {id:"quiet",e:"📚",label:"Quiet study",desc:"Calm, study-friendly"},
+  {id:"budget",e:"💸",label:"Budget smart",desc:"Cheapest third in the country"},
+  {id:"luxury",e:"✨",label:"Premium",desc:"Premium & rooftop living"},
+  {id:"fit",e:"💪",label:"Fit & active",desc:"Gym, sport, green space"},
+  {id:"creative",e:"🎨",label:"Creative",desc:"Cinema, arts, studios"}
 ];
-
-/* =====================================================================
-   3. DATA ADAPTER — API when configured, sample data otherwise
-   ===================================================================== */
-const Api = {
-  async schema(){
-    if(!CONFIG.apiBase) return {...SAMPLE_SCHEMA, cities:[...new Set(SAMPLE_DATA.map(p=>p.city))]};
-    return (await fetch(`${CONFIG.apiBase}/filters`)).json();
-  },
-  async properties(f){
-    if(!CONFIG.apiBase){ await new Promise(r=>setTimeout(r,380)); return SAMPLE_DATA; }
-    const q=new URLSearchParams({city:f.city||"",min:f.min,max:f.max,roomTypes:f.roomTypes.join(),durations:f.durations.join(),
-      roomFeatures:f.roomFeatures.join(),amenities:f.amenities.join(),vibes:f.vibes.join()});
-    return (await fetch(`${CONFIG.apiBase}/properties?${q}`)).json();
+const PERKS=[
+  {id:"bl",label:"Blocking deposit"},{id:"nv",label:"No visa · No pay"},{id:"np",label:"No place · No pay"},
+  {id:"ip",label:"Pay in instalments"},{id:"pl",label:"Pay later"},
+  {id:"gy",label:"Gym"},{id:"cn",label:"Cinema"},{id:"st",label:"Study space"}
+];
+const Api={
+  async catalog(){
+    if(!CONFIG.apiBase) return window.HOS_DATA;
+    return (await fetch(`${CONFIG.apiBase}/catalog`)).json();
   }
 };
 
 /* =====================================================================
-   4. STATE + MATCHING ENGINE
+   3. STATE + HELPERS
    ===================================================================== */
-const $=s=>document.querySelector(s), money=n=>CONFIG.currency+Math.round(n).toLocaleString();
-let schema, data=[], seq=0;
-const state={on:false,city:null,min:0,max:0,roomTypes:[],durations:[],vibes:[],roomFeatures:[],amenities:[],sort:"match"};
-const saved=new Set(JSON.parse((()=>{try{return localStorage.getItem("hos-saved")}catch(e){}})()||"[]"));
+const $=s=>document.querySelector(s);
+let DB, C={}, ALL=[], seq=0;
+const state={on:false,country:null,city:null,min:0,max:0,durations:[],vibes:[],perks:[],sort:"match",cmp:[]};
+const saved=new Set((()=>{try{return JSON.parse(localStorage.getItem("hos-saved")||"[]")}catch(e){return[]}})());
+const cur=()=>C[state.country];
+const money=n=>cur().cur+Math.round(n).toLocaleString();
+const per=()=>cur().period;                 // "week" | "month"
+const unitWord=n=>per()==="week"?(n===1?"week":"weeks"):(n===1?"month":"months");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+function prepare(){
+  DB.countries.forEach(c=>{
+    c.cityList=c.cities.split(";").map(x=>{const [name,slug,n]=x.split("|");return{name,slug,n:+n}});
+    c.cityBySlug=Object.fromEntries(c.cityList.map(x=>[x.slug,x]));
+    c.total=c.cityList.reduce((a,x)=>a+x.n,0);
+    C[c.slug]=c;
+  });
+  ALL=DB.properties;
+  const byCountry={};
+  ALL.forEach(p=>{
+    p.minp=Math.min(...p.r.map(r=>+r.mn));
+    p.perks=new Set([...(p.pk||[]),...(p.bl>0?["bl"]:[])]);
+    (byCountry[p.co]=byCountry[p.co]||[]).push(p);
+  });
+  Object.entries(byCountry).forEach(([co,list])=>{
+    const s=list.map(p=>p.minp).sort((a,b)=>a-b),p33=s[Math.floor((s.length-1)/3)];
+    list.forEach(p=>{p.vibes=new Set(p.v||[]);if(p.minp<=p33)p.vibes.add("budget")});
+  });
+}
+function bounds(){
+  const rows=ALL.filter(p=>p.co===state.country).flatMap(p=>p.r);
+  const step=per()==="week"?5:25;
+  if(!rows.length)return{lo:0,hi:step*20,step};
+  return{lo:Math.floor(Math.min(...rows.map(r=>+r.mn))/step)*step,hi:Math.ceil(Math.max(...rows.map(r=>+r.mx))/step)*step,step};
+}
+
+/* ---------- matching engine ---------- */
 function roomOk(r){
-  if(state.on){
-    if(r.price<state.min||r.price>state.max) return false;
-    if(state.roomTypes.length&&!state.roomTypes.includes(r.type)) return false;
-    if(state.durations.length&&!state.durations.some(w=>r.weeks.includes(w))) return false;
-    if(!state.roomFeatures.every(f=>r.features.includes(f))) return false;
-  }
+  if(!state.on) return true;
+  if(+r.mn>state.max||+r.mx<state.min) return false;
+  if(state.durations.length&&!state.durations.some(w=>r.wk.includes(w))) return false;
   return true;
 }
 function compute(){
   const out=[];
-  for(const p of data){
-    if(state.city&&p.city!==state.city) continue;
-    if(state.on&&!state.amenities.every(a=>p.amenities.includes(a))) continue;
-    const rooms=p.rooms.filter(roomOk).sort((a,b)=>a.price-b.price);
+  for(const p of ALL){
+    if(p.co!==state.country) continue;
+    if(state.city&&p.c!==state.city) continue;
+    if(state.on&&!state.perks.every(k=>p.perks.has(k))) continue;
+    const rooms=p.r.filter(roomOk).slice().sort((a,b)=>a.mn-b.mn);
     if(!rooms.length) continue;
     let score=0;
     if(state.on){
-      const v=state.vibes.length?state.vibes.filter(x=>p.vibes.includes(x)).length/state.vibes.length:0.6;
-      const mid=(state.min+state.max)/2, price=Math.max(0,1-Math.abs(rooms[0].price-mid)/(state.max-state.min||1));
-      score=Math.round(55*v+25*price+20*(p.rating/5));
-    } else score=Math.round(p.rating/5*100);
+      const v=state.vibes.length?state.vibes.filter(x=>p.vibes.has(x)).length/state.vibes.length:.6;
+      const mid=(state.min+state.max)/2,span=(state.max-state.min)||1;
+      const fit=Math.max(0,1-Math.abs(rooms[0].mn-mid)/span);
+      score=Math.round(100*(.6*v+.25*fit+.15*Math.min(1,p.perks.size/6)));
+    }
     out.push({p,rooms,score});
   }
-  const s=state.sort;
-  out.sort((a,b)=>s==="low"?a.rooms[0].price-b.rooms[0].price:s==="high"?b.rooms[0].price-a.rooms[0].price:s==="rating"?b.p.rating-a.p.rating:b.score-a.score);
+  const s=state.sort,low=x=>x.rooms[0].mn;
+  out.sort((a,b)=>s==="low"?low(a)-low(b):s==="high"?low(b)-low(a):s==="near"?(a.p.d||99)-(b.p.d||99):s==="block"?((a.p.bl||1e9)-(b.p.bl||1e9)):(b.score-a.score)||low(a)-low(b));
   return out;
 }
 
 /* =====================================================================
-   5. UI BUILDERS
+   4. UI: WHERE (country -> cities)
    ===================================================================== */
-function chips(el,items,key,multi=true,labelOf=x=>x.label||x,idOf=x=>x.id||x){
-  el.innerHTML="";
-  items.forEach(it=>{
+let showAllCities=false;
+function buildCountries(){
+  const el=$("#countries");el.innerHTML="";
+  DB.countries.slice().sort((a,b)=>b.total-a.total).forEach(c=>{
     const b=document.createElement("button");b.className="chip";b.type="button";
-    const id=idOf(it);b.textContent=labelOf(it);b.setAttribute("aria-pressed",multi?state[key].includes(id):state[key]===id);
-    b.onclick=()=>{
-      if(multi){const a=state[key],i=a.indexOf(id);i<0?a.push(id):a.splice(i,1)}
-      else state[key]=state[key]===id?null:id;
-      chips(el,items,key,multi,labelOf,idOf);refresh();
+    b.setAttribute("aria-pressed",state.country===c.slug);
+    b.innerHTML=`<span class="country"><span class="fl">${FLAGS[c.slug]||"🌍"}</span>${esc(c.name)}<small>${c.total.toLocaleString()}</small></span>`;
+    b.onclick=e=>{
+      if(state.country===c.slug) return;
+      state.country=c.slug;state.city=null;state.durations=[];showAllCities=false;$("#csearch").value="";
+      resetBudget();buildCountries();buildCities();buildDurations();refresh(true);
+      burst(e.clientX,e.clientY,8);
     };
+    el.appendChild(b);
+  });
+}
+function buildCities(){
+  const c=cur(),q=$("#csearch").value.trim().toLowerCase();
+  $("#citiesWrap").classList.add("open");
+  $("#citiesTitle").textContent=`Cities in ${c.name} · ${c.cityList.length}`;
+  let list=c.cityList.filter(x=>!q||x.name.toLowerCase().includes(q));
+  const LIMIT=14,collapsed=!showAllCities&&!q&&list.length>LIMIT;
+  const shown=collapsed?list.slice(0,LIMIT):list;
+  const el=$("#cities");el.innerHTML="";
+  shown.forEach((x,k)=>{
+    const b=document.createElement("button");b.className="chip";b.type="button";b.style.setProperty("--k",k);
+    b.setAttribute("aria-pressed",state.city===x.slug);
+    b.innerHTML=`${esc(x.name)}<small>${x.n}</small>`;
+    b.onclick=()=>{state.city=state.city===x.slug?null:x.slug;buildCities();refresh(true)};
+    el.appendChild(b);
+  });
+  if(!shown.length) el.innerHTML=`<span class="hint">No city matches “${esc(q)}”.</span>`;
+  const mb=$("#moreCities");mb.hidden=!collapsed&&!(showAllCities&&!q&&list.length>LIMIT);
+  mb.textContent=collapsed?`Show all ${list.length} cities ↓`:"Show fewer ↑";
+  mb.onclick=()=>{showAllCities=!showAllCities;buildCities()};
+}
+
+/* =====================================================================
+   5. UI: personalise panel
+   ===================================================================== */
+function resetBudget(){
+  const {lo,hi,step}=bounds();
+  ["#rmin","#rmax"].forEach(s=>{const e=$(s);e.min=lo;e.max=hi;e.step=step});
+  $("#rmin").value=lo;$("#rmax").value=hi;syncRange();
+  $("#budgetTitle").firstChild.textContent=`Budget per ${per()} `;
+}
+function syncRange(){
+  const lo=+$("#rmin").min,hi=+$("#rmin").max,a=+$("#rmin").value,b=+$("#rmax").value;
+  state.min=Math.min(a,b);state.max=Math.max(a,b);
+  const pct=v=>hi===lo?0:(v-lo)/(hi-lo)*100;
+  $("#fill").style.left=pct(state.min)+"%";$("#fill").style.right=(100-pct(state.max))+"%";
+  $("#priceBig").innerHTML=`${money(state.min)} – ${money(state.max)}<small> /${per()}</small>`;
+  $("#budgetLabel").textContent=per()==="week"?`≈ ${money(state.max*4.33)}/mo max`:`≈ ${money(state.max/4.33)}/wk max`;
+}
+function buildDurations(){
+  const counts={};
+  ALL.filter(p=>p.co===state.country).forEach(p=>p.r.forEach(r=>r.wk.forEach(w=>counts[w]=(counts[w]||0)+1)));
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7).map(x=>+x[0]).sort((a,b)=>b-a);
+  const el=$("#durations");el.innerHTML="";
+  top.forEach(w=>{
+    const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=`${w} ${unitWord(w)}`;
+    b.setAttribute("aria-pressed",state.durations.includes(w));
+    b.onclick=()=>{const a=state.durations,i=a.indexOf(w);i<0?a.push(w):a.splice(i,1);b.setAttribute("aria-pressed",i<0);refresh()};
+    el.appendChild(b);
+  });
+}
+function buildPerks(){
+  const el=$("#perks");el.innerHTML="";
+  PERKS.forEach(k=>{
+    const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=k.label;
+    b.setAttribute("aria-pressed",state.perks.includes(k.id));
+    b.onclick=()=>{const a=state.perks,i=a.indexOf(k.id);i<0?a.push(k.id):a.splice(i,1);b.setAttribute("aria-pressed",i<0);refresh()};
     el.appendChild(b);
   });
 }
 function buildVibes(){
   const el=$("#vibes");el.innerHTML="";
-  schema.vibes.forEach(v=>{
+  VIBES.forEach(v=>{
     const b=document.createElement("button");b.className="vibe";b.type="button";
     b.setAttribute("aria-pressed",state.vibes.includes(v.id));
     b.innerHTML=`<span class="e">${v.e}</span><b>${v.label}</b><small>${v.desc}</small>`;
@@ -416,123 +557,188 @@ function buildVibes(){
     el.appendChild(b);
   });
 }
-function syncRange(){
-  const {min,max}=schema.budget,lo=+$("#rmin").value,hi=+$("#rmax").value;
-  state.min=Math.min(lo,hi);state.max=Math.max(lo,hi);
-  const pct=v=>(v-min)/(max-min)*100;
-  $("#fill").style.left=pct(state.min)+"%";$("#fill").style.right=(100-pct(state.max))+"%";
-  $("#priceBig").innerHTML=`${money(state.min)} – ${money(state.max)}<small> /week</small>`;
-  $("#budgetLabel").textContent=`≈ ${money(state.max*4.33)}/mo max`;
-}
-function tween(el,to){
-  const from=+el.dataset.v||0;el.dataset.v=to;const t0=performance.now();
-  (function f(t){const k=Math.min(1,(t-t0)/500),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(f)})(t0);
-}
 
 /* =====================================================================
-   6. RENDER
+   6. RENDER: cards, recommended rail, compare
    ===================================================================== */
-const heart='<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg>';
+const ICON={
+  heart:'<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg>',
+  cmp:'<svg viewBox="0 0 24 24"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg>'
+};
+function hueOf(id){const a=(id*47)%360;return[a,(a+55)%360]}
 function cover(p){
-  const [a,b]=p.hue;
-  return `<div class="art" style="background:
-    radial-gradient(circle at 20% 25%,hsla(${a},85%,78%,.95),transparent 55%),
-    radial-gradient(circle at 85% 80%,hsla(${b},80%,70%,.95),transparent 55%),
-    linear-gradient(135deg,hsl(${a},60%,88%),hsl(${b},60%,82%))">
+  const [a,b]=hueOf(p.i);
+  return `<div class="art" style="background:radial-gradient(circle at 20% 25%,hsla(${a},85%,78%,.95),transparent 55%),radial-gradient(circle at 85% 80%,hsla(${b},80%,70%,.95),transparent 55%),linear-gradient(135deg,hsl(${a},60%,88%),hsl(${b},60%,82%))">
     <svg width="100%" height="100%" viewBox="0 0 360 190" preserveAspectRatio="xMidYMax slice"><g fill="rgba(29,31,27,.82)">
-    <rect x="30" y="${70+p.id%4*8}" width="64" height="150"/><rect x="104" y="${40+p.id%3*10}" width="78" height="180"/><rect x="192" y="${80+p.id%5*6}" width="58" height="140"/><rect x="260" y="${55+p.id%4*7}" width="72" height="170"/></g>
-    <g fill="rgba(255,236,150,.95)">${Array.from({length:22},(_,i)=>`<rect x="${42+(i%4)*20+Math.floor(i/11)*0}" y="${100+Math.floor(i/4)*20}" width="8" height="10" opacity="${(i*7+p.id)%3?0.9:0.15}"/>`).join("")}
-    </g></svg></div>`;
+    <rect x="30" y="${70+p.i%4*8}" width="64" height="150"/><rect x="104" y="${40+p.i%3*10}" width="78" height="180"/><rect x="192" y="${80+p.i%5*6}" width="58" height="140"/><rect x="260" y="${55+p.i%4*7}" width="72" height="170"/></g>
+    <g fill="rgba(255,236,150,.95)">${Array.from({length:22},(_,i)=>`<rect x="${42+(i%4)*20}" y="${100+Math.floor(i/4)*20}" width="8" height="10" opacity="${(i*7+p.i)%3?0.9:0.15}"/>`).join("")}</g></svg></div>`;
+}
+const cityName=p=>(C[p.co].cityBySlug[p.c]||{name:p.c}).name;
+const dist=p=>p.d?`${p.d} ${C[p.co].unit} from centre`:"";
+function perkLabels(p,hits){
+  return PERKS.filter(k=>p.perks.has(k.id)&&k.id!=="bl").sort((a,b)=>hits.has(b.id)-hits.has(a.id)).slice(0,6)
+    .map(k=>`<span class="${hits.has(k.id)?"hit":""}">${k.label}</span>`).join("");
 }
 function card({p,rooms,score},i){
-  const hits=new Set(state.on?state.amenities:[]);
-  const am=p.amenities.slice().sort((a,b)=>hits.has(b)-hits.has(a)).slice(0,6)
-    .map(id=>{const m=schema.amenities.find(x=>x.id===id);return m?`<span class="${hits.has(id)?"hit":""}">${m.label}</span>`:""}).join("");
-  const shown=rooms.slice(0,3), extra=rooms.length-shown.length;
-  const el=document.createElement("article");el.className="pcard";el.style.setProperty("--i",i);
+  const co=C[p.co],hits=new Set(state.on?state.perks:[]);
+  const shown=rooms.slice(0,3),extra=rooms.length-shown.length;
+  const el=document.createElement("article");el.className="pcard"+(state.cmp.includes(p.i)?" cmp":"");el.style.setProperty("--i",i);el.dataset.id=p.i;
   el.innerHTML=`
-   <div class="cover">${cover(p)}<span class="city">📍 ${p.city}</span>
-     <button class="save ${saved.has(p.id)?"on":""}" aria-label="Save">${heart}</button>
-     <div class="match" title="Vibe match"><svg viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="25"/><circle class="fg" cx="29" cy="29" r="25"/></svg><span>${score}%</span></div></div>
+   <div class="cover">${cover(p)}
+     ${p.bl>0?`<span class="blk">Block it for ${money(p.bl)}</span>`:""}
+     <span class="city">📍 ${esc(cityName(p))}</span>
+     <div class="iconbtns">
+       <button class="ib compare ${state.cmp.includes(p.i)?"on":""}" aria-label="Add to comparison" title="Compare">${ICON.cmp}</button>
+       <button class="ib save ${saved.has(p.i)?"on":""}" aria-label="Save" title="Save">${ICON.heart}</button>
+     </div>
+     ${state.on?`<div class="match" title="Vibe match"><svg viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="25"/><circle class="fg" cx="29" cy="29" r="25"/></svg><span>${score}%</span></div>`:""}
+   </div>
    <div class="pbody">
-     <div class="ptitle"><h3><a href="${CONFIG.propertyUrl(p)}">${p.name}, ${p.city}</a></h3><span class="rate">★ ${p.rating} (${p.reviews})</span></div>
-     <div class="meta">${p.verified?"✔ Verified · ":""}${p.distance}</div>
-     <div class="am">${am}</div>
-     ${p.offers?`<div class="offer"><b>${p.offers} Offer${p.offers>1?"s":""}</b> Up to ${money(p.cashback)} cashback</div>`:""}
+     <div class="ptitle"><h3><a href="${CONFIG.propertyUrl(p)}">${esc(p.n)}</a></h3></div>
+     <div class="meta">${esc(cityName(p))}, ${esc(co.name)}${p.d?" · "+dist(p):""}</div>
+     <div class="am">${perkLabels(p,hits)}</div>
      <div class="rooms"><h4>${rooms.length} matching room type${rooms.length>1?"s":""}</h4>
-     ${shown.map((r,j)=>{const w=state.durations.find(d=>r.weeks.includes(d))||r.weeks[0];
-       const ff=r.features.map(id=>(schema.roomFeatures.find(x=>x.id===id)||{}).label).filter(Boolean).join(" · ");
-       return `<div class="room" style="--j:${j}"><div><b>${r.type}</b></div><div class="rf">${ff||"Standard room"} · ${w} weeks</div>
-        <div class="price"><strong data-to="${r.price}">${money(0)}</strong><small>per week</small><br><a class="book" href="${CONFIG.bookUrl(p,r,w)}">Book now</a></div></div>`}).join("")}
+     ${shown.map((r,j)=>{
+       const w=state.durations.find(d=>r.wk.includes(d))||r.wk[0];
+              return `<div class="room" style="--j:${j}"><div><b>Room type #${r.rt}</b></div>
+        <div class="rf">${r.wk.slice(0,3).map(x=>x+" "+unitWord(x)).join(" · ")}${r.dep>0?` · deposit ${money(r.dep)}`:""}</div>
+        <div class="price"><strong data-to="${r.mn}">${money(0)}</strong><small>per ${co.period}${+r.mn===+r.mx?"":" · up to "+money(r.mx)}</small><br><a class="book" href="${CONFIG.bookUrl(p,r,w)}">Book now</a></div></div>`}).join("")}
      ${extra>0?`<div class="more">+ ${extra} more room type${extra>1?"s":""} at this property</div>`:""}</div>
      <a class="view" href="${CONFIG.propertyUrl(p)}">View property <i>→</i></a>
    </div>`;
   el.querySelector(".save").onclick=e=>{
-    const b=e.currentTarget;saved.has(p.id)?saved.delete(p.id):saved.add(p.id);b.classList.toggle("on");
+    const b=e.currentTarget;saved.has(p.i)?saved.delete(p.i):saved.add(p.i);b.classList.toggle("on");
     try{localStorage.setItem("hos-saved",JSON.stringify([...saved]))}catch(_){}
-    if(saved.has(p.id))burst(e.clientX,e.clientY,8);toast(saved.has(p.id)?"Saved to your shortlist":"Removed from shortlist");
+    if(saved.has(p.i))burst(e.clientX,e.clientY,8);toast(saved.has(p.i)?"Saved to your shortlist":"Removed from shortlist");
   };
-  // 3D tilt
+  el.querySelector(".compare").onclick=e=>toggleCompare(p.i,e);
   el.addEventListener("mousemove",e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
     el.style.transform=`perspective(900px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-6px)`});
   el.addEventListener("mouseleave",()=>el.style.transform="");
-  // animate rings + prices once card is revealed
-  requestAnimationFrame(()=>setTimeout(()=>{
-    el.querySelector(".fg").style.strokeDashoffset=157*(1-score/100);
+  setTimeout(()=>{
+    const fg=el.querySelector(".fg");if(fg)fg.style.strokeDashoffset=157*(1-score/100);
     el.querySelectorAll("[data-to]").forEach(s=>{const to=+s.dataset.to,t0=performance.now();
       (function f(t){const k=Math.min(1,(t-t0)/900),e=1-Math.pow(1-k,3);s.textContent=money(to*e);if(k<1)requestAnimationFrame(f)})(t0)});
-  },i*70+450));
+  },i*70+450);
   return el;
 }
 
+function renderReco(res){
+  const el=$("#reco"),co=cur();
+  const list=res.filter(r=>r.p.bl>0).sort((a,b)=>a.p.bl-b.p.bl||a.rooms[0].mn-b.rooms[0].mn).slice(0,10);
+  const where=state.city?cityName(list[0]?list[0].p:{co:state.country,c:state.city}):co.name;
+  let body;
+  if(!list.length){
+    body=`<div class="noreco">No properties with a blocking deposit match here${state.on?" with your current filters":""}. Try another city — blocking deposits are currently set up for UK and Ireland properties.</div>`;
+  } else {
+    body=`<div class="rail">${list.map((r,k)=>`
+      <article class="rc" style="--k:${k}">
+        <div class="amt"><small>Reserve with</small>${money(r.p.bl)}</div>
+        <h4>${esc(r.p.n)}</h4>
+        <p>${esc(cityName(r.p))}${r.p.d?" · "+dist(r.p):""}</p>
+        <div class="row"><span class="fromp">from <b>${money(r.rooms[0].mn)}</b>/${co.period}</span>
+        <a href="${CONFIG.bookUrl(r.p,r.rooms[0],r.rooms[0].wk[0])}">Block room →</a></div>
+      </article>`).join("")}</div>`;
+  }
+  el.innerHTML=`<div class="reco-head"><div><span class="badge-star">★ Recommended</span><h2 style="margin-top:8px">Hold your room with a small blocking deposit</h2>
+    <p>Reserve a room with a small blocking deposit now and settle the rest later. Properties in ${esc(where)} that offer this option, smallest deposit first.</p></div></div>${body}`;
+}
+
+/* ---------- compare ---------- */
+const findP=id=>ALL.find(p=>p.i===id);
+function toggleCompare(id,e){
+  const i=state.cmp.indexOf(id);
+  if(i>=0){state.cmp.splice(i,1);toast("Removed from comparison")}
+  else{
+    if(state.cmp.length>=CONFIG.maxCompare){toast(`You can compare up to ${CONFIG.maxCompare} properties`);return}
+    state.cmp.push(id);if(e)burst(e.clientX,e.clientY,8);toast(`Added to comparison (${state.cmp.length}/${CONFIG.maxCompare})`);
+  }
+  document.querySelectorAll(`.pcard[data-id="${id}"]`).forEach(c=>{
+    const on=state.cmp.includes(id);c.classList.toggle("cmp",on);c.querySelector(".compare").classList.toggle("on",on);
+  });
+  renderCompare();
+}
+function renderCompare(){
+  const n=state.cmp.length,body=$("#cmpBody");
+  $("#cmpCount").textContent=n?`(${n}/${CONFIG.maxCompare})`:"";
+  $("#cmpClear").hidden=!n;
+  $("#fabLabel").textContent=`Compare (${n})`;
+  updateFab();
+  if(!n){
+    body.innerHTML=`<div class="cmp-empty">${ICON.cmp}<div>Nothing selected yet. Hit the ⇄ icon on any property card and it will appear here.</div></div>`;
+    return;
+  }
+  const ps=state.cmp.map(findP).filter(Boolean);
+  const mins=ps.map(p=>p.minp),best=Math.min(...mins);
+  const bestD=Math.min(...ps.map(p=>p.d||1e9));
+  const cell=(f)=>ps.map((p,k)=>`<td class="cmp-col" style="animation-delay:${k*60}ms">${f(p)}</td>`).join("");
+  const sym=p=>C[p.co].cur;
+  const yn=(p,k)=>p.perks.has(k)?'<span class="yes">✔</span>':'<span class="no">—</span>';
+  body.innerHTML=`<div class="cmp-scroll"><table class="cmp-table"><tbody>
+    <tr><th class="lab"></th>${ps.map((p,k)=>`<td class="cmp-col" style="animation-delay:${k*60}ms"><button class="rm" data-rm="${p.i}" aria-label="Remove">✕</button>
+      <div class="nm"><a href="${CONFIG.propertyUrl(p)}">${esc(p.n)}</a></div><div class="ct">${esc(cityName(p))}, ${esc(C[p.co].name)}</div>
+      <a class="bk" href="${CONFIG.bookUrl(p,p.r.slice().sort((a,b)=>a.mn-b.mn)[0],p.r[0].wk[0])}">Book now</a></td>`).join("")}</tr>
+    <tr><th class="lab">From price</th>${cell(p=>{const c=C[p.co];return `<span class="${ps.length>1&&p.minp===best&&ps.every(q=>q.co===p.co)?"best":""}">${c.cur}${Math.round(p.minp).toLocaleString()}</span> <small style="color:#aab09c">/${c.period}</small>`})}</tr>
+    <tr><th class="lab">Room types</th>${cell(p=>p.r.length+(p.r.length>=4?"+":""))}</tr>
+    <tr><th class="lab">Stay lengths</th>${cell(p=>{const c=C[p.co];return [...new Set(p.r.flatMap(r=>r.wk))].sort((a,b)=>b-a).slice(0,4).map(w=>w+" "+(c.period==="week"?"wk":"mo")).join(", ")})}</tr>
+    <tr><th class="lab">To centre</th>${cell(p=>p.d?`<span class="${p.d===bestD&&ps.length>1?"best":""}">${p.d} ${C[p.co].unit}</span>`:"—")}</tr>
+    <tr><th class="lab">Blocking deposit</th>${cell(p=>p.bl>0?`${sym(p)}${p.bl}`:'<span class="no">—</span>')}</tr>
+    ${PERKS.filter(k=>k.id!=="bl").map(k=>`<tr><th class="lab">${k.label}</th>${cell(p=>yn(p,k.id))}</tr>`).join("")}
+    <tr><th class="lab">Vibes</th>${cell(p=>[...p.vibes].map(v=>(VIBES.find(x=>x.id===v)||{}).e).join(" ")||'<span class="no">—</span>')}</tr>
+  </tbody></table></div>`;
+  body.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>toggleCompare(+b.dataset.rm));
+}
+let cmpVisible=false;
+function updateFab(){$("#fab").classList.toggle("show",state.cmp.length>0&&!cmpVisible)}
+new IntersectionObserver(es=>{cmpVisible=es[0].isIntersecting;updateFab()},{threshold:.25}).observe($("#compare"));
+
+/* =====================================================================
+   7. RENDER ORCHESTRATION
+   ===================================================================== */
+function tween(el,to){
+  const from=+el.dataset.v||0;el.dataset.v=to;const t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/500),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(f)})(t0);
+}
 async function render(){
   const my=++seq,box=$("#cards");
   box.innerHTML=Array(3).fill('<div class="skel"></div>').join("");
-  if(CONFIG.apiBase||!data.length) data=await Api.properties({city:state.city,...state});
-  else await new Promise(r=>setTimeout(r,320));
+  await new Promise(r=>setTimeout(r,320));
   if(my!==seq) return;
-  const res=compute();
+  const res=compute(),co=cur();
   box.innerHTML="";
-  $("#rtitle").textContent=state.city?`Student accommodation ${state.city}`:"Student accommodation";
-  $("#rsub").textContent=`${res.length} propert${res.length===1?"y":"ies"} · from ${res.length?money(Math.min(...res.map(r=>r.rooms[0].price))):"–"}/week`;
+  const cname=state.city?(co.cityBySlug[state.city]||{}).name:null;
+  $("#rtitle").textContent=`Student accommodation ${cname||co.name}`;
+  $("#rsub").textContent=res.length?`${res.length} propert${res.length===1?"y":"ies"} · from ${money(Math.min(...res.map(r=>r.rooms[0].mn)))}/${co.period}`:"";
+  renderReco(res);
   if(!res.length){
-    box.innerHTML=`<div class="empty"><div class="big">🫠</div><h3>No rooms match every filter</h3><p>Try loosening one of these and we'll find you a home.</p>
-      <button class="go" id="wid">Add +£50 to budget</button><button class="reset" id="clr">Clear amenities</button></div>`;
-    $("#wid").onclick=()=>{setBudget(state.min,Math.min(schema.budget.max,state.max+50));refresh()};
-    $("#clr").onclick=()=>{state.amenities=[];state.roomFeatures=[];buildChips();refresh()};
+    const cityInfo=state.city&&co.cityBySlug[state.city];
+    const noSample=cityInfo&&!ALL.some(p=>p.co===state.country&&p.c===state.city);
+    box.innerHTML=noSample
+      ?`<div class="empty"><div class="big">🗺️</div><h3>${cityInfo.n} propert${cityInfo.n===1?"y":"ies"} in ${esc(cityInfo.name)}</h3><p>This demo ships with a sample of listings and none of them are in ${esc(cityInfo.name)}. Connect the live API (<code>CONFIG.apiBase</code>) to list all ${cityInfo.n}.</p><button class="go" id="clr">Back to all of ${esc(co.name)}</button></div>`
+      :`<div class="empty"><div class="big">🫠</div><h3>No rooms match every filter</h3><p>Try loosening one of these and we'll find you a home.</p>
+        <button class="go" id="wid">Widen budget</button><button class="reset" id="clr">Clear perks &amp; city</button></div>`;
+    const w=$("#wid");if(w)w.onclick=()=>{const b=bounds();$("#rmax").value=Math.min(+$("#rmax").max,state.max+b.step*8);$("#rmin").value=Math.max(+$("#rmin").min,state.min-b.step*4);syncRange();refresh(true)};
+    $("#clr").onclick=()=>{state.perks=[];state.city=null;state.durations=[];buildPerks();buildCities();buildDurations();refresh(true)};
     return;
   }
   res.forEach((r,i)=>box.appendChild(card(r,i)));
 }
-
 function renderTags(){
   const t=[];
   if(state.on){
-    if(state.city)t.push(state.city);
-    t.push(`${money(state.min)}–${money(state.max)}/wk`);
-    state.roomTypes.forEach(x=>t.push(x));state.durations.forEach(x=>t.push(x+" weeks"));
-    state.vibes.forEach(id=>{const v=schema.vibes.find(x=>x.id===id);t.push(v.e+" "+v.label)});
-    state.roomFeatures.forEach(id=>t.push(schema.roomFeatures.find(x=>x.id===id).label));
-    state.amenities.forEach(id=>t.push(schema.amenities.find(x=>x.id===id).label));
+    t.push(`${money(state.min)}–${money(state.max)}/${per()}`);
+    state.durations.forEach(x=>t.push(x+" "+unitWord(x)));
+    state.vibes.forEach(id=>{const v=VIBES.find(x=>x.id===id);t.push(v.e+" "+v.label)});
+    state.perks.forEach(id=>t.push(PERKS.find(x=>x.id===id).label));
   }
-  $("#tags").innerHTML=t.map((x,i)=>`<span class="tag" style="animation-delay:${i*30}ms">${x}</span>`).join("");
+  $("#tags").innerHTML=t.map((x,i)=>`<span class="tag" style="animation-delay:${i*30}ms">${esc(x)}</span>`).join("");
 }
 let debounce;
 function refresh(now){
   const res=compute();
   tween($("#cProps"),res.length);tween($("#cRooms"),res.reduce((n,r)=>n+r.rooms.length,0));
-  $("#cityLabel").textContent=state.city?`· ${state.city}`:"· anywhere";
   renderTags();
   clearTimeout(debounce);debounce=setTimeout(render,now?0:260);
-}
-function setBudget(lo,hi){$("#rmin").value=lo;$("#rmax").value=hi;syncRange()}
-function buildChips(){
-  chips($("#cities"),schema.cities,"city",false);
-  chips($("#roomTypes"),schema.roomTypes,"roomTypes");
-  chips($("#durations"),schema.durations,"durations",true,x=>x+" weeks",x=>x);
-  chips($("#roomFeatures"),schema.roomFeatures,"roomFeatures");
-  chips($("#amenities"),schema.amenities,"amenities");
-  buildVibes();
 }
 
 /* ---------- fx ---------- */
@@ -545,12 +751,13 @@ let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("sh
 
 /* ---------- init ---------- */
 (async function init(){
-  schema=await Api.schema();
-  const {min,max,step}=schema.budget;
-  ["#rmin","#rmax"].forEach(s=>{const e=$(s);e.min=min;e.max=max;e.step=step;e.oninput=()=>{syncRange();refresh()}});
-  setBudget(min,max);buildChips();
-
-  $("#toggle").onclick=e=>{
+  DB=await Api.catalog();prepare();
+  $("#nCountries").textContent=DB.countries.length;
+  state.country=C[CONFIG.defaultCountry]?CONFIG.defaultCountry:DB.countries[0].slug;
+  ["#rmin","#rmax"].forEach(s=>{$(s).oninput=()=>{syncRange();refresh()}});
+  resetBudget();buildCountries();buildCities();buildDurations();buildPerks();buildVibes();renderCompare();
+  $("#csearch").oninput=()=>buildCities();
+  $("#toggle").onclick=()=>{
     state.on=!state.on;const t=$("#toggle");t.setAttribute("aria-pressed",state.on);
     $("#panelShell").classList.toggle("open",state.on);
     $("#toggleLabel").textContent=state.on?"Personalised search is ON":"Personalise my search";
@@ -558,9 +765,12 @@ let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("sh
     if(state.on){const r=t.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,22)}
     refresh(true);
   };
-  $("#reset").onclick=()=>{Object.assign(state,{city:null,roomTypes:[],durations:[],vibes:[],roomFeatures:[],amenities:[]});setBudget(min,max);buildChips();refresh(true);toast("Filters reset")};
+  $("#reset").onclick=()=>{Object.assign(state,{durations:[],vibes:[],perks:[]});resetBudget();buildDurations();buildPerks();buildVibes();refresh(true);toast("Filters reset")};
   $("#show").onclick=()=>$("#results").scrollIntoView({behavior:"smooth"});
   $("#sort").onchange=e=>{state.sort=e.target.value;refresh(true)};
+  $("#fab").onclick=()=>$("#compare").scrollIntoView({behavior:"smooth",block:"center"});
+  $("#cmpClear").onclick=()=>{[...state.cmp].forEach(id=>toggleCompare(id))};
+  $("#foot").textContent="Data: BigQuery houseofstudent-ga (warehouse). Prices are shown per week for UK, Ireland, Australia and New Zealand and per month elsewhere (assumed from the stay-length values). Room types appear as IDs until the room-type dictionary is available.";
   refresh(true);
 })();
 </script>

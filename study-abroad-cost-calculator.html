@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Abroad Cost Calculator</title>
+<style>
+:root{
+  --bg:#f5f6fa; --card:#fff; --ink:#1b2033; --muted:#6b7390; --line:#e4e7f0;
+  --brand:#4f46e5; --brand-ink:#fff; --soft:#eef0ff; --warn:#b45309; --warnbg:#fff4e0;
+  --shadow:0 1px 2px rgba(20,24,50,.06),0 6px 20px rgba(20,24,50,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#10131f;--card:#181c2c;--ink:#eceefa;--muted:#9aa3c4;--line:#2a3050;--soft:#232a4d;--warn:#fbbf24;--warnbg:#3a2e12;--shadow:none}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;padding:28px 16px 64px}
+.wrap{max-width:1180px;margin:0 auto}
+header h1{margin:0 0 6px;font-size:clamp(22px,4vw,32px)}
+header p{margin:0;opacity:.9;max-width:680px}
+.topbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.topbar label{font-size:13px;opacity:.9}
+.topbar select{padding:6px 10px;border-radius:8px;border:0;font:inherit}
+main{max-width:1180px;margin:-44px auto 90px;padding:0 16px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px;border:1px solid var(--line)}
+.card h2{margin:0 0 2px;font-size:17px;display:flex;gap:10px;align-items:center}
+.card h2 .ic{font-size:20px}
+.card .sub{margin:0 0 14px;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field.full{grid-column:1/-1}
+.field>label{font-size:13px;font-weight:600}
+select{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+select:focus,input:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.rng{display:flex;align-items:center;gap:10px}
+.rng input{flex:1;accent-color:var(--brand);min-width:0}
+.rng output{min-width:64px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;font-size:13px}
+.tog{display:flex;align-items:center;gap:8px;font-weight:500}
+.tog input{width:18px;height:18px;accent-color:var(--brand)}
+.hint{font-size:12px;color:var(--muted);min-height:16px}
+.hint.warn{color:var(--warn);background:var(--warnbg);padding:4px 8px;border-radius:6px}
+.presets{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit;font-weight:600}
+.chip:hover{border-color:var(--brand)}
+.chip.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.sum{position:sticky;top:12px}
+.sum .big{font-size:clamp(30px,5vw,40px);font-weight:800;line-height:1.1;letter-spacing:-.5px}
+.sum .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.kpi{background:var(--soft);border-radius:12px;padding:10px 12px}
+.kpi b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.stack{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--line);margin:14px 0 10px}
+.stack i{display:block;height:100%}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.legend li{display:grid;grid-template-columns:12px 1fr auto auto;gap:8px;align-items:center;font-size:13px}
+.legend .dot{width:12px;height:12px;border-radius:4px}
+.legend .pc{color:var(--muted);width:38px;text-align:right}
+.legend .am{font-weight:600;font-variant-numeric:tabular-nums}
+.range{font-size:12px;color:var(--muted);margin-top:12px}
+.btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.where{font-size:13px;color:var(--muted);margin:2px 0 10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 6px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+td.note{color:var(--muted);text-align:left;font-size:12px}
+tr.cat td{font-weight:700;background:var(--soft);border-bottom:0}
+.tablewrap{overflow-x:auto}
+.mbar{display:none}
+footer{max-width:1180px;margin:0 auto 100px;padding:0 16px;color:var(--muted);font-size:12px}
+@media (max-width:920px){
+  main{grid-template-columns:1fr}
+  .sum{position:static}
+  .grid{grid-template-columns:1fr}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--brand);color:#fff;padding:10px 16px;justify-content:space-between;align-items:center;text-decoration:none;box-shadow:0 -4px 16px rgba(0,0,0,.2)}
+  .mbar b{font-size:18px}
+}
+@media print{
+  header .topbar,.presets,.mbar,.btns,#form{display:none!important}
+  main{display:block;margin-top:0}
+  header{background:none;color:#000;padding:0}
+  .sum{position:static}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>🎓 Study Abroad Cost Calculator</h1>
+    <p>Estimate what it really costs to <em>live</em> abroad, excluding tuition: rent, food, lifestyle, travel, clothing and one-time setup costs. Pick a country, city and neighbourhood, then tune your lifestyle.</p>
+    <div class="topbar">
+      <label for="cur">Show amounts in</label>
+      <select id="cur"></select>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="form"></div>
+  <aside class="sum card" id="results" aria-live="polite">
+    <div class="lbl">Total living cost (excl. tuition)</div>
+    <div class="big" id="sTotal">–</div>
+    <div class="where" id="sWhere"></div>
+    <div class="kpis">
+      <div class="kpi"><span class="lbl">Avg / month</span><b id="sAvg">–</b></div>
+      <div class="kpi"><span class="lbl">Avg / year</span><b id="sYear">–</b></div>
+      <div class="kpi"><span class="lbl">Recurring / month</span><b id="sRec">–</b></div>
+      <div class="kpi"><span class="lbl">One-time upfront</span><b id="sOne">–</b></div>
+    </div>
+    <div class="stack" id="stack"></div>
+    <ul class="legend" id="legend"></ul>
+    <div class="range" id="sRange"></div>
+    <div class="btns">
+      <button class="btn pri" id="btnCopy" type="button">Copy summary</button>
+      <button class="btn" id="btnPrint" type="button">Print / PDF</button>
+    </div>
+  </aside>
+</main>
+
+<section class="wrap" style="padding:0 16px;margin-top:-70px;margin-bottom:24px">
+  <div class="card">
+    <h2><span class="ic">🧾</span>Detailed breakdown</h2>
+    <p class="sub">Every line item behind your total.</p>
+    <div class="tablewrap"><table id="detail"></table></div>
+  </div>
+</section>
+
+<footer>
+  Figures are indicative estimates in USD from the sample dataset in this file (<code>DATA</code>, <code>COUNTRIES</code>) and
+  converted using the approximate rates in <code>RATES</code>. Replace them with your own verified data for production use.
+  Tuition and application fees are not included.
+</footer>
+
+<a class="mbar" href="#results"><span>Total living cost</span><b id="mTotal">–</b></a>
+
+<script>
+/* ============================================================
+   DATA  (all prices in USD). Replace with your own dataset.
+   city rent: [shared room, private room, studio, 1-bed flat] per month
+   city v:    [cheap meal, mid-range restaurant meal, coffee, groceries/week (all meals),
+               student transport pass, ride-share trip, utilities (1-bed), internet (1-bed),
+               mobile plan, gym, cinema/outing]
+   locality:  [name, rent multiplier, note]
+   ============================================================ */
+const RATES={USD:1,INR:88,EUR:0.92,GBP:0.78,CAD:1.37,AUD:1.52,AED:3.67,SGD:1.34};
+const LOCALE={USD:'en-US',INR:'en-IN',EUR:'de-DE',GBP:'en-GB',CAD:'en-CA',AUD:'en-AU',AED:'en-AE',SGD:'en-SG'};
+
+const MEDIA={flightBudget:'Budget airline flight',flightStd:'Full-service flight',train:'Train / rail',bus:'Coach / bus',car:'Self-drive / car-share'};
+const EU ={name:'nearby European countries',f:{flightBudget:110,flightStd:230,train:140,bus:55,car:130},d:[65,130,260]};
+const IE ={name:'UK & Europe',f:{flightBudget:100,flightStd:200,train:null,bus:null,car:170},d:[65,130,260]};
+const NA ={name:'nearby North America / Caribbean',f:{flightBudget:230,flightStd:400,train:140,bus:90,car:160},d:[80,160,320]};
+const OC ={name:'New Zealand / Fiji / Bali',f:{flightBudget:380,flightStd:650,train:null,bus:null,car:null},d:[85,160,320]};
+const GULF={name:'Oman / Qatar / Bahrain / Saudi',f:{flightBudget:170,flightStd:320,train:null,bus:70,car:110},d:[60,130,300]};
+const SEA={name:'Malaysia / Thailand / Indonesia',f:{flightBudget:90,flightStd:190,train:45,bus:30,car:70},d:[40,85,190]};
+
+const C=(n,rent,v,loc)=>({n,rent,v,loc});
+
+const COUNTRIES={
+ 'United Kingdom':{flag:'🇬🇧',cold:true,visa:650,health:1100,flightHome:700,domT:50,car:500,dom:[60,120,240],near:EU,cities:[
+   C('London',[800,1100,1700,2200],[16,45,4.5,50,190,14,140,35,15,40,16],[['Bloomsbury / King\'s Cross (Zone 1)',1.3,'UCL, SOAS, Birkbeck; walk to campus'],['Stratford (Zone 2-3)',1.0,'Queen Mary, UEL; great transport'],['Greenwich (Zone 2-3)',0.95,'Uni of Greenwich; riverside'],['Ealing / Croydon (Zone 3-5)',0.75,'Cheaper, longer commute']]),
+   C('Manchester',[550,750,1100,1300],[13,36,4,42,85,10,120,30,13,30,14],[['City Centre / Northern Quarter',1.25,'Walk to MMU'],['Fallowfield / Rusholme',0.9,'Student heartland, Uni of Manchester'],['Salford Quays',1.0,'Modern flats, tram link'],['Withington',0.8,'Quiet, budget-friendly']]),
+   C('Birmingham',[480,650,950,1100],[12,33,3.8,40,80,9,115,30,13,28,13],[['City Centre',1.2,'Aston, BCU nearby'],['Selly Oak',0.9,'Uni of Birmingham student area'],['Edgbaston',1.05,'Leafy, near campus'],['Digbeth',1.0,'Creative quarter']])]},
+ 'United States':{flag:'🇺🇸',cold:true,visa:535,health:1800,flightHome:1300,domT:90,car:520,dom:[80,150,300],near:NA,cities:[
+   C('New York',[1200,1700,2900,3600],[18,60,5.5,70,132,18,160,65,35,90,18],[['Manhattan: Morningside / Upper West',1.25,'Columbia, NYU orbit'],['Brooklyn: Williamsburg / Downtown',1.1,'Trendy, subway access'],['Queens: Astoria / Long Island City',0.85,'Quick subway to Manhattan'],['Jersey City, NJ',0.8,'PATH train commute']]),
+   C('Boston',[1000,1500,2500,3000],[17,55,5,65,90,16,150,65,35,80,17],[['Cambridge / Harvard Sq',1.2,'Harvard, MIT'],['Allston / Brighton',0.9,'BU, BC students'],['Back Bay / Fenway',1.3,'Premium, Northeastern'],['Somerville',0.95,'Tufts, vibrant']]),
+   C('Chicago',[800,1100,1800,2100],[16,48,4.8,58,75,15,140,60,30,60,16],[['Loop / South Loop',1.15,'DePaul, Columbia College'],['Lincoln Park',1.2,'DePaul, nightlife'],['Hyde Park',0.9,'Uni of Chicago'],['Rogers Park',0.8,'Loyola, lakefront']])]},
+ 'Canada':{flag:'🇨🇦',cold:true,visa:190,health:700,flightHome:1250,domT:80,car:480,dom:[70,140,280],near:NA,cities:[
+   C('Toronto',[800,1200,1900,2300],[15,40,4.2,55,115,14,130,55,40,40,14],[['Downtown / The Annex',1.2,'U of T, TMU'],['North York',0.85,'York Univ, subway'],['Scarborough',0.7,'Centennial, budget'],['Mississauga',0.8,'UTM, GO transit']]),
+   C('Vancouver',[850,1300,2000,2500],[15,42,4.3,57,75,13,120,55,40,45,14],[['Downtown',1.2,'Walk to everything'],['Kitsilano / Point Grey',1.1,'Near UBC'],['Burnaby',0.85,'SFU, SkyTrain'],['Surrey',0.7,'Cheaper, long commute']]),
+   C('Montreal',[550,800,1200,1450],[13,35,3.8,48,60,11,110,50,35,35,13],[['Plateau / Mile End',1.1,'Lively, McGill nearby'],['Downtown / McGill Ghetto',1.2,'McGill, Concordia'],['Côte-des-Neiges',0.85,'Uni of Montreal'],['Villeray',0.8,'Quiet, local']])]},
+ 'Australia':{flag:'🇦🇺',cold:false,visa:1300,health:600,flightHome:1100,domT:150,car:470,dom:[75,145,280],near:OC,cities:[
+   C('Sydney',[900,1300,2200,2600],[14,40,3.8,60,110,16,150,45,25,55,15],[['CBD / Haymarket',1.2,'UTS, USyd'],['Kensington',1.0,'UNSW'],['Bondi / Coogee',1.25,'Beachside premium'],['Parramatta',0.8,'Western Sydney Uni']]),
+   C('Melbourne',[750,1100,1900,2200],[14,38,3.8,57,100,15,140,45,25,50,15],[['CBD',1.15,'RMIT, Melbourne Uni'],['Carlton / Parkville',1.1,'Uni of Melbourne'],['Clayton',0.8,'Monash'],['Footscray',0.8,'Victoria Uni, diverse food']])]},
+ 'Germany':{flag:'🇩🇪',cold:true,visa:90,health:1400,flightHome:650,domT:40,car:480,dom:[60,115,230],near:EU,cities:[
+   C('Berlin',[600,800,1100,1400],[11,30,3.8,45,45,9,130,30,15,30,11],[['Mitte',1.25,'Humboldt, central'],['Charlottenburg',1.1,'TU Berlin, UdK'],['Neukölln',0.95,'Hip & multicultural'],['Lichtenberg',0.8,'Budget, HTW']]),
+   C('Munich',[750,1000,1400,1700],[12,34,4,48,60,11,140,30,15,35,12],[['Maxvorstadt',1.3,'LMU, TUM city campus'],['Schwabing',1.2,'Lively, central'],['Garching',0.9,'TUM science campus'],['Pasing',0.85,'S-Bahn, quieter']])]},
+ 'Ireland':{flag:'🇮🇪',cold:false,visa:100,health:500,flightHome:750,domT:35,car:480,dom:[65,125,250],near:IE,cities:[
+   C('Dublin',[800,1200,1800,2200],[15,42,4.2,55,90,13,150,45,15,45,14],[['City Centre',1.2,'Trinity, DCU city'],['Rathmines',1.0,'Student-friendly'],['Drumcondra',0.95,'DCU, quiet'],['Tallaght',0.7,'TU Dublin, Luas']])]},
+ 'France':{flag:'🇫🇷',cold:true,visa:100,health:300,flightHome:650,domT:50,car:480,dom:[60,120,240],near:EU,cities:[
+   C('Paris',[700,1000,1500,1800],[15,45,3.5,55,40,13,120,30,15,35,13],[['Latin Quarter (5th/6th)',1.3,'Sorbonne, iconic'],['14th (Cité U area)',1.0,'Student residences'],['Montreuil',0.8,'East, metro access'],['Saint-Denis',0.75,'Budget, Paris 8']]),
+   C('Lyon',[500,700,1000,1250],[13,35,3,48,35,10,105,30,15,30,12],[['Presqu\'île',1.2,'Central, shops'],['Part-Dieu',1.05,'Business hub, station'],['Villeurbanne',0.85,'INSA, Lyon 1'],['Gerland',0.9,'ENS Lyon']])]},
+ 'Netherlands':{flag:'🇳🇱',cold:true,visa:220,health:1100,flightHome:650,domT:30,car:500,dom:[65,125,250],near:EU,cities:[
+   C('Amsterdam',[800,1100,1700,2100],[14,42,4,52,70,14,170,35,15,45,15],[['Centrum',1.3,'UvA, historic'],['De Pijp',1.2,'Trendy, cafés'],['Nieuw-West',0.85,'Budget, tram'],['Amstelveen',0.8,'Quiet, suburban']]),
+   C('Rotterdam',[600,850,1300,1600],[13,36,3.8,48,60,12,160,35,15,40,14],[['Centrum',1.15,'Modern, central'],['Kralingen',1.0,'Erasmus Univ'],['Delfshaven',0.85,'Local feel'],['Charlois',0.8,'Budget']])]},
+ 'UAE':{flag:'🇦🇪',cold:false,visa:400,health:700,flightHome:300,domT:40,car:430,dom:[50,110,260],near:GULF,cities:[
+   C('Dubai',[500,800,1300,1700],[9,35,4.5,45,80,8,100,60,30,50,12],[['Dubai Marina / JLT',1.2,'Premium, metro & tram'],['Al Barsha',0.95,'Mid-range, malls'],['Bur Dubai / Karama',0.85,'Budget, central'],['Academic City',0.65,'Campus cluster, cheapest']])]},
+ 'Singapore':{flag:'🇸🇬',cold:false,visa:50,health:500,flightHome:350,domT:20,car:600,dom:[45,100,230],near:SEA,cities:[
+   C('Singapore',[650,1000,1800,2500],[6,30,3.3,45,55,7,90,30,20,60,11],[['Clementi / Kent Ridge',0.9,'NUS'],['Orchard / Central',1.4,'Premium, SMU'],['Jurong',0.8,'NTU side, budget'],['Tampines / Woodlands',0.75,'HDB rooms, far']])]}
+};
+
+/* ============================================================
+   UI DEFINITION
+   ============================================================ */
+const CATS=[
+ {id:'rent',n:'Rent & bills',c:'#4f46e5'},{id:'food',n:'Food',c:'#f59e0b'},
+ {id:'living',n:'Daily living',c:'#10b981'},{id:'lux',n:'Luxury & leisure',c:'#ec4899'},
+ {id:'trans',n:'Local transport',c:'#06b6d4'},{id:'travel',n:'Travel & trips',c:'#8b5cf6'},
+ {id:'cloth',n:'Clothing',c:'#f97316'},{id:'setup',n:'Setup & one-time',c:'#64748b'}
+];
+const o=(...a)=>a.map((l,i)=>[i,l]);
+const SECTIONS=[
+ {id:'where',ic:'📍',t:'Where & how long',s:'Narrow it down to the neighbourhood for better precision.',f:[
+   {k:'country',t:'select',l:'Country',opts:()=>Object.keys(COUNTRIES).map(c=>[c,COUNTRIES[c].flag+' '+c])},
+   {k:'city',t:'select',l:'City',opts:()=>COUNTRIES[S.country].cities.map((c,i)=>[i,c.n])},
+   {k:'locality',t:'select',l:'Nearby locality / neighbourhood',full:1,opts:()=>cityOf().loc.map((l,i)=>[i,l[0]]),hint:()=>{const l=locOf();return l[2]+' · rent '+(l[1]>=1?'+':'')+Math.round((l[1]-1)*100)+'% vs city average'}},
+   {k:'months',t:'range',l:'Length of stay',min:3,max:60,step:1,unit:' months'}]},
+ {id:'life',ic:'✨',t:'Overall lifestyle',s:'Pick a starting point, then fine-tune every section below.',presets:1,f:[]},
+ {id:'stay',ic:'🏠',t:'Tenancy / accommodation',s:'Rent comes from our locality data.',f:[
+   {k:'accType',t:'select',l:'Accommodation type',opts:()=>o('Shared room','Private room (shared flat)','Studio','1-bedroom flat'),hint:()=>'Rent here: '+fmt(rentMonthly())+' / month'},
+   {k:'billsIncl',t:'toggle',l:'Bills (utilities + internet) included in rent (+10% rent)'},
+   {k:'laundry',t:'select',l:'Laundry',opts:()=>[['free','In-house / free'],['paid','Launderette / paid']]},
+   {k:'deposit',t:'select',l:'Security deposit',opts:()=>[[0,'None'],[1,'1 month'],[1.5,'1.5 months'],[2,'2 months']],hint:()=>'Usually refundable at the end of the tenancy'}]},
+ {id:'food',ic:'🍽️',t:'Food',s:'Cooking at home vs eating out makes the biggest difference.',f:[
+   {k:'diet',t:'select',l:'Diet',opts:()=>[['veg','Vegetarian'],['mixed','Mixed'],['nonveg','Non-vegetarian heavy'],['vegan','Vegan']]},
+   {k:'groc',t:'select',l:'Grocery style',opts:()=>[['b','Budget supermarkets'],['m','Regular supermarkets'],['p','Organic / premium']]},
+   {k:'mHome',t:'range',l:'Home-cooked meals / week',min:0,max:21,step:1,unit:' /wk'},
+   {k:'mCheap',t:'range',l:'Cheap eats & fast food / week',min:0,max:14,step:1,unit:' /wk'},
+   {k:'mRest',t:'range',l:'Sit-down restaurant meals / week',min:0,max:10,step:1,unit:' /wk'},
+   {k:'mDeliv',t:'range',l:'Food delivery orders / week',min:0,max:10,step:1,unit:' /wk'},
+   {k:'coffee',t:'range',l:'Coffee, snacks & bubble tea / week',min:0,max:15,step:1,unit:' /wk',full:1,hint:()=>{const n=S.mHome+S.mCheap+S.mRest+S.mDeliv;return n>21?'⚠ '+n+' meals planned, more than 21 a week':n+' of 21 weekly meals planned'},warn:()=>S.mHome+S.mCheap+S.mRest+S.mDeliv>21}]},
+ {id:'living',ic:'🛋️',t:'Daily living',s:'Phone, fitness, personal care, entertainment.',f:[
+   {k:'mobile',t:'select',l:'Mobile plan',opts:()=>o('Basic / prepaid','Standard','Unlimited data')},
+   {k:'gym',t:'select',l:'Fitness',opts:()=>o('None / outdoor','Campus gym','Standard gym','Premium club')},
+   {k:'care',t:'select',l:'Personal care & toiletries',opts:()=>o('Basic','Standard','Premium (salon products, skincare)')},
+   {k:'outings',t:'range',l:'Cinema / outings per month',min:0,max:10,step:1,unit:''},
+   {k:'subs',t:'range',l:'Subscriptions (streaming, music, apps)',min:0,max:8,step:1,unit:''},
+   {k:'buffer',t:'range',l:'Contingency buffer on monthly spend',min:0,max:20,step:1,unit:'%'}]},
+ {id:'lux',ic:'💎',t:'Luxury & leisure',s:'Nice-to-haves that add up quickly.',f:[
+   {k:'salon',t:'range',l:'Salon / spa visits per month',min:0,max:6,step:1,unit:''},
+   {k:'night',t:'range',l:'Nightlife (bars, clubs) per month',min:0,max:12,step:1,unit:''},
+   {k:'events',t:'range',l:'Concerts / sports / events per month',min:0,max:6,step:1,unit:''},
+   {k:'fine',t:'range',l:'Fine-dining outings per month',min:0,max:6,step:1,unit:''},
+   {k:'brands',t:'select',l:'Branded goods & accessories (per month)',opts:()=>[[0,'None'],[60,'Occasional (~$60)'],[150,'Regular (~$150)'],[400,'Frequent (~$400)'],[1000,'Heavy (~$1,000)']]},
+   {k:'hobby',t:'select',l:'Hobbies & classes (per month)',opts:()=>[[0,'None'],[40,'Light (~$40)'],[90,'Active (~$90)'],[180,'Serious (~$180)']]}]},
+ {id:'trans',ic:'🚇',t:'Getting around locally',s:'Daily commute and city travel.',f:[
+   {k:'tMode',t:'select',l:'Main way to get around',opts:()=>[['pass','Student public-transport pass'],['bike','Bicycle'],['walk','Mostly walking'],['car','Own / leased car']]},
+   {k:'rides',t:'range',l:'Taxi / ride-share trips per month',min:0,max:30,step:1,unit:''}]},
+ {id:'travel',ic:'✈️',t:'Travel & trips',s:'Home visits, trips inside the country and nearby countries.',f:[
+   {k:'homeTrips',t:'range',l:'Trips back home per year',min:0,max:4,step:1,unit:' /yr',hint:()=>'Return flight ≈ '+fmt(C_().flightHome)},
+   {k:'domTrips',t:'range',l:'Trips within the country per year',min:0,max:12,step:1,unit:' /yr'},
+   {k:'domDays',t:'range',l:'Avg days per domestic trip',min:1,max:10,step:1,unit:' days'},
+   {k:'domStyle',t:'select',l:'Domestic trip style',opts:()=>o('Budget (hostels, buses)','Comfortable (3★ hotels)','Premium (4-5★)')},
+   {k:'nearTrips',t:'range',l:'Trips to nearby countries per year',min:0,max:12,step:1,unit:' /yr',hint:()=>'Typical region: '+C_().near.name},
+   {k:'nearDays',t:'range',l:'Avg days per nearby-country trip',min:1,max:14,step:1,unit:' days'},
+   {k:'nearMedium',t:'select',l:'How will you travel there?',opts:()=>Object.entries(C_().near.f).filter(e=>e[1]!=null).map(e=>[e[0],MEDIA[e[0]]+' (~'+fmt(e[1])+' return)'])},
+   {k:'nearStyle',t:'select',l:'Nearby trip style',opts:()=>o('Budget (hostels, street food)','Comfortable','Premium')}]},
+ {id:'cloth',ic:'👕',t:'Clothing & shopping',s:'Depends on your budget range. Cold countries also need winter wear.',f:[
+   {k:'clothRange',t:'select',l:'Shopping range',opts:()=>o('Thrift / budget (H&M, Primark)','Mid-range (Zara, Uniqlo)','Premium (Nike, Levi\'s, COS)','Designer / luxury')},
+   {k:'clothItems',t:'range',l:'New clothing items per month',min:0,max:12,step:1,unit:'',hint:()=>C_().cold?'Cold climate: one-time winter gear is added':'Warm climate: no winter gear needed'}]},
+ {id:'setup',ic:'🧳',t:'Setup & mandatory costs',s:'One-time and yearly costs outside tuition.',f:[
+   {k:'incVisa',t:'toggle',l:'Include student visa & permit fees',hint:()=>'≈ '+fmt(C_().visa)},
+   {k:'incIns',t:'toggle',l:'Include health insurance / surcharge',hint:()=>'≈ '+fmt(C_().health)+' per year'},
+   {k:'incFlight',t:'toggle',l:'Include arrival flight & first-week costs'},
+   {k:'incKit',t:'toggle',l:'Include starter household kit (bedding, kitchenware, SIM)'}]}
+];
+
+const PRESETS={
+ frugal:{label:'🪙 Frugal',accType:0,billsIncl:false,laundry:'paid',deposit:1,diet:'mixed',groc:'b',mHome:17,mCheap:3,mRest:0,mDeliv:0,coffee:1,mobile:0,gym:0,care:0,outings:1,subs:1,buffer:5,salon:0,night:0,events:0,fine:0,brands:0,hobby:0,tMode:'pass',rides:0,homeTrips:1,domTrips:1,domDays:2,domStyle:0,nearTrips:1,nearDays:3,nearMedium:'bus',nearStyle:0,clothRange:0,clothItems:1},
+ balanced:{label:'⚖️ Balanced',accType:1,billsIncl:false,laundry:'free',deposit:1,diet:'mixed',groc:'m',mHome:12,mCheap:4,mRest:1,mDeliv:1,coffee:3,mobile:1,gym:1,care:1,outings:2,subs:2,buffer:7,salon:1,night:1,events:0,fine:0,brands:60,hobby:40,tMode:'pass',rides:3,homeTrips:1,domTrips:3,domDays:3,domStyle:1,nearTrips:2,nearDays:4,nearMedium:'flightBudget',nearStyle:1,clothRange:1,clothItems:2},
+ comfortable:{label:'🛋️ Comfortable',accType:2,billsIncl:true,laundry:'free',deposit:1.5,diet:'mixed',groc:'m',mHome:8,mCheap:4,mRest:3,mDeliv:2,coffee:5,mobile:2,gym:2,care:1,outings:3,subs:3,buffer:8,salon:2,night:3,events:1,fine:1,brands:150,hobby:90,tMode:'pass',rides:8,homeTrips:2,domTrips:3,domDays:3,domStyle:1,nearTrips:4,nearDays:5,nearMedium:'flightBudget',nearStyle:1,clothRange:2,clothItems:3},
+ premium:{label:'👑 Premium',accType:3,billsIncl:true,laundry:'free',deposit:2,diet:'mixed',groc:'p',mHome:4,mCheap:3,mRest:6,mDeliv:4,coffee:7,mobile:2,gym:3,care:2,outings:4,subs:4,buffer:10,salon:3,night:5,events:2,fine:3,brands:400,hobby:180,tMode:'pass',rides:15,homeTrips:3,domTrips:4,domDays:4,domStyle:2,nearTrips:6,nearDays:6,nearMedium:'flightStd',nearStyle:2,clothRange:3,clothItems:4}
+};
+
+/* ============================================================
+   STATE & HELPERS
+   ============================================================ */
+const S={country:'United Kingdom',city:0,locality:0,months:12,cur:'USD',incVisa:true,incIns:true,incFlight:true,incKit:true,preset:'balanced'};
+const C_=()=>COUNTRIES[S.country];
+const cityOf=()=>C_().cities[S.city];
+const locOf=()=>cityOf().loc[S.locality];
+const $=s=>document.querySelector(s);
+const fmt=usd=>{const c=S.cur;try{return new Intl.NumberFormat(LOCALE[c],{style:'currency',currency:c,maximumFractionDigits:0}).format(usd*RATES[c])}catch(e){return c+' '+Math.round(usd*RATES[c])}};
+
+function applyPreset(name){
+  const p=PRESETS[name];S.preset=name;
+  for(const k in p){if(k!=='label')S[k]=p[k]}
+  fixNearMedium();
+}
+function fixNearMedium(){
+  const av=Object.entries(C_().near.f).filter(e=>e[1]!=null).map(e=>e[0]);
+  if(!av.includes(S.nearMedium))S.nearMedium=av.includes('flightBudget')?'flightBudget':av[0];
+}
+
+/* ============================================================
+   COST ENGINE
+   ============================================================ */
+const WEEKS=4.345;
+const typeFactorUtil=[.35,.45,.8,1], typeFactorNet=[.3,.4,1,1];
+function rentMonthly(){
+  const city=cityOf(),loc=locOf();
+  return city.rent[S.accType]*loc[1]*(S.billsIncl?1.1:1);
+}
+function compute(){
+  const c=C_(),city=cityOf(),loc=locOf(),v=city.v;
+  const [mealCheap,mealMid,coffee,grocWeek,pass,ride,utils,net,mob,gym,cin]=v;
+  const idx=mealMid/40;                       // city price index
+  const fm=1+(loc[1]-1)*0.3;                  // locality effect on eating out
+  const L=[];
+  const add=(cat,label,note,x)=>{ if((x.m||0)+(x.y||0)+(x.o||0)>0.5)L.push({cat,label,note,m:x.m||0,y:x.y||0,o:x.o||0}) };
+
+  // Rent & bills
+  const rent=rentMonthly();
+  add('rent','Rent',`${S.accType<2?['Shared room','Private room'][S.accType]:['Studio','1-bed flat'][S.accType-2]} in ${loc[0]}`,{m:rent});
+  if(!S.billsIncl){
+    add('rent','Utilities (electricity, water, heating)','City average × home size',{m:utils*typeFactorUtil[S.accType]});
+    add('rent','Home internet','Shared broadband share',{m:net*typeFactorNet[S.accType]});
+  }
+  if(S.laundry==='paid')add('rent','Laundry','~4 loads / month',{m:16*idx});
+
+  // Food
+  const dietF={veg:.9,mixed:1,nonveg:1.12,vegan:.92}[S.diet], gs={b:.8,m:1,p:1.5}[S.groc];
+  add('food','Home cooking & groceries',`${S.mHome} meals/wk`,{m:S.mHome*WEEKS*(grocWeek/21)*gs*dietF});
+  add('food','Cheap eats & fast food',`${S.mCheap}/wk × ${fmt(mealCheap*fm)}`,{m:S.mCheap*WEEKS*mealCheap*fm});
+  add('food','Restaurant meals',`${S.mRest}/wk × ${fmt(mealMid*fm)}`,{m:S.mRest*WEEKS*mealMid*fm});
+  add('food','Food delivery',`${S.mDeliv}/wk incl. fees`,{m:S.mDeliv*WEEKS*(mealCheap*1.3+3.5)});
+  add('food','Coffee, snacks & drinks',`${S.coffee}/wk × ${fmt(coffee*fm)}`,{m:S.coffee*WEEKS*coffee*fm});
+
+  // Daily living
+  add('living','Mobile plan','',{m:mob*[.6,1,1.7][S.mobile]});
+  add('living','Fitness','',{m:gym*[0,.4,1,2.2][S.gym]});
+  add('living','Personal care & toiletries','',{m:22*idx*[.7,1,1.7][S.care]});
+  add('living','Health & pharmacy (out-of-pocket)','Minor medical costs',{m:12*idx});
+  add('living','Cinema & outings',`${S.outings}/month`,{m:S.outings*cin*fm});
+  add('living','Subscriptions',`${S.subs} services`,{m:S.subs*12});
+
+  // Luxury
+  add('lux','Salon & spa',`${S.salon}/month`,{m:S.salon*38*idx});
+  add('lux','Nightlife',`${S.night}/month`,{m:S.night*45*idx*fm});
+  add('lux','Concerts, sports & events',`${S.events}/month`,{m:S.events*65*idx});
+  add('lux','Fine dining',`${S.fine}/month`,{m:S.fine*mealMid*2.4*fm});
+  add('lux','Branded goods & accessories','',{m:+S.brands});
+  add('lux','Hobbies & classes','',{m:+S.hobby*Math.max(.8,idx)});
+
+  // Transport
+  const tm={pass:pass,bike:22,walk:0,car:c.car}[S.tMode];
+  add('trans',{pass:'Student transit pass',bike:'Bicycle upkeep',walk:'Walking',car:'Car (lease/fuel/insurance/parking)'}[S.tMode],'',{m:tm});
+  add('trans','Taxi / ride-share',`${S.rides}/month × ${fmt(ride)}`,{m:S.rides*ride});
+
+  // Travel (per year)
+  add('travel','Trips back home',`${S.homeTrips} return flight(s)`,{y:S.homeTrips*c.flightHome});
+  const dd=c.dom[S.domStyle];
+  add('travel','Trips within the country',`${S.domTrips} × ${S.domDays} days`,{y:S.domTrips*(S.domDays*dd+c.domT)});
+  const med=c.near.f[S.nearMedium]??0, nd=c.near.d[S.nearStyle];
+  add('travel','Trips to nearby countries',`${S.nearTrips} × ${S.nearDays} days by ${(MEDIA[S.nearMedium]||'').toLowerCase()}`,{y:S.nearTrips*(med+S.nearDays*nd)});
+
+  // Clothing
+  const rf=[1,2.4,5,12][S.clothRange];
+  add('cloth','New clothes & shoes',`${S.clothItems} items/month`,{m:S.clothItems*18*rf*(.8+.2*idx)});
+  if(c.cold)add('cloth','Winter jacket, boots & thermals','One-time',{o:[110,240,520,1200][S.clothRange]});
+
+  // Contingency (on recurring monthly equivalents so far)
+  const recSoFar=L.reduce((a,l)=>a+l.m+l.y/12,0);
+  add('living','Contingency buffer',`${S.buffer}% of monthly spend`,{m:recSoFar*S.buffer/100});
+
+  // Setup
+  if(S.incVisa)add('setup','Student visa / permit fees','One-time',{o:c.visa});
+  if(S.incIns)add('setup','Health insurance / surcharge',fmt(c.health)+' per year',{y:c.health});
+  if(S.incFlight)add('setup','Arrival flight & first-week costs','One-way flight + temp stay',{o:c.flightHome*.6+120});
+  if(S.incKit)add('setup','Starter household kit','Bedding, kitchenware, SIM',{o:120+80*S.accType});
+  if(+S.deposit>0)add('setup','Security deposit (refundable)',`${S.deposit} × monthly rent`,{o:rent*S.deposit});
+
+  const mo=S.months;
+  L.forEach(l=>{l.total=l.m*mo+l.y*mo/12+l.o;l.avg=l.total/mo});
+  const total=L.reduce((a,l)=>a+l.total,0);
+  const recurring=L.reduce((a,l)=>a+l.m+l.y/12,0);
+  const oneTime=L.reduce((a,l)=>a+l.o,0);
+  const byCat=CATS.map(k=>({...k,total:L.filter(l=>l.cat===k.id).reduce((a,l)=>a+l.total,0)}));
+  const refundable=+S.deposit>0?rent*S.deposit:0;
+  return {L,total,recurring,oneTime,byCat,refundable,mo};
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function buildForm(){
+  const root=$('#form');root.innerHTML='';
+  SECTIONS.forEach(sec=>{
+    const card=document.createElement('section');card.className='card';
+    card.innerHTML=`<h2><span class="ic">${sec.ic}</span>${sec.t}</h2><p class="sub">${sec.s}</p>`;
+    if(sec.presets){
+      const p=document.createElement('div');p.className='presets';p.id='presets';
+      Object.entries(PRESETS).forEach(([k,pr])=>{
+        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.p=k;b.textContent=pr.label;
+        b.onclick=()=>{applyPreset(k);syncControls();update()};p.appendChild(b)});
+      card.appendChild(p);
+    }
+    if(sec.f.length){
+      const g=document.createElement('div');g.className='grid';
+      sec.f.forEach(f=>g.appendChild(buildField(f)));card.appendChild(g);
+    }
+    root.appendChild(card);
+  });
+}
+function buildField(f){
+  const d=document.createElement('div');d.className='field'+(f.full?' full':'');
+  const id='f_'+f.k;let ctl;
+  if(f.t==='select'){
+    d.innerHTML=`<label for="${id}">${f.l}</label><select id="${id}"></select>`;
+  }else if(f.t==='range'){
+    d.innerHTML=`<label for="${id}">${f.l}</label><div class="rng"><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}"><output id="o_${f.k}"></output></div>`;
+  }else{
+    d.innerHTML=`<label class="tog"><input type="checkbox" id="${id}"> ${f.l}</label>`;
+  }
+  d.insertAdjacentHTML('beforeend',`<div class="hint" id="h_${f.k}"></div>`);
+  const el=d.querySelector('#'+id);
+  el.addEventListener('input',()=>onChange(f,el));
+  el.addEventListener('change',()=>onChange(f,el));
+  return d;
+}
+function fieldDefs(){return SECTIONS.flatMap(s=>s.f)}
+
+function onChange(f,el){
+  let val=f.t==='toggle'?el.checked:(f.t==='range'?+el.value:el.value);
+  if(f.t==='select'&&['city','locality','accType','mobile','gym','care','domStyle','nearStyle','clothRange'].includes(f.k))val=+val;
+  if(f.t==='select'&&['deposit','brands','hobby'].includes(f.k))val=+val;
+  S[f.k]=val;S.preset=null;
+  if(f.k==='country'){S.city=0;S.locality=0;fixNearMedium();syncControls()}
+  if(f.k==='city'){S.locality=0;syncControls()}
+  update();
+}
+/* Push state into the DOM controls (rebuilding dynamic option lists). */
+function syncControls(){
+  fieldDefs().forEach(f=>{
+    const el=$('#f_'+f.k);if(!el)return;
+    if(f.t==='select'){
+      el.innerHTML=f.opts().map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+      el.value=String(S[f.k]);
+      if(el.value!==String(S[f.k])&&el.options.length){el.selectedIndex=0;S[f.k]=isNaN(+el.value)?el.value:+el.value}
+    }else if(f.t==='range')el.value=S[f.k];
+    else el.checked=!!S[f.k];
+  });
+  document.querySelectorAll('#presets .chip').forEach(b=>b.classList.toggle('on',b.dataset.p===S.preset));
+}
+function updateLabels(){
+  fieldDefs().forEach(f=>{
+    if(f.t==='range'){const o=$('#o_'+f.k);if(o)o.textContent=S[f.k]+(f.unit||'')}
+    const h=$('#h_'+f.k);
+    if(h){h.textContent=f.hint?f.hint():'';h.classList.toggle('warn',!!(f.warn&&f.warn()))}
+  });
+  document.querySelectorAll('#presets .chip').forEach(b=>b.classList.toggle('on',b.dataset.p===S.preset));
+}
+
+function update(){
+  updateLabels();
+  const r=compute(), mo=r.mo;
+  $('#sTotal').textContent=fmt(r.total);
+  $('#mTotal').textContent=fmt(r.total);
+  $('#sWhere').textContent=`${locOf()[0]}, ${cityOf().n}, ${S.country} · ${mo} months`;
+  $('#sAvg').textContent=fmt(r.total/mo);
+  $('#sYear').textContent=fmt(r.total/mo*12);
+  $('#sRec').textContent=fmt(r.recurring);
+  $('#sOne').textContent=fmt(r.oneTime);
+  const cats=r.byCat.filter(c=>c.total>0.5);
+  $('#stack').innerHTML=cats.map(c=>`<i title="${c.n}" style="width:${c.total/r.total*100}%;background:${c.c}"></i>`).join('');
+  $('#legend').innerHTML=cats.map(c=>`<li><span class="dot" style="background:${c.c}"></span><span>${c.n}</span><span class="pc">${Math.round(c.total/r.total*100)}%</span><span class="am">${fmt(c.total)}</span></li>`).join('');
+  $('#sRange').textContent=`Likely range: ${fmt(r.total*.9)} – ${fmt(r.total*1.15)}`+(r.refundable?` · includes ${fmt(r.refundable)} refundable deposit`:'');
+  // detail table
+  let h=`<tr><th>Item</th><th></th><th>Per month (avg)</th><th>Total for ${mo} mo</th></tr>`;
+  r.byCat.forEach(c=>{
+    const rows=r.L.filter(l=>l.cat===c.id);if(!rows.length)return;
+    h+=`<tr class="cat"><td colspan="2">${c.n}</td><td>${fmt(c.total/mo)}</td><td>${fmt(c.total)}</td></tr>`;
+    rows.forEach(l=>{h+=`<tr><td>${l.label}</td><td class="note">${l.note}</td><td>${fmt(l.avg)}</td><td>${fmt(l.total)}</td></tr>`});
+  });
+  h+=`<tr class="cat"><td colspan="2">GRAND TOTAL (excl. tuition)</td><td>${fmt(r.total/mo)}</td><td>${fmt(r.total)}</td></tr>`;
+  $('#detail').innerHTML=h;
+  window.__last=r;
+}
+
+function summaryText(){
+  const r=window.__last;
+  const lines=[`Study abroad living-cost estimate (excl. tuition)`,
+   `${locOf()[0]}, ${cityOf().n}, ${S.country} · ${r.mo} months`,
+   `TOTAL: ${fmt(r.total)}  |  avg ${fmt(r.total/r.mo)} / month  |  one-time ${fmt(r.oneTime)}`,''];
+  r.byCat.filter(c=>c.total>0.5).forEach(c=>lines.push(`${c.n}: ${fmt(c.total)} (${Math.round(c.total/r.total*100)}%)`));
+  return lines.join('\n');
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(function init(){
+  $('#cur').innerHTML=Object.keys(RATES).map(c=>`<option>${c}</option>`).join('');
+  $('#cur').onchange=e=>{S.cur=e.target.value;try{localStorage.setItem('sac_cur',S.cur)}catch(_){ }syncControls();update()};
+  try{const c=localStorage.getItem('sac_cur');if(c&&RATES[c]){S.cur=c;$('#cur').value=c}}catch(_){ }
+  applyPreset('balanced');
+  buildForm();syncControls();update();
+  $('#btnPrint').onclick=()=>window.print();
+  $('#btnCopy').onclick=async e=>{
+    const b=e.currentTarget,t=summaryText();
+    try{await navigator.clipboard.writeText(t);b.textContent='Copied ✓'}catch(_){b.textContent='Copy not allowed'}
+    setTimeout(()=>b.textContent='Copy summary',1600);
+  };
+})();
+</script>
+</body>
+</html>

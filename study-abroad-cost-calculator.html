@@ -3,152 +3,314 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Study Abroad Cost Calculator</title>
+<meta name="color-scheme" content="light">
+<title>Cost of Living Calculator | House of Student</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f6fa; --card:#fff; --ink:#1b2033; --muted:#6b7390; --line:#e4e7f0;
-  --brand:#4f46e5; --brand-ink:#fff; --soft:#eef0ff; --warn:#92400e; --warnbg:#fff4e0;
-  --q-db:#16a34a; --q-fee:#2563eb; --q-cited:#d97706; --q-est:#9ca3af;
-  --shadow:0 1px 2px rgba(20,24,50,.06),0 6px 20px rgba(20,24,50,.06);
-}
-@media (prefers-color-scheme:dark){
-  :root{--bg:#10131f;--card:#181c2c;--ink:#eceefa;--muted:#9aa3c4;--line:#2a3050;--soft:#232a4d;--warn:#fbbf24;--warnbg:#3a2e12;--shadow:none}
+  --lime:#D0FE97; --lime-soft:#EEFFD9; --lime-deep:#6BB52E;
+  --ink:#3B3733; --ink-strong:#22201D; --muted:#78726B; --faint:#A39D95;
+  --line:#E8E5E0; --line-strong:#D9D5CF; --bg:#F7F6F3; --surface:#FFFFFF; --sunken:#F2F0EC;
+  --warn:#8A5A00; --warn-bg:#FFF6E0;
+  --q-db:#6BB52E; --q-fee:#5E7FB0; --q-cited:#E2B04A; --q-est:#CFC9C0;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --shadow:0 1px 2px rgba(34,32,29,.04),0 8px 24px rgba(34,32,29,.06);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;padding:28px 16px 64px}
-.wrap{max-width:1180px;margin:0 auto}
-header h1{margin:0 0 6px;font-size:clamp(22px,4vw,32px)}
-header p{margin:0;opacity:.92;max-width:700px}
-.topbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
-.topbar label{font-size:13px;opacity:.9}
-.topbar select{width:auto;padding:6px 10px;border-radius:8px;border:0;font:inherit}
-main{max-width:1180px;margin:-44px auto 24px;padding:0 16px;display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px;align-items:start}
-.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px;border:1px solid var(--line)}
-.card h2{margin:0 0 2px;font-size:17px;display:flex;gap:10px;align-items:center}
-.card .sub{margin:0 0 14px;color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
-.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Manrope,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- Top bar ---------- */
+.nav{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.nav-in{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;line-height:0}
+.brand img,.foot-in img{mix-blend-mode:multiply}
+.brand img{height:42px;width:auto}
+.nav-sep{width:1px;height:28px;background:var(--line-strong)}
+.nav-title{font-weight:700;font-size:15px;color:var(--ink)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-right label{font-size:13px;color:var(--muted);font-weight:600}
+.pill-select{appearance:none;border:1px solid var(--line-strong);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath stroke='%233B3733' stroke-width='1.6' d='m1 1.5 5 5 5-5'/%3E%3C/svg%3E") no-repeat right 12px center;border-radius:999px;padding:8px 34px 8px 14px;font-weight:700;font-size:14px;cursor:pointer}
+
+/* ---------- Hero ---------- */
+.hero{max-width:1240px;margin:0 auto;padding:44px 24px 28px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--lime-deep)}
+.hero h1{margin:12px 0 10px;font-size:clamp(30px,4.4vw,48px);line-height:1.08;letter-spacing:-.02em;font-weight:800;color:var(--ink-strong);max-width:820px}
+.hero h1 mark{background:linear-gradient(transparent 58%,var(--lime) 58%);color:inherit;padding:0 2px}
+.hero p{margin:0;color:var(--muted);font-size:17px;max-width:680px}
+.trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.trust span{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600}
+.trust svg{flex:none}
+
+/* ---------- Layout ---------- */
+.layout{max-width:1240px;margin:0 auto;padding:0 24px 32px;display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.step{padding:26px 28px;margin-bottom:16px}
+.step-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+.step-num{flex:none;width:34px;height:34px;border-radius:10px;background:var(--lime);color:var(--ink-strong);font-weight:800;font-size:13px;display:grid;place-items:center}
+.step-head h2{margin:0;font-size:19px;font-weight:800;color:var(--ink-strong);letter-spacing:-.01em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.step-head p{margin:3px 0 0;color:var(--muted);font-size:14px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--sunken);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 24px}
+.field{min-width:0;display:flex;flex-direction:column;gap:8px}
 .field.full{grid-column:1/-1}
-.field>label{font-size:13px;font-weight:600}
-select{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
-select:focus,input:focus-visible,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
-.rng{display:flex;align-items:center;gap:10px}
-.rng input{flex:1;accent-color:var(--brand);min-width:0}
-.rng output{min-width:64px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;font-size:13px}
-.tog{display:flex;align-items:center;gap:8px;font-weight:500}
-.tog input{width:18px;height:18px;accent-color:var(--brand)}
-.hint{font-size:12px;color:var(--muted);min-height:16px}
-.hint.warn{color:var(--warn);background:var(--warnbg);padding:4px 8px;border-radius:6px}
-.presets{display:flex;gap:8px;flex-wrap:wrap}
-.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit;font-weight:600}
-.chip:hover{border-color:var(--brand)}
-.chip.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
-.sum{position:sticky;top:12px}
-.sum .big{font-size:clamp(30px,5vw,40px);font-weight:800;line-height:1.1;letter-spacing:-.5px}
-.lbl{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-.kpi{background:var(--soft);border-radius:12px;padding:10px 12px}
-.kpi b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
-.stack{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--line);margin:10px 0}
-.stack i{display:block;height:100%}
-.legend{list-style:none;margin:0;padding:0;display:grid;gap:7px}
-.legend li{display:grid;grid-template-columns:12px 1fr auto auto;gap:8px;align-items:center;font-size:13px}
-.legend .dot{width:12px;height:12px;border-radius:4px}
-.legend .pc{color:var(--muted);width:38px;text-align:right}
-.legend .am{font-weight:600;font-variant-numeric:tabular-nums}
-.qrow{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:4px}
-.qrow span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:var(--c)}
-.note{font-size:12px;color:var(--muted);margin-top:12px}
-.alert{font-size:12px;background:var(--warnbg);color:var(--warn);padding:8px 10px;border-radius:8px;margin-top:10px}
-.btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.btn{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
-.btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
-.where{font-size:13px;color:var(--muted);margin:2px 0 6px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:7px 6px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-th:first-child,td:first-child{text-align:left}
-td.nt{color:var(--muted);text-align:left;font-size:12px}
-tr.cat td{font-weight:700;background:var(--soft);border-bottom:0}
-.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:99px;color:#fff;background:var(--c);white-space:nowrap}
-.tablewrap{overflow-x:auto}
-.full-card{max-width:1180px;margin:0 auto;padding:0 16px}
-footer{max-width:1180px;margin:0 auto 100px;padding:0 16px;color:var(--muted);font-size:12px}
-footer a{color:var(--brand)}
+.flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13.5px;font-weight:700;color:var(--ink)}
+.flabel output{font-weight:800;color:var(--ink-strong);font-size:14px}
+.hint{font-size:12.5px;color:var(--muted);min-height:0}
+.hint:empty{display:none}
+.hint.warn{color:var(--warn);background:var(--warn-bg);padding:6px 10px;border-radius:8px}
+
+/* select */
+.sel{appearance:none;width:100%;border:1px solid var(--line-strong);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath stroke='%233B3733' stroke-width='1.6' d='m1 1.5 5 5 5-5'/%3E%3C/svg%3E") no-repeat right 14px center;border-radius:var(--r-sm);padding:12px 40px 12px 14px;font-weight:600;cursor:pointer;transition:border-color .15s}
+.sel:hover{border-color:var(--ink)}
+
+/* segmented */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;background:var(--sunken);padding:4px;border-radius:12px}
+.seg.wrap{grid-auto-flow:row;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.seg button{border:0;background:transparent;border-radius:9px;padding:9px 8px;cursor:pointer;font-weight:700;font-size:13.5px;color:var(--muted);line-height:1.25;transition:background .15s,color .15s}
+.seg button small{display:block;font-weight:600;font-size:12px;margin-top:2px;color:var(--faint)}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-checked="true"]{background:var(--ink);color:#fff;box-shadow:0 2px 6px rgba(34,32,29,.18)}
+.seg button[aria-checked="true"] small{color:var(--lime)}
+
+/* country cards */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cards button{text-align:left;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.cards button:hover{border-color:var(--ink)}
+.cards b{display:block;font-size:15px;color:var(--ink-strong)}
+.cards small{display:block;color:var(--muted);font-weight:600;font-size:12.5px;margin-top:2px}
+.cards button[aria-checked="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:linear-gradient(0deg,var(--lime-soft),var(--lime-soft))}
+
+/* presets */
+.presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.presets button{text-align:left;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r-md);padding:16px;cursor:pointer;transition:border-color .15s}
+.presets button:hover{border-color:var(--ink)}
+.presets b{display:block;font-size:15px;color:var(--ink-strong);margin-bottom:4px}
+.presets small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4}
+.presets button[aria-checked="true"]{background:var(--ink);border-color:var(--ink)}
+.presets button[aria-checked="true"] b{color:var(--lime)}
+.presets button[aria-checked="true"] small{color:#E6E2DC}
+
+/* range */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ink) var(--p,0%),var(--line) var(--p,0%))}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ink) var(--p,0%),var(--line) var(--p,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:var(--lime);border:2px solid var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--lime);border:2px solid var(--ink)}
+
+/* toggle */
+.tog{display:flex;gap:14px;align-items:flex-start;cursor:pointer;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md)}
+.tog input{position:absolute;opacity:0;pointer-events:none}
+.tog .sw{flex:none;width:42px;height:24px;border-radius:99px;background:var(--line-strong);position:relative;transition:background .15s;margin-top:1px}
+.tog .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .15s,background .15s}
+.tog input:checked+.sw{background:var(--ink)}
+.tog input:checked+.sw::after{transform:translateX(18px);background:var(--lime)}
+.tog input:focus-visible+.sw{outline:2px solid var(--ink);outline-offset:2px}
+.tog b{display:block;font-size:14px;color:var(--ink-strong)}
+.tog small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+
+/* stay chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.chips button{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* meal plan */
+.mealbar{display:grid;grid-template-columns:repeat(21,1fr);gap:3px}
+.mealbar i{height:26px;border-radius:5px;background:var(--c)}
+.meallegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);font-weight:600}
+.meallegend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:6px;vertical-align:-1px}
+.mealnote{background:var(--sunken);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;color:var(--ink)}
+
+/* ---------- Summary ---------- */
+.sum{position:sticky;top:84px;padding:26px}
+.sum .lbl{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.total{font-size:clamp(34px,4vw,44px);font-weight:800;letter-spacing:-.02em;color:var(--ink-strong);line-height:1.1;margin-top:6px}
+.ctx{color:var(--muted);font-size:13.5px;margin-top:4px;font-weight:600}
+.eq{margin-top:14px;background:var(--lime-soft);border:1px solid #DDF5BF;border-radius:var(--r-md);padding:12px 14px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.eq b{color:var(--ink-strong)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 20px}
+.kpi{border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px}
+.kpi.wide{grid-column:1/-1}
+.kpi span{display:block;font-size:12px;color:var(--muted);font-weight:700}
+.kpi b{display:block;font-size:19px;font-weight:800;color:var(--ink-strong);margin-top:2px}
+.kpi small{display:block;font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px}
+.divider{height:1px;background:var(--line);margin:18px 0}
+.cats{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:12px}
+.cats li{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:13.5px}
+.cats .nm{font-weight:700;color:var(--ink)}
+.cats .am{font-weight:800;color:var(--ink-strong)}
+.cats .bar{grid-column:1/-1;height:6px;border-radius:99px;background:var(--sunken);overflow:hidden}
+.cats .bar i{display:block;height:100%;border-radius:99px;background:var(--c)}
+.cats .pc{color:var(--faint);font-weight:700;margin-left:6px;font-size:12px}
+.qbar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--sunken);margin:12px 0 10px;gap:2px}
+.qbar i{display:block;height:100%;background:var(--c)}
+.qleg{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.qleg span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:6px}
+.qleg b{color:var(--ink-strong)}
+.alert{margin-top:12px;font-size:12.5px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:var(--r-sm);padding:9px 12px}
+.rangeline{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.rangeline b{color:var(--ink-strong)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.btn{border-radius:12px;padding:12px 14px;font-weight:800;font-size:14px;cursor:pointer;border:1px solid var(--ink)}
+.btn.primary{background:var(--lime);color:var(--ink-strong);border-color:var(--lime)}
+.btn.primary:hover{background:#C3F57F}
+.btn.ghost{background:var(--surface);color:var(--ink)}
+.btn.ghost:hover{background:var(--sunken)}
+
+/* ---------- Below ---------- */
+.below{max-width:1240px;margin:0 auto;padding:0 24px 40px}
+.panel{padding:26px 28px;margin-bottom:16px}
+.panel h3{margin:0 0 4px;font-size:19px;font-weight:800;color:var(--ink-strong)}
+.panel .sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;text-align:right;padding:10px 12px;border-bottom:1px solid var(--line-strong)}
+td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line)}
+th.l,td.l,td.basis{text-align:left}
+td.basis{color:var(--muted);font-size:12.5px;max-width:330px}
+tr.grp td{background:var(--sunken);font-weight:800;color:var(--ink-strong);border-bottom:0}
+tr.grp td:first-child{border-radius:10px 0 0 10px}
+tr.grp td:last-child{border-radius:0 10px 10px 0}
+tr.tot td{font-weight:800;font-size:15px;color:var(--ink-strong);border-bottom:0;border-top:2px solid var(--ink)}
+.q{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;white-space:nowrap;color:var(--ink)}
+.q::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+details{border-top:1px solid var(--line);padding:14px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:800;color:var(--ink-strong);list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:20px;font-weight:600;color:var(--muted)}
+details[open] summary::after{content:"–"}
+details p,details li{color:var(--ink);font-size:14px}
+details ul{padding-left:18px}
+details a{color:var(--ink);font-weight:700}
+.assump td:nth-child(2){text-align:right}
+footer{border-top:1px solid var(--line);background:var(--surface)}
+.foot-in{max-width:1240px;margin:0 auto;padding:22px 24px 90px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
+.foot-in img{height:30px;width:auto}
+
+/* mobile bar */
 .mbar{display:none}
-@media (max-width:920px){
-  main{grid-template-columns:1fr}
+@media (max-width:1040px){
+  .layout{grid-template-columns:1fr}
   .sum{position:static}
+  .presets{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .nav-in{padding:10px 16px;gap:12px}
+  .brand img{height:34px}
+  .nav-sep,.nav-title,.nav-right label{display:none}
+  .hero{padding:28px 16px 20px}
+  .layout,.below{padding-left:16px;padding-right:16px}
+  .step,.panel,.sum{padding:20px 18px}
   .grid{grid-template-columns:1fr}
-  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--brand);color:#fff;padding:10px 16px;justify-content:space-between;align-items:center;text-decoration:none;box-shadow:0 -4px 16px rgba(0,0,0,.2)}
-  .mbar b{font-size:18px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .seg{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .seg.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--ink);color:#fff;padding:12px 16px;justify-content:space-between;align-items:center;gap:12px}
+  .mbar span{font-size:12px;color:#D9D5CF;font-weight:600;display:block}
+  .mbar b{font-size:19px;font-weight:800}
+  .mbar a{background:var(--lime);color:var(--ink-strong);text-decoration:none;font-weight:800;font-size:13px;padding:10px 14px;border-radius:10px}
 }
 @media print{
-  header .topbar,.presets,.mbar,.btns,#form{display:none!important}
-  main{display:block;margin-top:0}
-  header{background:none;color:#000;padding:0}
+  .nav,.hero .trust,#form,.mbar,.actions{display:none!important}
+  body{background:#fff}
+  .layout{display:block;padding:0}
+  .card{box-shadow:none}
   .sum{position:static}
+  details{display:block}
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>🎓 Study Abroad Cost Calculator</h1>
-    <p>What will it really cost to <em>live</em> abroad, excluding tuition? Rent comes from our own listings database; fees and everyday costs are clearly labelled by how reliable they are.</p>
-    <div class="topbar">
-      <label for="cur">Show amounts in</label>
-      <select id="cur"></select>
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="https://houseofstudent.com/" aria-label="House of Student home"><img src="data:image/png;base64,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" alt="House of Student" width="162" height="42"></a>
+    <span class="nav-sep" aria-hidden="true"></span>
+    <span class="nav-title">Cost of Living Calculator</span>
+    <div class="nav-right">
+      <label for="cur">Currency</label>
+      <select id="cur" class="pill-select"></select>
     </div>
   </div>
 </header>
 
-<main>
+<section class="hero">
+  <span class="eyebrow"><span class="dot"></span>Study abroad planner</span>
+  <h1>Know the real cost of <mark>living abroad</mark> before you go.</h1>
+  <p>Build a month-by-month budget for your stay, excluding tuition. Rent is calculated from live House of Student listings; every other cost is itemised and labelled by how reliable it is.</p>
+  <div class="trust" id="trust"></div>
+</section>
+
+<main class="layout">
   <div id="form"></div>
-  <aside class="sum card" id="results" aria-live="polite">
-    <div class="lbl">Total living cost (excl. tuition)</div>
-    <div class="big" id="sTotal">–</div>
-    <div class="where" id="sWhere"></div>
+  <aside class="card sum" id="results" aria-live="polite">
+    <div class="lbl">Estimated cost of living</div>
+    <div class="total num" id="sTotal">–</div>
+    <div class="ctx" id="sWhere"></div>
+    <div class="eq num" id="sEq"></div>
     <div class="kpis">
-      <div class="kpi"><span class="lbl">Avg / month</span><b id="sAvg">–</b></div>
-      <div class="kpi"><span class="lbl">Avg / year</span><b id="sYear">–</b></div>
-      <div class="kpi"><span class="lbl">Recurring / month</span><b id="sRec">–</b></div>
-      <div class="kpi"><span class="lbl">One-time upfront</span><b id="sOne">–</b></div>
+      <div class="kpi"><span>Monthly running cost</span><b class="num" id="sRec">–</b><small>Rent, food, living, travel</small></div>
+      <div class="kpi"><span>All-in monthly average</span><b class="num" id="sAvg">–</b><small>Total ÷ months</small></div>
+      <div class="kpi wide"><span>Cash needed to get started</span><b class="num" id="sUp">–</b><small id="sUpNote"></small></div>
     </div>
-    <div class="stack" id="stack"></div>
-    <ul class="legend" id="legend"></ul>
-    <div class="lbl" style="margin-top:16px">How reliable is this number?</div>
-    <div class="stack" id="qstack"></div>
-    <div class="qrow" id="qlegend"></div>
+    <div class="lbl">Where the money goes</div>
+    <ul class="cats" id="cats"></ul>
+    <div class="divider"></div>
+    <div class="lbl">Data confidence</div>
+    <div class="qbar" id="qbar"></div>
+    <div class="qleg" id="qleg"></div>
     <div id="alerts"></div>
-    <div class="note" id="sRange"></div>
-    <div class="btns">
-      <button class="btn pri" id="btnCopy" type="button">Copy summary</button>
-      <button class="btn" id="btnPrint" type="button">Print / PDF</button>
+    <div class="rangeline num" id="sRange"></div>
+    <div class="actions">
+      <button class="btn primary" id="btnCopy" type="button">Copy summary</button>
+      <button class="btn ghost" id="btnPrint" type="button">Save as PDF</button>
     </div>
   </aside>
 </main>
 
-<section class="full-card">
-  <div class="card">
-    <h2><span>🧾</span>Detailed breakdown</h2>
-    <p class="sub">Every line item behind your total, tagged by data quality.</p>
+<section class="below">
+  <div class="card panel">
+    <h3>Detailed breakdown</h3>
+    <p class="sub">Every line behind your total, with the basis of each figure and where it comes from.</p>
     <div class="tablewrap"><table id="detail"></table></div>
   </div>
-  <div class="card">
-    <h2><span>🔎</span>Where the numbers come from</h2>
-    <p class="sub" id="methSub"></p>
-    <div class="tablewrap"><table id="assump"></table></div>
+  <div class="card panel">
+    <h3>Methodology &amp; sources</h3>
+    <p class="sub">How each number is produced, so you can judge how far to rely on it.</p>
+    <details open><summary>Rent: House of Student listings data</summary><div id="mRent"></div></details>
+    <details><summary>Assumptions for the selected country</summary><div class="tablewrap"><table class="assump" id="assump"></table></div></details>
+    <details><summary>How the total is calculated</summary>
+      <ul>
+        <li><b>Total</b> = monthly running cost × months of stay + one-time costs. The refundable deposit is not a cost and is excluded from the total.</li>
+        <li><b>Monthly running cost</b> includes yearly items (trips, annual memberships) spread evenly per month, plus your contingency buffer.</li>
+        <li><b>One-time costs</b> are visa and residence fees, insurance and levies paid upfront, flights at the start and end of your stay, a starter household kit and winter clothing where needed.</li>
+        <li><b>Cash needed to get started</b> = one-time costs + refundable deposit + your first month of running costs.</li>
+        <li><b>Meals</b>: the plan always adds up to 21 meals a week; home cooking covers every meal you do not eat out.</li>
+        <li><b>Likely range</b> widens with uncertainty: ±5% on DB-backed and official items, ±15% on sourced estimates, ±30% on estimates.</li>
+      </ul>
+    </details>
+    <details><summary>Sources and exchange rates</summary><div id="mSources"></div></details>
   </div>
 </section>
 
-<footer id="foot"></footer>
-<a class="mbar" href="#results"><span>Total living cost</span><b id="mTotal">–</b></a>
+<footer>
+  <div class="foot-in">
+    <img src="data:image/png;base64,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" alt="House of Student" width="116" height="30">
+    <span>Estimates for planning only. Confirm visa, insurance and fee amounts on official government sites before paying. Tuition is not included.</span>
+  </div>
+</footer>
+
+<div class="mbar"><div><span>Estimated total</span><b class="num" id="mTotal">–</b></div><a href="#results">View summary</a></div>
 
 <script>
 /* =====================================================================
-   1. RENT DATA — snapshot of the House of Student listings database
+   1. RENT DATA: snapshot of the House of Student listings database
    ---------------------------------------------------------------------
    Source: BigQuery houseofstudent-ga.warehouse.tbl_p_details + tbl_r_wpd (+ tbl_city, tbl_country)
    Rules:  property status=1, not deleted; price row status=1, price>0;
@@ -160,6 +322,8 @@ footer a{color:var(--brand)}
    city:   n = listings in sample (property × room type). Cities with n >= 15 only.
    L:      postcode districts with n >= 8 (top 8 per city, cities with n >= 40):
            [postcode, area name (researched; null = not confident), n, p25, median, p75]
+   Verification checksum (BigQuery = this file): 91 cities, Σ(n+p25+med+p75)=277111;
+           152 localities, Σ=545658.
    ===================================================================== */
 const SNAPSHOT='2026-10-28';
 const DB={
@@ -229,153 +393,158 @@ const DB={
 
 /* =====================================================================
    2. NON-RENT ASSUMPTIONS (local currency unless noted)
-   Quality tags: fee = published government/insurer fee (verify before paying)
-                 cited = taken from a published student budget / price list found in research
-                 est = analyst estimate, no solid source — treat as indicative
+   Quality: fee   = published government / insurer fee (verify before paying)
+            cited = from a published student budget or price list found in research
+            est   = analyst estimate without a solid source; indicative only
    ===================================================================== */
-// FX: INR per 1 unit — Indian Customs notified rates, 2 Oct 2026 (reference rates, not live market quotes)
+// INR per 1 unit: Indian Customs notified exchange rates, 2 Oct 2026 (reference rates, not live quotes)
 const FX={INR:1,USD:96.95,EUR:110.50,GBP:129.25,AUD:68.20,NZD:55.30};
-const FX_NOTE='Indian Customs notified exchange rates dated 2 Oct 2026 (reference rates, not live market quotes)';
-const MEDIA={flightBudget:'Budget airline flight',flightStd:'Full-service flight',train:'Train / rail',bus:'Coach / bus',car:'Self-drive / car-share'};
+const FX_NOTE='Indian Customs notified exchange rates of 2 Oct 2026 (reference rates, not live market quotes)';
+const MEDIA={flightBudget:'Budget airline',flightStd:'Full-service airline',train:'Train',bus:'Coach',car:'Car / car-share'};
 
+/* fee kinds: once | halfyear (per 12 months, ≤6-month remainder at half rate) | peryear (per started year)
+              | persemester (per started 6 months) | prorata (annual amount × months/12, paid upfront) | monthly */
 const COUNTRIES={
- 'United Kingdom':{flag:'🇬🇧',cold:true,
-  p:{cheap:12,mid:28,coffee:3.5,groc:38,canteen:5,pass:55,ride:9,utils:95,net:28,mobile:12,gym:28,cinema:11.5,cloth:18,car:450},
-  cited:['groc'],
-  cityP:{London:{pass:140,ride:14}},
-  fee:{visa:558,health:776,levy:0,extra:0},
-  feeNote:{visa:'Student visa application fee £558 from 8 Apr 2026 (older sources show £524) — confirm on gov.uk',health:'Immigration Health Surcharge, student rate £776 per year, charged for the whole visa length'},
+ 'United Kingdom':{code:'GB',cold:true,
+  p:{cheap:12,mid:28,coffee:3.5,groc:38,canteen:5,pass:55,ride:9,utils:95,net:28,mobile:12,gym:28,cinema:11.5,sub:9,cloth:18,car:450},
+  cited:['groc'],cityP:{London:{pass:140,ride:14}},
+  fees:[
+   {g:'visa',label:'Student visa application',amt:558,kind:'once',q:'fee',note:'£558 from 8 Apr 2026 (previously £524). Confirm on gov.uk.'},
+   {g:'ins',label:'Immigration Health Surcharge',amt:776,kind:'halfyear',q:'fee',note:'£776 per year, remainder of 6 months or less at half rate, paid upfront. Charged on the full visa length, which can run a few months beyond your course.'}],
   flightINR:75000,dom:[55,110,220],domT:40,
-  near:{name:'nearby European countries',ccy:'GBP',f:{flightBudget:90,flightStd:190,train:120,bus:45,car:110},d:[55,110,220]}},
- 'France':{flag:'🇫🇷',cold:true,
-  p:{cheap:10,mid:25,coffee:2.5,groc:55,canteen:3.3,pass:28,ride:12,utils:60,net:25,mobile:15,gym:25,cinema:10,cloth:20,car:480},
-  cited:['cheap','mid','groc','canteen','mobile'],
-  cityP:{Paris:{pass:35}},
-  fee:{visa:99,health:240,levy:105,extra:0},
-  feeNote:{visa:'Long-stay student visa €99 standard (€50 via Études en France); sources disagree on a further validation fee — confirm on France-Visas',health:'Optional complementary insurance — estimate; basic cover is via the student social-security levy',levy:'CVEC student levy €105 per year (one source says €100)'},
+  near:{name:'Europe',ccy:'GBP',f:{flightBudget:90,flightStd:190,train:120,bus:45,car:110},d:[55,110,220]}},
+ 'France':{code:'FR',cold:true,
+  p:{cheap:10,mid:25,coffee:2.5,groc:55,canteen:3.3,pass:28,ride:12,utils:60,net:25,mobile:15,gym:25,cinema:10,sub:10,cloth:20,car:480},
+  cited:['cheap','mid','groc','canteen','mobile'],cityP:{Paris:{pass:35}},
+  fees:[
+   {g:'visa',label:'Long-stay student visa',amt:99,kind:'once',q:'fee',note:'€99 standard, €50 via Études en France. Sources disagree on a further validation fee. Confirm on France-Visas.'},
+   {g:'ins',label:'CVEC student levy',amt:105,kind:'peryear',q:'fee',note:'€105 per academic year (one source says €100).'},
+   {g:'ins',label:'Complementary health insurance (mutuelle)',amt:20,kind:'monthly',q:'est',note:'Optional top-up cover; basic cover comes through French social security.'}],
   flightINR:78000,dom:[60,120,240],domT:45,
-  near:{name:'nearby European countries',ccy:'EUR',f:{flightBudget:100,flightStd:210,train:120,bus:50,car:110},d:[60,120,240]}},
- 'Germany':{flag:'🇩🇪',cold:true,
-  p:{cheap:10,mid:25,coffee:3.5,groc:58,canteen:4.5,pass:0,ride:12,utils:60,net:25,mobile:15,gym:30,cinema:11,cloth:20,car:480},
-  cited:['groc','canteen','utils'],
-  cityP:{},
-  fee:{visa:75,health:1740,levy:600,extra:0},
-  feeNote:{visa:'Student visa fee €75 (single source) — confirm with the German embassy',health:'Statutory student health insurance ≈ €145/month (providers list €141–151)',levy:'Semester contribution ≈ €250–400 per semester (two per year, mid-range used); usually includes the regional transit ticket, so transit pass is set to 0'},
+  near:{name:'Europe',ccy:'EUR',f:{flightBudget:100,flightStd:210,train:120,bus:50,car:110},d:[60,120,240]}},
+ 'Germany':{code:'DE',cold:true,
+  p:{cheap:10,mid:25,coffee:3.5,groc:58,canteen:4.5,pass:0,ride:12,utils:60,net:25,mobile:15,gym:30,cinema:11,sub:10,cloth:20,car:480},
+  cited:['groc','canteen','utils'],cityP:{},
+  fees:[
+   {g:'visa',label:'Student visa',amt:75,kind:'once',q:'fee',note:'€75 (single source). Confirm with the German embassy.'},
+   {g:'ins',label:'Statutory student health insurance',amt:145,kind:'monthly',q:'fee',note:'About €141–151 per month depending on insurer.'},
+   {g:'ins',label:'Semester contribution',amt:300,kind:'persemester',q:'fee',note:'About €250–400 per semester; mid-range used. Usually includes the regional transit ticket, so the transit pass is set to zero.'}],
   flightINR:75000,dom:[60,115,230],domT:40,
-  near:{name:'nearby European countries',ccy:'EUR',f:{flightBudget:100,flightStd:210,train:120,bus:50,car:110},d:[60,120,240]}},
- 'Australia':{flag:'🇦🇺',cold:false,
-  p:{cheap:15,mid:32,coffee:4.5,groc:100,canteen:10,pass:120,ride:20,utils:140,net:65,mobile:35,gym:60,cinema:22,cloth:28,car:470},
-  cited:['utils','net'],
-  cityP:{},
-  fee:{visa:2500,health:650,levy:0,extra:0},
-  feeNote:{visa:'Subclass 500 student visa A$2,500 from 1 Jul 2026 (earlier A$2,000) — confirm with Home Affairs',health:'OSHC ≈ A$500–700 per year (A$45–65 per month)'},
+  near:{name:'Europe',ccy:'EUR',f:{flightBudget:100,flightStd:210,train:120,bus:50,car:110},d:[60,120,240]}},
+ 'Australia':{code:'AU',cold:false,
+  p:{cheap:15,mid:32,coffee:4.5,groc:100,canteen:10,pass:120,ride:20,utils:140,net:65,mobile:35,gym:60,cinema:22,sub:15,cloth:28,car:470},
+  cited:['utils','net'],cityP:{},
+  fees:[
+   {g:'visa',label:'Student visa (subclass 500)',amt:2500,kind:'once',q:'fee',note:'A$2,500 from 1 Jul 2026 (previously A$2,000). Confirm with Home Affairs.'},
+   {g:'ins',label:'Overseas Student Health Cover (OSHC)',amt:650,kind:'prorata',q:'fee',note:'About A$500–700 per year, paid upfront for the whole visa.'}],
   flightINR:95000,dom:[75,145,280],domT:150,
-  near:{name:'New Zealand / Bali / Fiji',ccy:'AUD',f:{flightBudget:550,flightStd:950,train:null,bus:null,car:null},d:[130,250,500]}},
- 'Ireland':{flag:'🇮🇪',cold:false,
-  p:{cheap:12,mid:30,coffee:4,groc:50,canteen:6,pass:48,ride:12,utils:110,net:30,mobile:25,gym:35,cinema:12,cloth:20,car:480},
-  cited:['coffee','groc','utils','net','mobile'],
-  cityP:{},
-  fee:{visa:60,health:300,levy:0,extra:300},
-  feeNote:{visa:'Student visa €60 (single entry)',health:'Mandatory private health insurance — sources quote about €150–300; low confidence',extra:'Irish Residence Permit (IRP) registration €300 — confirm with Irish Immigration Service'},
+  near:{name:'New Zealand, Bali, Fiji',ccy:'AUD',f:{flightBudget:550,flightStd:950,train:null,bus:null,car:null},d:[130,250,500]}},
+ 'Ireland':{code:'IE',cold:false,
+  p:{cheap:12,mid:30,coffee:4,groc:50,canteen:6,pass:48,ride:12,utils:110,net:30,mobile:25,gym:35,cinema:12,sub:10,cloth:20,car:480},
+  cited:['coffee','groc','utils','net','mobile'],cityP:{},
+  fees:[
+   {g:'visa',label:'Student visa',amt:60,kind:'once',q:'fee',note:'€60 single entry.'},
+   {g:'visa',label:'Irish Residence Permit registration',amt:300,kind:'peryear',q:'fee',note:'€300 per registration or renewal. Confirm with Irish Immigration Service.'},
+   {g:'ins',label:'Private health insurance',amt:300,kind:'peryear',q:'cited',note:'Mandatory; sources quote about €150–300 per year. Low confidence.'}],
   flightINR:80000,dom:[65,125,250],domT:35,
-  near:{name:'UK & Europe',ccy:'EUR',f:{flightBudget:90,flightStd:190,train:null,bus:null,car:160},d:[60,120,240]}},
- 'New Zealand':{flag:'🇳🇿',cold:false,
-  p:{cheap:16,mid:38,coffee:5,groc:125,canteen:10,pass:130,ride:22,utils:150,net:80,mobile:40,gym:75,cinema:21,cloth:30,car:480},
-  cited:['groc','pass'],
-  cityP:{},
-  fee:{visa:375,health:700,levy:0,extra:0},
-  feeNote:{visa:'No fee found in research — figure is an estimate, confirm with Immigration New Zealand',health:'Insurance is mandatory; no price found — estimate'},
+  near:{name:'UK and Europe',ccy:'EUR',f:{flightBudget:90,flightStd:190,train:null,bus:null,car:160},d:[60,120,240]}},
+ 'New Zealand':{code:'NZ',cold:false,
+  p:{cheap:16,mid:38,coffee:5,groc:125,canteen:10,pass:130,ride:22,utils:150,net:80,mobile:40,gym:75,cinema:21,sub:16,cloth:30,car:480},
+  cited:['groc','pass'],cityP:{},
+  fees:[
+   {g:'visa',label:'Student visa',amt:375,kind:'once',q:'est',note:'No official figure found in research. Confirm with Immigration New Zealand.'},
+   {g:'ins',label:'International student insurance',amt:700,kind:'prorata',q:'est',note:'Mandatory; no price found in research.'}],
   flightINR:110000,dom:[80,150,290],domT:130,
-  near:{name:'Australia / Fiji / Pacific',ccy:'NZD',f:{flightBudget:500,flightStd:850,train:null,bus:null,car:null},d:[140,260,520]}}
+  near:{name:'Australia and the Pacific',ccy:'NZD',f:{flightBudget:500,flightStd:850,train:null,bus:null,car:null},d:[140,260,520]}}
 };
 const SOURCES=[
- ['UK visa fee & IHS','https://www.davidsonmorris.com/uk-visa-fees','Secondary; confirm on gov.uk'],
- ['UK student visa fees 2026','https://www.uni2study.com/articles/uk-student-visa-health-surcharge-fee-increase-2026','Secondary'],
- ['Australia student visa fee 2026','https://migratio.com.au/blog/australia-student-visa-fee-2026','Secondary; confirm with Home Affairs'],
- ['Germany blocked account / insurance','https://www.expatrio.com/about-germany/blocked-amount-2025','Secondary'],
- ['France visa, CVEC, funds','https://www.ccfs-sorbonne.fr/en/?p=107311','Secondary; confirm on France-Visas'],
- ['France 1€ student canteen meals','https://www.thelocal.fr/20260426/france-launches-one-euro-university-meals-for-all-students','News'],
- ['Ireland cost of living (DCU)','https://www.dcu.ie/students/financial-survival-university','University budget guide'],
- ['Ireland cost of living (TU Dublin)','https://www.tudublin.ie/media/website/for-students/documents/TU-Dublin-Cost-of-Living-Guide-2026.pdf','University budget guide'],
- ['UK London student budget','https://www.trinitylaban.ac.uk/fees-your-finances/cost-of-living/','University budget guide'],
+ ['UK visa fee and Immigration Health Surcharge','https://www.davidsonmorris.com/uk-visa-fees','secondary; confirm on gov.uk'],
+ ['UK student visa fee increase 2026','https://www.uni2study.com/articles/uk-student-visa-health-surcharge-fee-increase-2026','secondary'],
+ ['London student budget (Trinity Laban)','https://www.trinitylaban.ac.uk/fees-your-finances/cost-of-living/','university budget guide'],
+ ['Australia student visa fee 2026','https://migratio.com.au/blog/australia-student-visa-fee-2026','secondary; confirm with Home Affairs'],
+ ['Germany blocked account and insurance','https://www.expatrio.com/about-germany/blocked-amount-2025','secondary'],
+ ['France visa, CVEC and financial proof','https://www.ccfs-sorbonne.fr/en/?p=107311','secondary; confirm on France-Visas'],
+ ['France €1 student canteen meals','https://www.thelocal.fr/20260426/france-launches-one-euro-university-meals-for-all-students','news'],
+ ['Dublin student costs (DCU)','https://www.dcu.ie/students/financial-survival-university','university budget guide'],
+ ['Dublin student costs (TU Dublin)','https://www.tudublin.ie/media/website/for-students/documents/TU-Dublin-Cost-of-Living-Guide-2026.pdf','university budget guide'],
  ['Exchange rates','https://indiashippingnews.com/custom-exchange-rates/','Indian Customs notified rates, 2 Oct 2026']
 ];
 
 /* =====================================================================
-   3. UI DEFINITION
+   3. CATEGORIES, QUALITY LEVELS, FORM DEFINITION
    ===================================================================== */
 const CATS=[
- {id:'rent',n:'Rent & bills',c:'#4f46e5'},{id:'food',n:'Food',c:'#f59e0b'},
- {id:'living',n:'Daily living',c:'#10b981'},{id:'lux',n:'Luxury & leisure',c:'#ec4899'},
- {id:'trans',n:'Local transport',c:'#06b6d4'},{id:'travel',n:'Travel & trips',c:'#8b5cf6'},
- {id:'cloth',n:'Clothing',c:'#f97316'},{id:'setup',n:'Fees & one-time setup',c:'#64748b'}
+ {id:'rent',n:'Rent & bills',c:'#3B3733'},{id:'food',n:'Food',c:'#9CCB5B'},
+ {id:'living',n:'Everyday living',c:'#6F9A8D'},{id:'lux',n:'Leisure & luxury',c:'#D08C6B'},
+ {id:'trans',n:'Local transport',c:'#5E7FB0'},{id:'travel',n:'Travel',c:'#E2B04A'},
+ {id:'cloth',n:'Clothing',c:'#A487C2'},{id:'fees',n:'Visa, insurance & fees',c:'#8E8780'},
+ {id:'setup',n:'Moving & setup',c:'#C2BCB4'},{id:'buffer',n:'Contingency',c:'#DCD7D0'}
 ];
-const QUAL={db:{n:'Our DB data',c:'var(--q-db)'},fee:{n:'Official fee',c:'var(--q-fee)'},cited:{n:'Sourced estimate',c:'var(--q-cited)'},est:{n:'Estimate',c:'var(--q-est)'}};
-const o=(...a)=>a.map((l,i)=>[i,l]);
+const QUAL={db:{n:'House of Student data',s:'DB data',c:'var(--q-db)',w:.05},fee:{n:'Official fee',s:'Official fee',c:'var(--q-fee)',w:.05},cited:{n:'Sourced estimate',s:'Sourced',c:'var(--q-cited)',w:.15},est:{n:'Estimate',s:'Estimate',c:'var(--q-est)',w:.30}};
+const MEALS=[['mCanteen','Campus canteen','#6F9A8D'],['mCheap','Cheap eats','#E2B04A'],['mRest','Restaurants','#D08C6B'],['mDeliv','Delivery','#A487C2']];
+const MEAL_KEYS=MEALS.map(m=>m[0]);
+const lc=v=>fmtCcy(v,localCcy(),Math.abs(v)<100&&Math.round(v)!==v?2:0);   // unit prices keep their pence/cents
+
 const SECTIONS=[
- {ic:'📍',t:'Where & how long',s:'Country → city → neighbourhood. Only places with enough listings in our database are offered.',f:[
-   {k:'country',t:'select',l:'Country',opts:()=>Object.keys(DB).map(c=>[c,COUNTRIES[c].flag+' '+c])},
-   {k:'city',t:'select',l:'City',opts:()=>DB[S.country].cities.map((c,i)=>[i,c.c+' ('+c.n+' listings)'])},
-   {k:'locality',t:'select',l:'Nearby locality (postcode area)',full:1,opts:()=>localities().map((l,i)=>[i,l.label]),hint:()=>{const l=localities()[S.locality];return l.n+' listings in sample · typical rent '+fmtL(l.r[1])+' / month'+(S.locality?'':' · pick a postcode area for a more precise figure')}},
-   {k:'months',t:'range',l:'Length of stay',min:3,max:60,step:1,unit:' months'}]},
- {ic:'✨',t:'Overall lifestyle',s:'Pick a starting point, then fine-tune every section below.',presets:1,f:[]},
- {ic:'🏠',t:'Tenancy / accommodation',s:'Rent is the real price range of our listings in the area you chose.',f:[
-   {k:'tier',t:'select',l:'Room price band',opts:()=>[[0,'Budget — cheapest quarter of listings'],[1,'Typical — median listing'],[2,'Premium — top quarter of listings']],hint:()=>'Rent: '+fmtL(rentMonthlyLocal())+' / month ('+['25th percentile','median','75th percentile'][S.tier]+')',full:1},
-   {k:'billsIncl',t:'toggle',l:'Bills (utilities + internet) are included in my rent'},
-   {k:'laundry',t:'select',l:'Laundry',opts:()=>[['free','In-house / free'],['paid','Launderette / paid']]},
-   {k:'deposit',t:'select',l:'Security deposit (refundable)',opts:()=>[[0,'None'],[1,'1 month'],[1.5,'1.5 months'],[2,'2 months']],hint:()=>'Varies by property — check the listing',full:1}]},
- {ic:'🍽️',t:'Food',s:'Cooking at home vs eating out makes the biggest difference.',f:[
-   {k:'diet',t:'select',l:'Diet',opts:()=>[['veg','Vegetarian'],['mixed','Mixed'],['nonveg','Non-vegetarian heavy'],['vegan','Vegan']]},
-   {k:'groc',t:'select',l:'Grocery style',opts:()=>[['b','Budget supermarkets'],['m','Regular supermarkets'],['p','Organic / premium']]},
-   {k:'mHome',t:'range',l:'Home-cooked meals / week',min:0,max:21,step:1,unit:' /wk'},
-   {k:'mCanteen',t:'range',l:'Campus canteen meals / week',min:0,max:14,step:1,unit:' /wk'},
-   {k:'mCheap',t:'range',l:'Cheap eats & fast food / week',min:0,max:14,step:1,unit:' /wk'},
-   {k:'mRest',t:'range',l:'Sit-down restaurant meals / week',min:0,max:10,step:1,unit:' /wk'},
-   {k:'mDeliv',t:'range',l:'Food delivery orders / week',min:0,max:10,step:1,unit:' /wk'},
-   {k:'coffee',t:'range',l:'Coffee, snacks & bubble tea / week',min:0,max:15,step:1,unit:' /wk',hint:()=>{const n=S.mHome+S.mCanteen+S.mCheap+S.mRest+S.mDeliv;return n>21?'⚠ '+n+' meals planned, more than 21 a week':n+' of 21 weekly meals planned'},warn:()=>S.mHome+S.mCanteen+S.mCheap+S.mRest+S.mDeliv>21}]},
- {ic:'🛋️',t:'Daily living',s:'Phone, fitness, personal care, entertainment.',f:[
-   {k:'mobile',t:'select',l:'Mobile plan',opts:()=>o('Basic / prepaid','Standard','Unlimited data')},
-   {k:'gym',t:'select',l:'Fitness',opts:()=>o('None / outdoor','Campus gym','Standard gym','Premium club')},
-   {k:'care',t:'select',l:'Personal care & toiletries',opts:()=>o('Basic','Standard','Premium (salon products, skincare)')},
-   {k:'outings',t:'range',l:'Cinema / outings per month',min:0,max:10,step:1,unit:''},
-   {k:'subs',t:'range',l:'Subscriptions (streaming, music, apps)',min:0,max:8,step:1,unit:''},
-   {k:'buffer',t:'range',l:'Contingency buffer on monthly spend',min:0,max:20,step:1,unit:'%'}]},
- {ic:'💎',t:'Luxury & leisure',s:'Nice-to-haves that add up quickly. Unit prices scale with the local mid-range restaurant price.',f:[
-   {k:'salon',t:'range',l:'Salon / spa visits per month',min:0,max:6,step:1,unit:''},
-   {k:'night',t:'range',l:'Nightlife (bars, clubs) per month',min:0,max:12,step:1,unit:''},
-   {k:'events',t:'range',l:'Concerts / sports / events per month',min:0,max:6,step:1,unit:''},
-   {k:'fine',t:'range',l:'Fine-dining outings per month',min:0,max:6,step:1,unit:''},
-   {k:'brands',t:'select',l:'Branded goods & accessories (per month)',opts:()=>[[0,'None'],[5000,'Occasional (~'+fmt(5000)+')'],[12000,'Regular (~'+fmt(12000)+')'],[30000,'Frequent (~'+fmt(30000)+')'],[80000,'Heavy (~'+fmt(80000)+')']]},
-   {k:'hobby',t:'select',l:'Hobbies & classes (per month)',opts:()=>[[0,'None'],[3500,'Light (~'+fmt(3500)+')'],[8000,'Active (~'+fmt(8000)+')'],[16000,'Serious (~'+fmt(16000)+')']]}]},
- {ic:'🚇',t:'Getting around locally',s:'Daily commute and city travel.',f:[
-   {k:'tMode',t:'select',l:'Main way to get around',opts:()=>[['pass','Student public-transport pass'],['bike','Bicycle'],['walk','Mostly walking'],['car','Own / leased car']]},
-   {k:'rides',t:'range',l:'Taxi / ride-share trips per month',min:0,max:30,step:1,unit:''}]},
- {ic:'✈️',t:'Travel & trips',s:'Home visits, trips inside the country and nearby countries.',f:[
-   {k:'homeTrips',t:'range',l:'Trips back home per year',min:0,max:4,step:1,unit:' /yr',hint:()=>'Return flight ≈ '+fmt(COUNTRIES[S.country].flightINR)+' (estimate)'},
-   {k:'domTrips',t:'range',l:'Trips within the country per year',min:0,max:12,step:1,unit:' /yr'},
-   {k:'domDays',t:'range',l:'Avg days per domestic trip',min:1,max:10,step:1,unit:' days'},
-   {k:'domStyle',t:'select',l:'Domestic trip style',opts:()=>o('Budget (hostels, buses)','Comfortable (3★ hotels)','Premium (4-5★)')},
-   {k:'nearTrips',t:'range',l:'Trips to nearby countries per year',min:0,max:12,step:1,unit:' /yr',hint:()=>'Typical region: '+COUNTRIES[S.country].near.name},
-   {k:'nearDays',t:'range',l:'Avg days per nearby-country trip',min:1,max:14,step:1,unit:' days'},
-   {k:'nearMedium',t:'select',l:'How will you travel there?',opts:()=>{const nr=COUNTRIES[S.country].near;return Object.entries(nr.f).filter(e=>e[1]!=null).map(e=>[e[0],MEDIA[e[0]]+' (~'+fmt(e[1]*FX[nr.ccy])+' return)'])}},
-   {k:'nearStyle',t:'select',l:'Nearby trip style',opts:()=>o('Budget (hostels, street food)','Comfortable','Premium')}]},
- {ic:'👕',t:'Clothing & shopping',s:'Depends on your budget range. Cold countries also need winter wear.',f:[
-   {k:'clothRange',t:'select',l:'Shopping range',opts:()=>o('Thrift / budget (H&M, Primark)','Mid-range (Zara, Uniqlo)','Premium (Nike, Levi\'s, COS)','Designer / luxury')},
-   {k:'clothItems',t:'range',l:'New clothing items per month',min:0,max:12,step:1,unit:'',hint:()=>COUNTRIES[S.country].cold?'Cold climate: one-time winter gear is added':'Warm climate: no winter gear needed'}]},
- {ic:'🧳',t:'Fees & setup',s:'Government fees, mandatory insurance and one-time costs, outside tuition.',f:[
-   {k:'incVisa',t:'toggle',l:'Include student visa / permit fees',hint:()=>'≈ '+fmtL(COUNTRIES[S.country].fee.visa+COUNTRIES[S.country].fee.extra)},
-   {k:'incIns',t:'toggle',l:'Include health insurance, student levies',hint:()=>'≈ '+fmtL(COUNTRIES[S.country].fee.health+COUNTRIES[S.country].fee.levy)+' per year'},
-   {k:'incFlight',t:'toggle',l:'Include arrival flight & first-week costs'},
-   {k:'incKit',t:'toggle',l:'Include starter household kit (bedding, kitchenware, SIM)'}]}
+ {t:'Destination',d:'Only places with enough listings in our database to give a reliable rent figure are offered.',f:[
+   {k:'country',t:'cards',full:1,opts:()=>Object.keys(DB).map(c=>[c,c,COUNTRIES[c].code+' · '+DB[c].cities.length+(DB[c].cities.length>1?' cities':' city')])},
+   {k:'city',t:'select',l:'City',opts:()=>DB[S.country].cities.map((c,i)=>[i,c.c+'  ·  '+c.n+' listings'])},
+   {k:'locality',t:'select',l:'Neighbourhood',opts:()=>localities().map((l,i)=>[i,l.label]),hint:()=>{const l=curLoc();return l.whole?'Choose a postcode area for a more precise rent figure.':l.n+' listings in this area.'}},
+   {k:'months',t:'stay',l:'Length of stay',full:1}]},
+ {t:'Lifestyle profile',d:'Sets sensible defaults for every section below. Fine-tune anything afterwards.',tag:()=>S.preset?null:'Customised',f:[{k:'preset',t:'presets',full:1}]},
+ {t:'Accommodation',d:'Rent is the actual price range of House of Student listings in the area you chose.',f:[
+   {k:'tier',t:'seg',cls:'three',l:'Room price band',full:1,opts:()=>{const r=curLoc().r;return [[0,'Budget',lc(r[0])+' /mo'],[1,'Typical',lc(r[1])+' /mo'],[2,'Premium',lc(r[2])+' /mo']]},hint:()=>['Cheapest quarter of listings (25th percentile).','Median listing: half are cheaper, half are dearer.','Top quarter of listings (75th percentile).'][S.tier]+(dispCcy()!==localCcy()?' '+lc(rentLocal())+' ≈ '+fmt(rentLocal()*FX[localCcy()])+' per month.':'')},
+   {k:'billsIncl',t:'toggle',full:1,l:'Bills included in rent',desc:'Most purpose-built student homes include utilities and Wi-Fi. Switch off if your listing does not.'},
+   {k:'laundry',t:'seg',l:'Laundry',opts:()=>[['free','Included'],['paid','Pay per wash']]},
+   {k:'deposit',t:'seg',l:'Refundable deposit',opts:()=>[[0,'None'],[1,'1 mo'],[1.5,'1.5 mo'],[2,'2 mo']],hint:()=>'Not a cost, so it is excluded from the total. It is included in cash needed to get started.'}]},
+ {t:'Food',d:'Plan a typical week of 21 meals. Home cooking automatically covers every meal you do not eat out.',f:[
+   {k:'meals',t:'meals',full:1},
+   ...MEALS.map(m=>({k:m[0],t:'range',l:m[1]+' per week',min:0,max:14,step:1})),
+   {k:'diet',t:'seg',l:'Diet',opts:()=>[['veg','Veg'],['mixed','Mixed'],['nonveg','Non-veg'],['vegan','Vegan']]},
+   {k:'groc',t:'seg',l:'Grocery shopping',opts:()=>[['b','Budget'],['m','Regular'],['p','Premium']]},
+   {k:'coffee',t:'range',l:'Coffees and snacks per week',min:0,max:15,step:1,full:1}]},
+ {t:'Everyday living',d:'Phone, fitness, personal care and entertainment.',f:[
+   {k:'mobile',t:'seg',l:'Mobile plan',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Unlimited']]},
+   {k:'gym',t:'seg',l:'Fitness',opts:()=>[[0,'None'],[1,'Campus'],[2,'Gym'],[3,'Premium']]},
+   {k:'care',t:'seg',l:'Personal care',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Premium']]},
+   {k:'outings',t:'range',l:'Cinema and outings per month',min:0,max:10,step:1},
+   {k:'subs',t:'range',l:'Paid subscriptions',min:0,max:8,step:1,hint:()=>'About '+lc(P_().sub)+' per service per month.'}]},
+ {t:'Leisure & luxury',d:'Discretionary spending. Prices scale with local restaurant prices.',f:[
+   {k:'salon',t:'range',l:'Salon or spa visits per month',min:0,max:6,step:1},
+   {k:'night',t:'range',l:'Nights out per month',min:0,max:12,step:1},
+   {k:'events',t:'range',l:'Concerts and events per month',min:0,max:6,step:1},
+   {k:'fine',t:'range',l:'Fine-dining meals per month',min:0,max:6,step:1},
+   {k:'brands',t:'seg',l:'Gadgets and accessories (excl. clothing)',full:1,opts:()=>[0,2,5,12].map((m,i)=>[i,['None','Occasional','Regular','Frequent'][i],m?lc(m*P_().mid)+' /mo':''])},
+   {k:'hobby',t:'seg',l:'Hobbies and classes',full:1,opts:()=>[0,1.5,3.5,7].map((m,i)=>[i,['None','Light','Active','Serious'][i],m?lc(m*P_().mid)+' /mo':''])}]},
+ {t:'Getting around',d:'Your daily commute and trips around the city.',f:[
+   {k:'tMode',t:'seg',l:'Main way to get around',full:1,opts:()=>{const P=P_();return [['pass','Transit pass',P.pass?lc(P.pass)+' /mo':'Included'],['bike','Bicycle',lc(P.cheap*2)+' /mo'],['walk','Walking','Free'],['car','Car',lc(P.car)+' /mo']]}},
+   {k:'rides',t:'range',l:'Taxi or ride-share trips per month',min:0,max:30,step:1,full:1}]},
+ {t:'Travel',d:'Visits home, trips within the country and to neighbouring countries. Counts are per year and spread across your stay.',f:[
+   {k:'homeTrips',t:'range',l:'Trips home per year',min:0,max:4,step:1,hint:()=>'Return flight from India about '+fmt(cn().flightINR)+'.'},
+   {k:'domTrips',t:'range',l:'Domestic trips per year',min:0,max:12,step:1},
+   {k:'domDays',t:'range',l:'Days per domestic trip',min:1,max:10,step:1},
+   {k:'domStyle',t:'seg',l:'Domestic travel style',opts:()=>[[0,'Budget'],[1,'Comfort'],[2,'Premium']]},
+   {k:'nearTrips',t:'range',l:'Trips abroad per year',min:0,max:12,step:1,hint:()=>'Nearby: '+cn().near.name+'.'},
+   {k:'nearDays',t:'range',l:'Days per trip abroad',min:1,max:14,step:1},
+   {k:'nearMedium',t:'seg',cls:'wrap',l:'How you travel abroad',full:1,opts:()=>{const nr=cn().near;return Object.entries(nr.f).filter(e=>e[1]!=null).map(e=>[e[0],MEDIA[e[0]],fmtCcy(e[1],nr.ccy)+' return'])}},
+   {k:'nearStyle',t:'seg',l:'Travel style abroad',full:1,opts:()=>[[0,'Budget'],[1,'Comfort'],[2,'Premium']]}]},
+ {t:'Clothing',d:'Regular shopping, plus one-time winter wear in cold climates.',f:[
+   {k:'clothRange',t:'seg',l:'Shopping range',full:1,opts:()=>[[0,'Value'],[1,'Mid-range'],[2,'Premium'],[3,'Designer']]},
+   {k:'clothItems',t:'range',l:'New items per month',min:0,max:12,step:1,full:1,hint:()=>cn().cold?'Cold climate: a one-time winter wardrobe is added to moving costs.':'Mild climate: no winter wardrobe needed.'}]},
+ {t:'Fees, setup & buffer',d:'Government fees, mandatory insurance, moving costs and a safety margin.',f:[
+   {k:'incVisa',t:'toggle',l:'Visa and residence fees',desc:()=>feeSummary('visa')},
+   {k:'incIns',t:'toggle',l:'Health insurance and student levies',desc:()=>feeSummary('ins')},
+   {k:'incFlight',t:'toggle',l:'Flights at the start and end of your stay',desc:()=>'One return flight, about '+fmt(cn().flightINR)+', plus a first week of budget accommodation.'},
+   {k:'incKit',t:'toggle',l:'Starter household kit',desc:()=>'Bedding, kitchenware and a local SIM, about '+fmt(15000)+'.'},
+   {k:'buffer',t:'range',l:'Contingency buffer on monthly spend',min:0,max:20,step:1,unit:'%',full:1}]}
 ];
 
 const PRESETS={
- frugal:{label:'🪙 Frugal',tier:0,billsIncl:false,laundry:'paid',deposit:1,diet:'mixed',groc:'b',mHome:15,mCanteen:3,mCheap:2,mRest:0,mDeliv:0,coffee:1,mobile:0,gym:0,care:0,outings:1,subs:1,buffer:5,salon:0,night:0,events:0,fine:0,brands:0,hobby:0,tMode:'pass',rides:0,homeTrips:1,domTrips:1,domDays:2,domStyle:0,nearTrips:1,nearDays:3,nearMedium:'bus',nearStyle:0,clothRange:0,clothItems:1},
- balanced:{label:'⚖️ Balanced',tier:1,billsIncl:false,laundry:'free',deposit:1,diet:'mixed',groc:'m',mHome:11,mCanteen:2,mCheap:3,mRest:1,mDeliv:1,coffee:3,mobile:1,gym:1,care:1,outings:2,subs:2,buffer:7,salon:1,night:1,events:0,fine:0,brands:5000,hobby:3500,tMode:'pass',rides:3,homeTrips:1,domTrips:3,domDays:3,domStyle:1,nearTrips:2,nearDays:4,nearMedium:'flightBudget',nearStyle:1,clothRange:1,clothItems:2},
- comfortable:{label:'🛋️ Comfortable',tier:1,billsIncl:true,laundry:'free',deposit:1.5,diet:'mixed',groc:'m',mHome:8,mCanteen:1,mCheap:3,mRest:3,mDeliv:2,coffee:5,mobile:2,gym:2,care:1,outings:3,subs:3,buffer:8,salon:2,night:3,events:1,fine:1,brands:12000,hobby:8000,tMode:'pass',rides:8,homeTrips:2,domTrips:3,domDays:3,domStyle:1,nearTrips:4,nearDays:5,nearMedium:'flightBudget',nearStyle:1,clothRange:2,clothItems:3},
- premium:{label:'👑 Premium',tier:2,billsIncl:true,laundry:'free',deposit:2,diet:'mixed',groc:'p',mHome:4,mCanteen:0,mCheap:3,mRest:6,mDeliv:4,coffee:7,mobile:2,gym:3,care:2,outings:4,subs:4,buffer:10,salon:3,night:5,events:2,fine:3,brands:30000,hobby:16000,tMode:'pass',rides:15,homeTrips:3,domTrips:4,domDays:4,domStyle:2,nearTrips:6,nearDays:6,nearMedium:'flightStd',nearStyle:2,clothRange:3,clothItems:4}
+ frugal:{label:'Frugal',desc:'Budget room, cook most meals, minimal extras.',tier:0,billsIncl:true,laundry:'paid',deposit:1,diet:'mixed',groc:'b',mCanteen:3,mCheap:2,mRest:0,mDeliv:0,coffee:1,mobile:0,gym:0,care:0,outings:1,subs:1,buffer:5,salon:0,night:0,events:0,fine:0,brands:0,hobby:0,tMode:'pass',rides:0,homeTrips:1,domTrips:1,domDays:2,domStyle:0,nearTrips:1,nearDays:3,nearMedium:'bus',nearStyle:0,clothRange:0,clothItems:1},
+ balanced:{label:'Balanced',desc:'Typical room, some eating out, a few trips a year.',tier:1,billsIncl:true,laundry:'free',deposit:1,diet:'mixed',groc:'m',mCanteen:2,mCheap:3,mRest:1,mDeliv:1,coffee:3,mobile:1,gym:1,care:1,outings:2,subs:2,buffer:7,salon:1,night:1,events:0,fine:0,brands:1,hobby:1,tMode:'pass',rides:3,homeTrips:1,domTrips:3,domDays:3,domStyle:1,nearTrips:2,nearDays:4,nearMedium:'flightBudget',nearStyle:1,clothRange:1,clothItems:2},
+ comfortable:{label:'Comfortable',desc:'Typical room, regular dining out and travel.',tier:1,billsIncl:true,laundry:'free',deposit:1.5,diet:'mixed',groc:'m',mCanteen:1,mCheap:3,mRest:3,mDeliv:2,coffee:5,mobile:2,gym:2,care:1,outings:3,subs:3,buffer:8,salon:2,night:3,events:1,fine:1,brands:2,hobby:2,tMode:'pass',rides:8,homeTrips:2,domTrips:3,domDays:3,domStyle:1,nearTrips:4,nearDays:5,nearMedium:'flightBudget',nearStyle:1,clothRange:2,clothItems:3},
+ premium:{label:'Premium',desc:'Top-quarter room, dining out often, frequent travel.',tier:2,billsIncl:true,laundry:'free',deposit:2,diet:'mixed',groc:'p',mCanteen:0,mCheap:3,mRest:6,mDeliv:4,coffee:7,mobile:2,gym:3,care:2,outings:4,subs:4,buffer:10,salon:3,night:5,events:2,fine:3,brands:3,hobby:3,tMode:'pass',rides:15,homeTrips:3,domTrips:4,domDays:4,domStyle:2,nearTrips:6,nearDays:6,nearMedium:'flightStd',nearStyle:2,clothRange:3,clothItems:4}
 };
-const NUM_KEYS=['city','locality','tier','mobile','gym','care','domStyle','nearStyle','clothRange','deposit','brands','hobby'];
 
 /* =====================================================================
    4. STATE & HELPERS
@@ -386,272 +555,312 @@ const cn=()=>COUNTRIES[S.country];
 const cityDB=()=>DB[S.country].cities[S.city];
 const localCcy=()=>DB[S.country].ccy;
 const dispCcy=()=>S.cur==='LOCAL'?localCcy():S.cur;
+const P_=()=>({...cn().p,...(cn().cityP[cityDB().c]||{})});
 const nf={};
-function fmtCcy(v,ccy){
-  try{nf[ccy]=nf[ccy]||new Intl.NumberFormat(ccy==='INR'?'en-IN':'en-US',{style:'currency',currency:ccy,maximumFractionDigits:0});return nf[ccy].format(v)}
+function fmtCcy(v,ccy,dp=0){
+  const key=ccy+dp;
+  try{nf[key]=nf[key]||new Intl.NumberFormat(ccy==='INR'?'en-IN':'en-GB',{style:'currency',currency:ccy,minimumFractionDigits:dp,maximumFractionDigits:dp});return nf[key].format(v)}
   catch(e){return ccy+' '+Math.round(v)}
 }
-const fmt=inr=>fmtCcy(inr/FX[dispCcy()],dispCcy());                  // INR amount → display currency
-const fmtL=local=>fmtCcy(local,localCcy())+(dispCcy()!==localCcy()?' (≈ '+fmt(local*FX[localCcy()])+')':''); // local amount, with conversion
+const fmt=inr=>fmtCcy(inr/FX[dispCcy()],dispCcy());   // INR → display currency
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-/* Locality list for the selected city: whole city first, then postcode areas from DB. */
 function localities(){
   const c=cityDB();
-  const list=[{label:'Whole city — average of all listings ('+c.n+')',n:c.n,r:c.r,whole:true}];
-  (c.L||[]).forEach(l=>list.push({label:l[0]+(l[1]?' · '+l[1]:'')+' ('+l[2]+' listings)',n:l[2],r:[l[3],l[4],l[5]],code:l[0],name:l[1]}));
+  const list=[{label:'Whole city · all '+c.n+' listings',n:c.n,r:c.r,whole:true}];
+  (c.L||[]).forEach(l=>list.push({label:l[0]+(l[1]?' · '+l[1]:'')+'  ('+l[2]+' listings)',short:l[0]+(l[1]?' '+l[1]:''),n:l[2],r:[l[3],l[4],l[5]],code:l[0]}));
   return list;
 }
-const curLoc=()=>localities()[Math.min(S.locality,localities().length-1)];
-const rentMonthlyLocal=()=>curLoc().r[S.tier];
+const curLoc=()=>{const l=localities();return l[Math.min(S.locality,l.length-1)]};
+const rentLocal=()=>curLoc().r[S.tier];
+const mealsOut=()=>MEAL_KEYS.reduce((a,k)=>a+S[k],0);
 
 function applyPreset(name){
   const p=PRESETS[name];S.preset=name;
-  for(const k in p){if(k!=='label')S[k]=p[k]}
+  for(const k in p){if(k!=='label'&&k!=='desc')S[k]=p[k]}
   fixNearMedium();
 }
 function fixNearMedium(){
   const av=Object.entries(cn().near.f).filter(e=>e[1]!=null).map(e=>e[0]);
   if(!av.includes(S.nearMedium))S.nearMedium=av.includes('flightBudget')?'flightBudget':av[0];
 }
-
-/* =====================================================================
-   5. COST ENGINE  — every line carries a quality tag (db / fee / cited / est)
-   ===================================================================== */
-const WEEKS=4.345;
-const typeUtil=1, typeNet=1;
-function compute(){
-  const c=cn(),ccy=localCcy(),X=FX[ccy];                 // X: INR per local unit
-  const city=cityDB(),loc=curLoc();
-  const P={...c.p,...(c.cityP[city.c]||{})};
-  const q=k=>c.cited.includes(k)?'cited':'est';
-  const idx=P.mid/28;
-  const L=[];
-  // add(cat,label,note,quality,{m:monthly INR, y:yearly INR, o:one-time INR})
-  const add=(cat,label,note,qual,x)=>{ if((x.m||0)+(x.y||0)+(x.o||0)>0.5)L.push({cat,label,note,q:qual,m:x.m||0,y:x.y||0,o:x.o||0}) };
-
-  // ---- Rent & bills (DB)
-  const rentLocal=loc.r[S.tier];
-  const rent=rentLocal*X;
-  add('rent','Rent',`${['Budget','Typical','Premium'][S.tier]} room · ${loc.whole?'whole city':loc.label.replace(/ \(\d+ listings\)/,'')} · ${fmtCcy(rentLocal,ccy)}/mo`,'db',{m:rent});
-  if(!S.billsIncl){
-    add('rent','Utilities (electricity, water, heating)','Average share of a student flat',q('utils'),{m:P.utils*X});
-    add('rent','Home internet','Broadband share',q('net'),{m:P.net*X});
+/* Amount (local currency) a fee item costs over a stay of `mo` months. Returns {o: lump sum, m: monthly}. */
+function feeCost(f,mo){
+  switch(f.kind){
+    case 'once':return {o:f.amt,m:0};
+    case 'halfyear':{const y=Math.floor(mo/12),r=mo%12;return {o:f.amt*y+(r===0?0:r<=6?f.amt/2:f.amt),m:0}}
+    case 'peryear':return {o:f.amt*Math.ceil(mo/12),m:0};
+    case 'persemester':return {o:f.amt*Math.ceil(mo/6),m:0};
+    case 'prorata':return {o:f.amt*mo/12,m:0};
+    case 'monthly':return {o:0,m:f.amt};
   }
-  if(S.laundry==='paid')add('rent','Laundry','~4 loads / month','est',{m:P.cheap*1.3*X});
-
-  // ---- Food
-  const dietF={veg:.9,mixed:1,nonveg:1.12,vegan:.92}[S.diet], gs={b:.8,m:1,p:1.5}[S.groc];
-  add('food','Home cooking & groceries',`${S.mHome} meals/wk`,q('groc'),{m:S.mHome*WEEKS*(P.groc/21)*gs*dietF*X});
-  add('food','Campus canteen',`${S.mCanteen}/wk × ${fmtCcy(P.canteen,ccy)}`,q('canteen'),{m:S.mCanteen*WEEKS*P.canteen*X});
-  add('food','Cheap eats & fast food',`${S.mCheap}/wk × ${fmtCcy(P.cheap,ccy)}`,q('cheap'),{m:S.mCheap*WEEKS*P.cheap*X});
-  add('food','Restaurant meals',`${S.mRest}/wk × ${fmtCcy(P.mid,ccy)}`,q('mid'),{m:S.mRest*WEEKS*P.mid*X});
-  add('food','Food delivery',`${S.mDeliv}/wk incl. fees`,'est',{m:S.mDeliv*WEEKS*(P.cheap*1.3+P.cheap*.3)*X});
-  add('food','Coffee, snacks & drinks',`${S.coffee}/wk × ${fmtCcy(P.coffee,ccy)}`,q('coffee'),{m:S.coffee*WEEKS*P.coffee*X});
-
-  // ---- Daily living
-  add('living','Mobile plan','',q('mobile'),{m:P.mobile*[.6,1,1.7][S.mobile]*X});
-  add('living','Fitness','','est',{m:P.gym*[0,.4,1,2.2][S.gym]*X});
-  add('living','Personal care & toiletries','','est',{m:P.mid*.9*[.6,1,1.8][S.care]*X});
-  add('living','Health & pharmacy (out-of-pocket)','Minor medical costs','est',{m:P.mid*.45*X});
-  add('living','Cinema & outings',`${S.outings}/month`,'est',{m:S.outings*P.cinema*X});
-  add('living','Subscriptions',`${S.subs} services`,'est',{m:S.subs*P.cinema*.7*X});
-
-  // ---- Luxury (scaled to local mid-range meal)
-  add('lux','Salon & spa',`${S.salon}/month`,'est',{m:S.salon*P.mid*1.4*X});
-  add('lux','Nightlife',`${S.night}/month`,'est',{m:S.night*P.mid*1.6*X});
-  add('lux','Concerts, sports & events',`${S.events}/month`,'est',{m:S.events*P.mid*2.3*X});
-  add('lux','Fine dining',`${S.fine}/month`,'est',{m:S.fine*P.mid*3.5*X});
-  add('lux','Branded goods & accessories','Your chosen budget','est',{m:+S.brands});
-  add('lux','Hobbies & classes','Your chosen budget','est',{m:+S.hobby});
-
-  // ---- Transport
-  const tm={pass:P.pass,bike:P.cheap*2,walk:0,car:P.car}[S.tMode];
-  add('trans',{pass:'Student transit pass',bike:'Bicycle upkeep',walk:'Walking',car:'Car (lease/fuel/insurance/parking)'}[S.tMode],S.tMode==='pass'&&P.pass===0?'Included in semester contribution':'',S.tMode==='pass'?q('pass'):'est',{m:tm*X});
-  add('trans','Taxi / ride-share',`${S.rides}/month × ${fmtCcy(P.ride,ccy)}`,'est',{m:S.rides*P.ride*X});
-
-  // ---- Travel (per year)
-  add('travel','Trips back home',`${S.homeTrips} return flight(s)`,'est',{y:S.homeTrips*c.flightINR});
-  add('travel','Trips within the country',`${S.domTrips} × ${S.domDays} days`,'est',{y:S.domTrips*(S.domDays*c.dom[S.domStyle]+c.domT)*X});
-  const nr=c.near,med=nr.f[S.nearMedium]??0,nd=nr.d[S.nearStyle];
-  add('travel','Trips to nearby countries',`${S.nearTrips} × ${S.nearDays} days by ${(MEDIA[S.nearMedium]||'').toLowerCase()}`,'est',{y:S.nearTrips*(med+S.nearDays*nd)*FX[nr.ccy]});
-
-  // ---- Clothing
-  const rf=[1,2.4,5,12][S.clothRange];
-  add('cloth','New clothes & shoes',`${S.clothItems} items/month`,'est',{m:S.clothItems*P.cloth*rf*X});
-  if(c.cold)add('cloth','Winter jacket, boots & thermals','One-time','est',{o:[110,240,520,1200][S.clothRange]*X*(P.cloth/18)*0.8});
-
-  // ---- Contingency (on recurring monthly equivalents so far)
-  const rec=L.reduce((a,l)=>a+l.m+l.y/12,0);
-  add('living','Contingency buffer',`${S.buffer}% of monthly spend`,'est',{m:rec*S.buffer/100});
-
-  // ---- Fees & setup
-  const f=c.fee;
-  if(S.incVisa){
-    add('setup','Student visa fee','One-time · '+c.feeNote.visa,'fee',{o:f.visa*X});
-    if(f.extra)add('setup','Residence permit registration','One-time · '+c.feeNote.extra,'fee',{o:f.extra*X});
-  }
-  if(S.incIns){
-    add('setup','Health insurance',c.feeNote.health,'fee',{y:f.health*X});
-    if(f.levy)add('setup','Student levy / semester contribution',c.feeNote.levy,'fee',{y:f.levy*X});
-  }
-  if(S.incFlight)add('setup','Arrival flight & first-week costs','One-way flight (60% of a return) + 7 nights budget stay','est',{o:c.flightINR*.6+7*c.dom[0]*X});
-  if(S.incKit)add('setup','Starter household kit','Bedding, kitchenware, SIM','est',{o:15000});
-  if(+S.deposit>0)add('setup','Security deposit (refundable)',`${S.deposit} × monthly rent`,'db',{o:rent*S.deposit});
-
-  const mo=S.months;
-  L.forEach(l=>{l.total=l.m*mo+l.y*mo/12+l.o;l.avg=l.total/mo});
-  const total=L.reduce((a,l)=>a+l.total,0);
-  const recurring=L.reduce((a,l)=>a+l.m+l.y/12,0);
-  const oneTime=L.reduce((a,l)=>a+l.o,0);
-  const byCat=CATS.map(k=>({...k,total:L.filter(l=>l.cat===k.id).reduce((a,l)=>a+l.total,0)}));
-  const byQ=Object.keys(QUAL).map(k=>({k,...QUAL[k],total:L.filter(l=>l.q===k).reduce((a,l)=>a+l.total,0)}));
-  const refundable=+S.deposit>0?rent*S.deposit:0;
-  return {L,total,recurring,oneTime,byCat,byQ,refundable,mo,loc,P};
+}
+function feeSummary(g){
+  const items=cn().fees.filter(f=>f.g===g);
+  const tot=items.reduce((a,f)=>{const c=feeCost(f,S.months);return a+c.o+c.m*S.months},0);
+  return items.map(f=>f.label).join(', ')+'. About '+lc(tot)+' for '+S.months+' months.';
 }
 
 /* =====================================================================
-   6. RENDER
+   5. COST ENGINE
+   Every line: {cat,label,note,q, m: monthly running (INR), y: yearly running (INR), o: one-time (INR)}
+   Total = Σm·months + Σy·months/12 + Σo.  Refundable deposit is tracked separately.
    ===================================================================== */
+const WEEKS=52/12;
+function compute(){
+  const c=cn(),ccy=localCcy(),X=FX[ccy],mo=S.months;
+  const P=P_(),loc=curLoc();
+  const q=k=>c.cited.includes(k)?'cited':'est';
+  const L=[];
+  const add=(cat,label,note,qual,x)=>{ if((x.m||0)+(x.y||0)+(x.o||0)>0.004)L.push({cat,label,note,q:qual,m:x.m||0,y:x.y||0,o:x.o||0}) };
+
+  // Rent & bills
+  const rentL=loc.r[S.tier],rent=rentL*X;
+  add('rent','Rent',`${['Budget','Typical','Premium'][S.tier]} band, ${loc.whole?'whole city':loc.short}: ${lc(rentL)} per month from ${loc.n} listings`,'db',{m:rent});
+  if(!S.billsIncl){
+    add('rent','Utilities',`Electricity, water and heating: ${lc(P.utils)} per month`,q('utils'),{m:P.utils*X});
+    add('rent','Home internet',`${lc(P.net)} per month`,q('net'),{m:P.net*X});
+  }
+  if(S.laundry==='paid')add('rent','Laundry','About 4 washes a month','est',{m:P.cheap*1.3*X});
+
+  // Food: 21 meals a week; home cooking = the rest
+  const home=Math.max(0,21-mealsOut());
+  const dietF={veg:.9,mixed:1,nonveg:1.12,vegan:.92}[S.diet],gs={b:.8,m:1,p:1.5}[S.groc];
+  add('food','Groceries for home cooking',`${home} meals a week; full self-catering costs ${lc(P.groc)} a week`,q('groc'),{m:home*(P.groc/21)*gs*dietF*WEEKS*X});
+  add('food','Campus canteen',`${S.mCanteen} a week × ${lc(P.canteen)}`,q('canteen'),{m:S.mCanteen*P.canteen*WEEKS*X});
+  add('food','Cheap eats',`${S.mCheap} a week × ${lc(P.cheap)}`,q('cheap'),{m:S.mCheap*P.cheap*WEEKS*X});
+  add('food','Restaurant meals',`${S.mRest} a week × ${lc(P.mid)}`,q('mid'),{m:S.mRest*P.mid*WEEKS*X});
+  add('food','Food delivery',`${S.mDeliv} a week × ${lc(P.cheap*1.6)} incl. fees`,'est',{m:S.mDeliv*P.cheap*1.6*WEEKS*X});
+  add('food','Coffees and snacks',`${S.coffee} a week × ${lc(P.coffee)}`,q('coffee'),{m:S.coffee*P.coffee*WEEKS*X});
+
+  // Everyday living
+  add('living','Mobile plan',['Basic','Standard','Unlimited'][S.mobile]+' plan',q('mobile'),{m:P.mobile*[.6,1,1.7][S.mobile]*X});
+  add('living','Fitness',['','Campus gym','Standard gym','Premium club'][S.gym],'est',{m:P.gym*[0,.4,1,2.2][S.gym]*X});
+  add('living','Personal care and toiletries',['Basic','Standard','Premium'][S.care],'est',{m:P.mid*.9*[.6,1,1.8][S.care]*X});
+  add('living','Pharmacy and minor medical','Out-of-pocket costs','est',{m:P.mid*.45*X});
+  add('living','Cinema and outings',`${S.outings} a month × ${lc(P.cinema)}`,'est',{m:S.outings*P.cinema*X});
+  add('living','Subscriptions',`${S.subs} × ${lc(P.sub)}`,'est',{m:S.subs*P.sub*X});
+
+  // Leisure & luxury (multiples of a local mid-range meal)
+  add('lux','Salon and spa',`${S.salon} a month × ${lc(P.mid*1.4)}`,'est',{m:S.salon*P.mid*1.4*X});
+  add('lux','Nights out',`${S.night} a month × ${lc(P.mid*1.6)}`,'est',{m:S.night*P.mid*1.6*X});
+  add('lux','Concerts and events',`${S.events} a month × ${lc(P.mid*2.3)}`,'est',{m:S.events*P.mid*2.3*X});
+  add('lux','Fine dining',`${S.fine} a month × ${lc(P.mid*3.5)}`,'est',{m:S.fine*P.mid*3.5*X});
+  add('lux','Gadgets and accessories',['','Occasional','Regular','Frequent'][S.brands],'est',{m:[0,2,5,12][S.brands]*P.mid*X});
+  add('lux','Hobbies and classes',['','Light','Active','Serious'][S.hobby],'est',{m:[0,1.5,3.5,7][S.hobby]*P.mid*X});
+
+  // Local transport
+  const tm={pass:P.pass,bike:P.cheap*2,walk:0,car:P.car}[S.tMode];
+  add('trans',{pass:'Student transit pass',bike:'Bicycle upkeep',walk:'Walking',car:'Car: lease, fuel, insurance, parking'}[S.tMode],'',S.tMode==='pass'?q('pass'):'est',{m:tm*X});
+  add('trans','Taxis and ride-share',`${S.rides} a month × ${lc(P.ride)}`,'est',{m:S.rides*P.ride*X});
+
+  // Travel (per year, spread over the stay)
+  const span=n=>`${n} a year (≈ ${(n*mo/12).toFixed(n*mo/12%1?1:0)} over your stay)`;
+  add('travel','Trips home',span(S.homeTrips)+` × ${fmt(c.flightINR)} return`,'est',{y:S.homeTrips*c.flightINR});
+  add('travel','Domestic trips',span(S.domTrips)+`, ${S.domDays} days each`,'est',{y:S.domTrips*(S.domDays*c.dom[S.domStyle]+c.domT)*X});
+  const nr=c.near,fare=nr.f[S.nearMedium]??0;
+  add('travel','Trips abroad',span(S.nearTrips)+`, ${S.nearDays} days each by ${(MEDIA[S.nearMedium]||'').toLowerCase()}`,'est',{y:S.nearTrips*(fare+S.nearDays*nr.d[S.nearStyle])*FX[nr.ccy]});
+
+  // Clothing
+  const rf=[1,2.4,5,12][S.clothRange];
+  add('cloth','New clothes and shoes',`${S.clothItems} items a month`,'est',{m:S.clothItems*P.cloth*rf*X});
+
+  // Contingency on all running costs
+  const run=L.reduce((a,l)=>a+l.m+l.y/12,0);
+  add('buffer','Contingency buffer',`${S.buffer}% of monthly running costs`,'est',{m:run*S.buffer/100});
+
+  // Fees (lump sums for the stay, or monthly)
+  c.fees.forEach(f=>{
+    if((f.g==='visa'&&!S.incVisa)||(f.g==='ins'&&!S.incIns))return;
+    const fc=feeCost(f,mo);
+    add('fees',f.label,f.note,f.q,{o:fc.o*X,m:fc.m*X});
+  });
+
+  // Moving & setup
+  if(S.incFlight)add('setup','Flights at start and end of stay','One return flight from India + 7 nights budget stay on arrival','est',{o:c.flightINR+7*c.dom[0]*X});
+  if(S.incKit)add('setup','Starter household kit','Bedding, kitchenware, local SIM','est',{o:15000});
+  if(c.cold)add('setup','Winter wardrobe','Coat, boots and thermals, one-time','est',{o:P.cloth*[6,13,28,65][S.clothRange]*X});
+
+  L.forEach(l=>{l.total=l.m*mo+l.y*mo/12+l.o;l.avg=l.total/mo});
+  const total=L.reduce((a,l)=>a+l.total,0);
+  const running=L.reduce((a,l)=>a+l.m+l.y/12,0);
+  const oneTime=L.reduce((a,l)=>a+l.o,0);
+  const deposit=rent*S.deposit;
+  const byCat=CATS.map(k=>({...k,total:L.filter(l=>l.cat===k.id).reduce((a,l)=>a+l.total,0)}));
+  const byQ=Object.keys(QUAL).map(k=>({k,...QUAL[k],total:L.filter(l=>l.q===k).reduce((a,l)=>a+l.total,0)}));
+  const spread=L.reduce((a,l)=>a+l.total*QUAL[l.q].w,0);
+  return {L,total,running,oneTime,deposit,upfront:oneTime+deposit+running,byCat,byQ,spread,mo,loc,P,home};
+}
+
+/* =====================================================================
+   6. RENDERING
+   ===================================================================== */
+const ICON={
+ db:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
+ map:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+ cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+ ok:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><path d="m5 12 5 5 9-10"/></svg>'
+};
+
 function buildForm(){
   const root=$('#form');root.innerHTML='';
-  SECTIONS.forEach(sec=>{
-    const card=document.createElement('section');card.className='card';
-    card.innerHTML=`<h2><span>${sec.ic}</span>${sec.t||'Where & how long'}</h2><p class="sub">${sec.s}</p>`;
-    if(sec.presets){
-      const p=document.createElement('div');p.className='presets';p.id='presets';
-      Object.entries(PRESETS).forEach(([k,pr])=>{
-        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.p=k;b.textContent=pr.label;
-        b.onclick=()=>{applyPreset(k);syncControls();update()};p.appendChild(b)});
-      card.appendChild(p);
-    }
-    if(sec.f.length){
-      const g=document.createElement('div');g.className='grid';
-      sec.f.forEach(f=>g.appendChild(buildField(f)));card.appendChild(g);
-    }
-    root.appendChild(card);
+  SECTIONS.forEach((sec,i)=>{
+    const card=document.createElement('section');card.className='card step';
+    card.innerHTML=`<div class="step-head"><div class="step-num">${String(i+1).padStart(2,'0')}</div><div><h2>${sec.t}<span class="tag" data-tag="${i}" hidden></span></h2><p>${sec.d}</p></div></div>`;
+    const g=document.createElement('div');g.className='grid';
+    sec.f.forEach(f=>g.appendChild(buildField(f)));
+    card.appendChild(g);root.appendChild(card);
   });
 }
 function buildField(f){
   const d=document.createElement('div');d.className='field'+(f.full?' full':'');
   const id='f_'+f.k;
-  if(f.t==='select')d.innerHTML=`<label for="${id}">${f.l}</label><select id="${id}"></select>`;
-  else if(f.t==='range')d.innerHTML=`<label for="${id}">${f.l}</label><div class="rng"><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}"><output id="o_${f.k}"></output></div>`;
-  else d.innerHTML=`<label class="tog"><input type="checkbox" id="${id}"> ${f.l}</label>`;
+  if(f.t==='select')d.innerHTML=`<label class="flabel" for="${id}">${f.l}</label><select class="sel" id="${id}"></select>`;
+  else if(f.t==='seg')d.innerHTML=`<div class="flabel" id="l_${f.k}">${f.l}</div><div class="seg ${f.cls||''}" role="radiogroup" aria-labelledby="l_${f.k}" id="${id}"></div>`;
+  else if(f.t==='cards')d.innerHTML=`<div class="cards" role="radiogroup" aria-label="Country" id="${id}"></div>`;
+  else if(f.t==='presets')d.innerHTML=`<div class="presets" role="radiogroup" aria-label="Lifestyle profile" id="${id}"></div>`;
+  else if(f.t==='range')d.innerHTML=`<label class="flabel" for="${id}"><span>${f.l}</span><output id="o_${f.k}" class="num"></output></label><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}">`;
+  else if(f.t==='toggle')d.innerHTML=`<label class="tog"><input type="checkbox" id="${id}"><span class="sw" aria-hidden="true"></span><span><b>${f.l}</b><small id="d_${f.k}"></small></span></label>`;
+  else if(f.t==='stay')d.innerHTML=`<label class="flabel" for="${id}"><span>${f.l}</span><output id="o_${f.k}" class="num"></output></label><div class="chips" id="c_${f.k}">${[6,9,12,18,24,36].map(m=>`<button type="button" data-m="${m}">${m} months</button>`).join('')}</div><input type="range" id="${id}" min="3" max="60" step="1">`;
+  else if(f.t==='meals')d.innerHTML=`<div class="mealbar" id="mealbar" aria-hidden="true"></div><div class="meallegend" id="meallegend"></div><div class="mealnote" id="mealnote"></div>`;
   d.insertAdjacentHTML('beforeend',`<div class="hint" id="h_${f.k}"></div>`);
   const el=d.querySelector('#'+id);
-  el.addEventListener('input',()=>onChange(f,el));
-  el.addEventListener('change',()=>onChange(f,el));
+  if(f.t==='select')el.addEventListener('change',()=>set(f.k,isNaN(+el.value)?el.value:+el.value));
+  if(f.t==='range'||f.t==='stay')el.addEventListener('input',()=>set(f.k,+el.value));
+  if(f.t==='toggle')el.addEventListener('change',()=>set(f.k,el.checked));
+  if(f.t==='seg'||f.t==='cards')el.addEventListener('click',e=>{const b=e.target.closest('button');if(b)set(f.k,f.opts()[+b.dataset.i][0])});
+  if(f.t==='presets')el.addEventListener('click',e=>{const b=e.target.closest('button');if(b){applyPreset(b.dataset.p);update()}});
+  if(f.t==='stay')d.querySelector('#c_months').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('months',+b.dataset.m)});
   return d;
 }
 const fieldDefs=()=>SECTIONS.flatMap(s=>s.f);
 
-function onChange(f,el){
-  let val=f.t==='toggle'?el.checked:(f.t==='range'?+el.value:el.value);
-  if(f.t==='select'&&NUM_KEYS.includes(f.k))val=+val;
-  if(S[f.k]===val)return;
-  S[f.k]=val;
-  if(!['country','city','locality','months'].includes(f.k))S.preset=null;
-  if(f.k==='country'){S.city=0;S.locality=0;fixNearMedium();syncControls()}
-  if(f.k==='city'){S.locality=0;syncControls()}
+function set(k,v){
+  if(MEAL_KEYS.includes(k))v=Math.min(v,21-(mealsOut()-S[k]));     // a week has 21 meals
+  if(S[k]===v){update();return}
+  S[k]=v;
+  if(!['country','city','locality','months'].includes(k))S.preset=null;
+  if(k==='country'){S.city=0;S.locality=0;fixNearMedium()}
+  if(k==='city')S.locality=0;
   update();
 }
-function syncControls(){
-  // rebuild dynamic option lists from state
-  const cur=$('#cur');
+
+/* Sync every control with state. Option lists are rebuilt only when their content changes. */
+function refreshControls(){
   fieldDefs().forEach(f=>{
     const el=$('#f_'+f.k);if(!el)return;
     if(f.t==='select'){
-      el.innerHTML=f.opts().map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+      const opts=f.opts(),sig=JSON.stringify(opts);
+      if(el.dataset.sig!==sig){el.innerHTML=opts.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('');el.dataset.sig=sig}
       el.value=String(S[f.k]);
-      if(el.value!==String(S[f.k])&&el.options.length){el.selectedIndex=0;const v=el.value;S[f.k]=NUM_KEYS.includes(f.k)?+v:v}
-    }else if(f.t==='range')el.value=S[f.k];
-    else el.checked=!!S[f.k];
+    }else if(f.t==='seg'||f.t==='cards'){
+      const opts=f.opts(),sig=JSON.stringify(opts);
+      if(el.dataset.sig!==sig){
+        el.innerHTML=opts.map((o,i)=>f.t==='cards'?`<button type="button" role="radio" data-i="${i}"><b>${esc(o[1])}</b><small>${esc(o[2])}</small></button>`:`<button type="button" role="radio" data-i="${i}">${esc(o[1])}${o[2]?`<small>${esc(o[2])}</small>`:''}</button>`).join('');
+        el.dataset.sig=sig;
+      }
+      [...el.children].forEach((b,i)=>b.setAttribute('aria-checked',String(opts[i][0]===S[f.k])));
+    }else if(f.t==='presets'){
+      if(!el.children.length)el.innerHTML=Object.entries(PRESETS).map(([k,p])=>`<button type="button" role="radio" data-p="${k}"><b>${p.label}</b><small>${p.desc}</small></button>`).join('');
+      [...el.children].forEach(b=>b.setAttribute('aria-checked',String(b.dataset.p===S.preset)));
+    }else if(f.t==='range'||f.t==='stay'){
+      el.value=S[f.k];
+      const pct=(S[f.k]-el.min)/(el.max-el.min)*100;el.style.setProperty('--p',pct+'%');
+      $('#o_'+f.k).textContent=f.t==='stay'?S.months+' months':S[f.k]+(f.unit||'');
+      if(f.t==='stay')document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.months)));
+    }else if(f.t==='toggle'){
+      el.checked=!!S[f.k];
+      $('#d_'+f.k).textContent=typeof f.desc==='function'?f.desc():(f.desc||'');
+    }
+    const h=$('#h_'+f.k);if(h){h.textContent=f.hint?f.hint():'';h.classList.toggle('warn',!!(f.warn&&f.warn()))}
   });
-  cur.value=S.cur;
+  SECTIONS.forEach((s,i)=>{const t=document.querySelector(`[data-tag="${i}"]`),v=s.tag&&s.tag();t.hidden=!v;t.textContent=v||''});
+  // meal plan visual
+  const segs=[];MEALS.forEach(m=>{for(let i=0;i<S[m[0]];i++)segs.push(m[2])});
+  while(segs.length<21)segs.push('#C9E89E');
+  $('#mealbar').innerHTML=segs.map(c=>`<i style="--c:${c}"></i>`).join('');
+  $('#meallegend').innerHTML=`<span style="--c:#C9E89E">Home cooked ${21-mealsOut()}</span>`+MEALS.map(m=>`<span style="--c:${m[2]}">${m[1]} ${S[m[0]]}</span>`).join('');
+  $('#mealnote').textContent=mealsOut()>=21?'All 21 weekly meals are eaten out. Reduce one to add home cooking.':`${21-mealsOut()} of 21 weekly meals are cooked at home. Adjust eating out below; home cooking fills the rest.`;
+  $('#cur').value=S.cur;
 }
-function updateLabels(){
-  fieldDefs().forEach(f=>{
-    if(f.t==='range'){const x=$('#o_'+f.k);if(x)x.textContent=S[f.k]+(f.unit||'')}
-    const h=$('#h_'+f.k);
-    if(h){h.textContent=f.hint?f.hint():'';h.classList.toggle('warn',!!(f.warn&&f.warn()))}
-  });
-  document.querySelectorAll('#presets .chip').forEach(b=>b.classList.toggle('on',b.dataset.p===S.preset));
-}
-const badge=k=>`<span class="badge" style="--c:${QUAL[k].c}">${QUAL[k].n}</span>`;
 
+const qpill=k=>`<span class="q" style="--c:${QUAL[k].c}">${QUAL[k].s}</span>`;
 function update(){
-  updateLabels();
+  refreshControls();
   const r=compute(),mo=r.mo,c=cn();
+  const where=(r.loc.whole?'':r.loc.short+', ')+cityDB().c+', '+S.country;
   $('#sTotal').textContent=fmt(r.total);
   $('#mTotal').textContent=fmt(r.total);
-  $('#sWhere').textContent=`${r.loc.whole?'Whole of ':(r.loc.code+' · ')}${cityDB().c}, ${S.country} · ${mo} months`;
+  $('#sWhere').textContent=`For ${mo} months in ${where}`;
+  $('#sEq').innerHTML=`<b>${fmt(r.running)}</b> a month × ${mo} months + <b>${fmt(r.oneTime)}</b> one-time = <b>${fmt(r.total)}</b>`;
+  $('#sRec').textContent=fmt(r.running);
   $('#sAvg').textContent=fmt(r.total/mo);
-  $('#sYear').textContent=fmt(r.total/mo*12);
-  $('#sRec').textContent=fmt(r.recurring);
-  $('#sOne').textContent=fmt(r.oneTime);
-  const cats=r.byCat.filter(x=>x.total>0.5);
-  $('#stack').innerHTML=cats.map(x=>`<i title="${x.n}" style="width:${x.total/r.total*100}%;background:${x.c}"></i>`).join('');
-  $('#legend').innerHTML=cats.map(x=>`<li><span class="dot" style="background:${x.c}"></span><span>${x.n}</span><span class="pc">${Math.round(x.total/r.total*100)}%</span><span class="am">${fmt(x.total)}</span></li>`).join('');
+  $('#sUp').textContent=fmt(r.upfront);
+  $('#sUpNote').textContent=`One-time costs ${fmt(r.oneTime)} + refundable deposit ${fmt(r.deposit)} + first month ${fmt(r.running)}`;
+  const cats=r.byCat.filter(x=>x.total>0.5).sort((a,b)=>b.total-a.total),max=cats[0].total;
+  $('#cats').innerHTML=cats.map(x=>`<li><span class="nm">${x.n}<span class="pc">${Math.round(x.total/r.total*100)}%</span></span><span class="am num">${fmt(x.total)}</span><span class="bar"><i style="width:${x.total/max*100}%;--c:${x.c}"></i></span></li>`).join('');
   const qs=r.byQ.filter(x=>x.total>0.5);
-  $('#qstack').innerHTML=qs.map(x=>`<i title="${x.n}" style="width:${x.total/r.total*100}%;background:${x.c}"></i>`).join('');
-  $('#qlegend').innerHTML=qs.map(x=>`<span style="--c:${x.c}">${x.n} ${x.total/r.total<.005?'<1':Math.round(x.total/r.total*100)}%</span>`).join('');
-  const alerts=[];
-  if(r.loc.n<30)alerts.push(`Only ${r.loc.n} listings back the rent figure for this area, so treat it as indicative.`);
-  const estShare=r.byQ.find(x=>x.k==='est').total/r.total;
-  if(estShare>.4)alerts.push(`${Math.round(estShare*100)}% of this total is based on estimates, not verified prices.`);
-  $('#alerts').innerHTML=alerts.map(a=>`<div class="alert">⚠ ${a}</div>`).join('');
-  $('#sRange').textContent=`Rent data: our listings as of ${SNAPSHOT}. Likely range for the total: ${fmt(r.total*.9)} – ${fmt(r.total*1.15)}`+(r.refundable?` · includes ${fmt(r.refundable)} refundable deposit`:'')+'.';
-  // detail table
-  let h=`<tr><th>Item</th><th>Basis</th><th>Quality</th><th>Per month (avg)</th><th>Total for ${mo} mo</th></tr>`;
-  r.byCat.forEach(x=>{
-    const rows=r.L.filter(l=>l.cat===x.id);if(!rows.length)return;
-    h+=`<tr class="cat"><td colspan="3">${x.n}</td><td>${fmt(x.total/mo)}</td><td>${fmt(x.total)}</td></tr>`;
-    rows.forEach(l=>{h+=`<tr><td>${l.label}</td><td class="nt">${l.note}</td><td>${badge(l.q)}</td><td>${fmt(l.avg)}</td><td>${fmt(l.total)}</td></tr>`});
+  $('#qbar').innerHTML=qs.map(x=>`<i title="${x.n}" style="width:${x.total/r.total*100}%;--c:${x.c}"></i>`).join('');
+  $('#qleg').innerHTML=qs.map(x=>`<span style="--c:${x.c}">${x.n} <b>${x.total/r.total<.005?'<1':Math.round(x.total/r.total*100)}%</b></span>`).join('');
+  const al=[];
+  if(r.loc.n<30)al.push(`Rent is based on only ${r.loc.n} listings here, so treat it as indicative.`);
+  $('#alerts').innerHTML=al.map(a=>`<div class="alert">${a}</div>`).join('');
+  $('#sRange').innerHTML=`Likely range <b>${fmt(r.total-r.spread)} – ${fmt(r.total+r.spread)}</b>, wider where figures are estimates.`;
+
+  // breakdown table
+  let h=`<thead><tr><th class="l">Item</th><th class="l">Basis</th><th class="l">Source</th><th>Per month</th><th>Total for ${mo} months</th></tr></thead><tbody>`;
+  CATS.forEach(cat=>{
+    const rows=r.L.filter(l=>l.cat===cat.id);if(!rows.length)return;
+    const t=rows.reduce((a,l)=>a+l.total,0);
+    h+=`<tr class="grp"><td class="l" colspan="3">${cat.n}</td><td class="num">${fmt(t/mo)}</td><td class="num">${fmt(t)}</td></tr>`;
+    rows.forEach(l=>{h+=`<tr><td class="l">${esc(l.label)}</td><td class="basis">${esc(l.note)}</td><td class="l">${qpill(l.q)}</td><td class="num">${l.o&&!l.m&&!l.y?'<span style="color:var(--faint)">one-time</span>':fmt(l.m+l.y/12)}</td><td class="num">${fmt(l.total)}</td></tr>`});
   });
-  h+=`<tr class="cat"><td colspan="3">GRAND TOTAL (excl. tuition)</td><td>${fmt(r.total/mo)}</td><td>${fmt(r.total)}</td></tr>`;
-  $('#detail').innerHTML=h;
-  // assumptions table
+  h+=`<tr class="tot"><td class="l" colspan="3">Total cost of living (excl. tuition)</td><td class="num">${fmt(r.running)}</td><td class="num">${fmt(r.total)}</td></tr>`;
+  if(r.deposit)h+=`<tr><td class="l">Refundable deposit</td><td class="basis">${S.deposit} × monthly rent. Returned at the end of the tenancy, so not part of the total.</td><td class="l">${qpill('db')}</td><td></td><td class="num">${fmt(r.deposit)}</td></tr>`;
+  $('#detail').innerHTML=h+'</tbody>';
+
+  // methodology
+  $('#mRent').innerHTML=`<p>Rent comes from House of Student listings (snapshot ${SNAPSHOT}): live properties whose price window ends on or after the snapshot date, one value per property and room type, weekly prices converted to monthly (× 52 ÷ 12), and extreme outliers (outside each country's 3rd–97th percentile) removed. The price bands are the 25th percentile, median and 75th percentile of what remains. Your selection (${esc(curLoc().whole?'whole city':curLoc().short)}, ${esc(cityDB().c)}) is based on <b>${curLoc().n} listings</b>.</p>`;
   const P=r.P,ccy=localCcy();
-  const rows=[['Rent (selected band)',rentMonthlyLocal(),'/ month','db',`${r.loc.n} listings in sample · snapshot ${SNAPSHOT}`],
-   ['Inexpensive meal',P.cheap,'','cheap'],['Mid-range restaurant meal',P.mid,'','mid'],['Coffee',P.coffee,'','coffee'],['Groceries, full self-catering',P.groc,'/ week','groc'],
-   ['Campus canteen meal',P.canteen,'','canteen'],['Student transit pass',P.pass,'/ month','pass'],['Ride-share trip',P.ride,'','ride'],
-   ['Utilities',P.utils,'/ month','utils'],['Internet',P.net,'/ month','net'],['Mobile plan',P.mobile,'/ month','mobile'],['Gym',P.gym,'/ month','gym'],['Cinema ticket',P.cinema,'','cinema']];
-  let a='<tr><th>Parameter</th><th>Value</th><th>Quality</th><th>Note</th></tr>';
-  rows.forEach(x=>{const qual=x[3]==='db'?'db':(c.cited.includes(x[3])?'cited':'est');a+=`<tr><td>${x[0]}</td><td>${fmtCcy(x[1],ccy)} ${x[2]}</td><td>${badge(qual)}</td><td class="nt">${x[4]||''}</td></tr>`});
-  [['Visa fee',c.fee.visa,c.feeNote.visa],['Residence permit',c.fee.extra,c.feeNote.extra],['Health insurance / yr',c.fee.health,c.feeNote.health],['Student levy / yr',c.fee.levy,c.feeNote.levy]].forEach(x=>{
-    if(x[1])a+=`<tr><td>${x[0]}</td><td>${fmtCcy(x[1],ccy)}</td><td>${badge('fee')}</td><td class="nt">${x[2]||''}</td></tr>`});
-  a+=`<tr><td>Return flight from India</td><td>${fmtCcy(c.flightINR,'INR')}</td><td>${badge('est')}</td><td class="nt">Airline-published “from” fares vary widely by month; use your own quote</td></tr>`;
+  const prow=[['Inexpensive meal','cheap',''],['Mid-range restaurant meal','mid',''],['Coffee','coffee',''],['Groceries, full self-catering','groc',' / week'],['Campus canteen meal','canteen',''],['Student transit pass','pass',' / month'],['Taxi or ride-share trip','ride',''],['Utilities','utils',' / month'],['Home internet','net',' / month'],['Mobile plan','mobile',' / month'],['Gym membership','gym',' / month'],['Cinema ticket','cinema',''],['Subscription','sub',' / month']];
+  let a='<thead><tr><th class="l">Assumption</th><th>Value</th><th class="l">Source</th><th class="l">Note</th></tr></thead><tbody>';
+  prow.forEach(x=>{a+=`<tr><td class="l">${x[0]}</td><td class="num">${fmtCcy(P[x[1]],ccy)}${x[2]}</td><td class="l">${qpill(c.cited.includes(x[1])?'cited':'est')}</td><td class="basis">${x[1]==='pass'&&!P.pass?'Included in the semester contribution':''}</td></tr>`});
+  c.fees.forEach(f=>{a+=`<tr><td class="l">${esc(f.label)}</td><td class="num">${fmtCcy(f.amt,ccy)}${{once:'',halfyear:' / year',peryear:' / year',persemester:' / semester',prorata:' / year',monthly:' / month'}[f.kind]}</td><td class="l">${qpill(f.q)}</td><td class="basis">${esc(f.note)}</td></tr>`});
+  a+=`<tr><td class="l">Return flight from India</td><td class="num">${fmtCcy(c.flightINR,'INR')}</td><td class="l">${qpill('est')}</td><td class="basis">Published fares vary widely by month and route; use your own quote.</td></tr></tbody>`;
   $('#assump').innerHTML=a;
-  $('#methSub').innerHTML=`<b>Rent</b> is calculated from our listings database (snapshot ${SNAPSHOT}): live properties with a price window ending on or after the snapshot, one value per property and room code, weekly prices converted to monthly (×52/12), extreme outliers (outside each country's 3rd–97th percentile) removed. Bands are the 25th percentile / median / 75th percentile. Currency conversion uses ${FX_NOTE}.`;
   window.__last=r;
 }
 
 function summaryText(){
   const r=window.__last;
-  const lines=[`Study abroad living-cost estimate (excl. tuition)`,
-   `${r.loc.whole?'Whole city':r.loc.label}, ${cityDB().c}, ${S.country} · ${r.mo} months`,
-   `TOTAL: ${fmt(r.total)}  |  avg ${fmt(r.total/r.mo)} / month  |  one-time ${fmt(r.oneTime)}`,''];
-  r.byCat.filter(x=>x.total>0.5).forEach(x=>lines.push(`${x.n}: ${fmt(x.total)} (${Math.round(x.total/r.total*100)}%)`));
-  lines.push('',`Data quality: `+r.byQ.filter(x=>x.total>0.5).map(x=>`${x.n} ${Math.round(x.total/r.total*100)}%`).join(', '));
-  return lines.join('\n');
+  const where=(r.loc.whole?'':r.loc.short+', ')+cityDB().c+', '+S.country;
+  const out=['House of Student: cost of living estimate (excl. tuition)',`${where}, ${r.mo} months`,'',
+   `Total: ${fmt(r.total)}`,`= ${fmt(r.running)} a month × ${r.mo} months + ${fmt(r.oneTime)} one-time`,
+   `Cash needed to get started: ${fmt(r.upfront)} (incl. ${fmt(r.deposit)} refundable deposit)`,''];
+  r.byCat.filter(x=>x.total>0.5).sort((a,b)=>b.total-a.total).forEach(x=>out.push(`${x.n}: ${fmt(x.total)} (${Math.round(x.total/r.total*100)}%)`));
+  out.push('',`Rent from ${r.loc.n} House of Student listings, snapshot ${SNAPSHOT}.`);
+  return out.join('\n');
 }
 
 /* =====================================================================
    7. INIT
    ===================================================================== */
 (function init(){
-  $('#cur').innerHTML=['INR','USD','EUR','GBP','AUD','NZD'].map(c=>`<option value="${c}">${c}</option>`).join('')+'<option value="LOCAL">Local currency of country</option>';
-  $('#cur').onchange=e=>{S.cur=e.target.value;try{localStorage.setItem('sac_cur',S.cur)}catch(_){ }syncControls();update()};
-  try{const c=localStorage.getItem('sac_cur');if(c&&(FX[c]||c==='LOCAL'))S.cur=c}catch(_){ }
+  const nCities=Object.values(DB).reduce((a,c)=>a+c.cities.length,0);
+  const nListings=Object.values(DB).reduce((a,c)=>a+c.cities.reduce((b,x)=>b+x.n,0),0);
+  $('#trust').innerHTML=`<span>${ICON.db}Rent from ${nListings.toLocaleString("en-IN")} room listings</span><span>${ICON.map}${nCities} cities in ${Object.keys(DB).length} countries</span><span>${ICON.cal}Data updated ${new Date(SNAPSHOT).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span><span>${ICON.ok}Excludes tuition</span>`;
+  $('#cur').innerHTML=['INR','USD','EUR','GBP','AUD','NZD'].map(c=>`<option value="${c}">${c}</option>`).join('')+'<option value="LOCAL">Local</option>';
+  $('#cur').addEventListener('change',e=>{S.cur=e.target.value;try{localStorage.setItem('hos_cur',S.cur)}catch(_){ }update()});
+  try{const c=localStorage.getItem('hos_cur');if(c&&(FX[c]||c==='LOCAL'))S.cur=c}catch(_){ }
+  $('#mSources').innerHTML=`<p>Currency conversion uses ${FX_NOTE}. Fees and everyday costs come from the sources below, mostly secondary summaries of official pages; confirm on official sites before paying.</p><ul>`+SOURCES.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>, ${s[2]}</li>`).join('')+'</ul>';
   applyPreset('balanced');
-  buildForm();syncControls();update();
-  $('#foot').innerHTML='<b>Sources &amp; caveats.</b> Rent: House of Student listings database. Fees and cost-of-living figures were gathered from the public sources below (mostly secondary summaries of official pages) and must be confirmed on the official sites before you commit money. “Estimate” items have no solid source. '+SOURCES.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a> (${s[2]})`).join(' · ')+'. Tuition and application fees are not included.';
-  $('#btnPrint').onclick=()=>window.print();
-  $('#btnCopy').onclick=async e=>{
-    const b=e.currentTarget,t=summaryText();
-    try{await navigator.clipboard.writeText(t);b.textContent='Copied ✓'}catch(_){b.textContent='Copy not allowed'}
+  buildForm();update();
+  $('#btnPrint').addEventListener('click',()=>window.print());
+  $('#btnCopy').addEventListener('click',async e=>{
+    const b=e.currentTarget;
+    try{await navigator.clipboard.writeText(summaryText());b.textContent='Copied'}catch(_){b.textContent='Copy unavailable'}
     setTimeout(()=>b.textContent='Copy summary',1600);
-  };
+  });
 })();
 </script>
 </body>

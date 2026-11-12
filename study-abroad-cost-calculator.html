@@ -310,6 +310,90 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 }
 @media print{ .expander,.pair input,.swap{display:none!important} }
 
+
+/* ---------- v4: low-friction layout ---------- */
+.hero{padding:30px 24px 22px}
+.hero h1{font-size:clamp(28px,3.6vw,40px);margin:10px 0 8px}
+.hero p{font-size:16px}
+.trust{margin-top:16px}
+.where{display:grid;grid-template-columns:1.3fr 1fr 1.3fr;gap:16px}
+.where .field.stay{grid-column:1/-1}
+.src{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.45}
+.src b{color:var(--ink)}
+.src .badge{flex:none;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--lime);color:var(--ink-strong);margin-top:1px}
+.src .badge.cal{background:#E6EEFA;color:#2A4F86}
+.src .badge.db{background:var(--sunken);color:var(--ink)}
+
+/* living levels */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.levels button{text-align:left;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:border-color .15s}
+.levels button:hover{border-color:var(--ink)}
+.levels .ln{display:block;font-weight:800;font-size:15px;color:var(--ink-strong)}
+.levels .la{display:block;font-weight:800;font-size:18px;color:var(--ink-strong);margin-top:6px}
+.levels .la small{font-size:12px;font-weight:700;color:var(--muted)}
+.levels .ld{display:block;font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+.levels button[aria-checked="true"]{background:var(--ink);border-color:var(--ink)}
+.levels button[aria-checked="true"] .ln{color:var(--lime)}
+.levels button[aria-checked="true"] .la{color:#fff}
+.levels button[aria-checked="true"] .la small,.levels button[aria-checked="true"] .ld{color:#D9D5CF}
+.linkrow{margin-top:14px}
+.textbtn{border:0;background:none;padding:0;font-weight:800;font-size:13.5px;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:underline;text-underline-offset:3px}
+.textbtn svg{transition:transform .2s}
+.textbtn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.tune{margin-top:16px;padding:18px;border-radius:var(--r-md);background:var(--sunken)}
+.tune[hidden]{display:none}
+.tune .seg{background:#E7E4DE}
+.tune .tog{background:var(--surface)}
+
+/* add-ons */
+.addons{display:grid;gap:10px}
+.addon{border:1px solid var(--line-strong);border-radius:var(--r-md);background:var(--surface);transition:border-color .15s,box-shadow .15s}
+.addon.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.addon-head{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 16px;cursor:pointer}
+.addon-head .sw{flex:none;width:42px;height:24px;border-radius:99px;background:var(--line-strong);position:relative;transition:background .15s}
+.addon-head .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .15s,background .15s}
+.addon.on .addon-head .sw{background:var(--ink)}
+.addon.on .addon-head .sw::after{transform:translateX(18px);background:var(--lime)}
+.addon-head b{display:block;font-size:14.5px;color:var(--ink-strong)}
+.addon-head small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.addon-amt{text-align:right;font-weight:800;font-size:13.5px;color:var(--ink-strong);white-space:nowrap}
+.addon-amt small{display:block;font-weight:600;font-size:11.5px;color:var(--faint)}
+.addon:not(.on) .addon-amt{color:var(--faint)}
+.addon-body{padding:4px 16px 18px;border-top:1px solid var(--line)}
+.addon-body[hidden]{display:none}
+.addon-body .grid{margin-top:14px}
+.money-in{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:var(--r-sm);overflow:hidden;background:var(--surface)}
+.money-in span{padding:0 12px;font-weight:800;color:var(--muted);background:var(--sunken);align-self:stretch;display:grid;place-items:center;border-right:1px solid var(--line-strong)}
+.money-in input{border:0;padding:11px 12px;font-weight:800;font-size:15px;width:100%;min-width:0;font-variant-numeric:tabular-nums}
+.money-in input:focus{outline:none}
+.money-in:focus-within{border-color:var(--ink)}
+.feelist{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+.feelist li{display:flex;justify-content:space-between;gap:12px;font-size:13px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.feelist li span:first-child{color:var(--ink);font-weight:600}
+.feelist li span:last-child{font-weight:800;color:var(--ink-strong);white-space:nowrap}
+.feelist small{display:block;color:var(--muted);font-weight:500;font-size:11.5px}
+
+/* summary v4 */
+.split{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.split li{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:14px}
+.split li>span{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--ink)}
+.split li>span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+.split li b{font-weight:800;color:var(--ink-strong);text-align:right}
+.split li b .m2{font-size:11.5px}
+.totalbox{margin-top:16px;border-radius:var(--r-md);background:var(--ink);color:#fff;padding:14px 16px}
+.totalbox .tl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#D9D5CF}
+.totalbox .tv{font-size:24px;font-weight:800;color:var(--lime);margin-top:2px}
+.totalbox .tv .m2{color:#D9D5CF;font-size:13px}
+.totalbox .tn{font-size:12px;color:#D9D5CF;margin-top:4px}
+.sum .pair{margin-top:18px}
+
+@media (max-width:1040px){ .where{grid-template-columns:1fr 1fr} .where .field.loc{grid-column:1/-1} }
+@media (max-width:720px){
+  .where,.levels{grid-template-columns:1fr}
+  .addon-head{grid-template-columns:auto 1fr;}
+  .addon-amt{grid-column:2;text-align:left}
+}
+
 </style>
 </head>
 <body>
@@ -317,7 +401,7 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
   <div class="nav-in">
     <a class="brand" href="https://houseofstudent.com/" aria-label="House of Student home"><img src="data:image/png;base64,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" alt="House of Student" width="162" height="42"></a>
     <span class="nav-sep" aria-hidden="true"></span>
-    <span class="nav-title">Cost of Living Calculator</span>
+    <span class="nav-title">Rent &amp; Living Cost Calculator</span>
     <div class="nav-right">
       <label for="home">Your currency</label>
       <select id="home" class="pill-select"></select>
@@ -327,35 +411,33 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 
 <section class="hero">
   <span class="eyebrow"><span class="dot"></span>Study abroad planner</span>
-  <h1>Know the real cost of <mark>living abroad</mark> before you go.</h1>
-  <p>Pick where you will live, the rent you are aiming for and your lifestyle. You get a full budget for your stay in your own currency, excluding tuition. Rent comes from live House of Student listings.</p>
+  <h1>What will it cost to <mark>live</mark> there?</h1>
+  <p>Choose a city and see your monthly rent and living costs straight away. Add flights, visa fees or travel only if you want them.</p>
   <div class="trust" id="trust"></div>
 </section>
 
 <main class="layout">
   <div id="form"></div>
   <aside class="card sum" id="results" aria-live="polite">
-    <div class="lbl">Estimated cost of living</div>
-    <div class="total num" id="sTotal">–</div>
+    <div class="lbl">Your estimated monthly cost</div>
+    <div class="total num" id="sMonthly">–</div>
     <div class="ctx" id="sWhere"></div>
-    <div class="pair" id="pair"></div>
-    <div class="eq num" id="sEq"></div>
-    <div class="kpis">
-      <div class="kpi"><span>Monthly running cost</span><b class="num" id="sRec">–</b></div>
-      <div class="kpi"><span>All-in monthly average</span><b class="num" id="sAvg">–</b></div>
+    <ul class="split num" id="split"></ul>
+    <div class="totalbox num">
+      <div class="tl" id="tLabel">Total for your stay</div>
+      <div class="tv" id="sTotal">–</div>
+      <div class="tn" id="sEq"></div>
+    </div>
+    <div class="kpis" id="upBox" hidden>
       <div class="kpi wide"><span>Cash needed to get started</span><b class="num" id="sUp">–</b><small id="sUpNote"></small></div>
     </div>
-    <div class="lbl">Where the money goes</div>
+    <div class="lbl" style="margin-top:20px">Where the money goes</div>
     <div class="donut-wrap">
       <svg class="donut" id="donut" viewBox="0 0 200 200" role="img" aria-labelledby="donutTitle"><title id="donutTitle">Share of total cost by segment</title></svg>
       <ul class="dleg" id="dleg"></ul>
     </div>
-    <div class="divider"></div>
-    <div class="lbl">Data confidence</div>
-    <div class="qbar" id="qbar"></div>
-    <div class="qleg" id="qleg"></div>
+    <div class="pair" id="pair"></div>
     <div id="alerts"></div>
-    <div class="rangeline num" id="sRange"></div>
     <div class="actions">
       <button class="btn primary" id="btnCopy" type="button">Copy summary</button>
       <button class="btn ghost" id="btnPrint" type="button">Save as PDF</button>
@@ -366,23 +448,20 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 <section class="below">
   <div class="card panel">
     <h3>Detailed breakdown</h3>
-    <p class="sub">Every line behind your total, grouped by segment, with the basis of each figure and where it comes from.</p>
+    <p class="sub">Every line behind your estimate, with the basis of each figure and where it comes from.</p>
     <div class="tablewrap"><table id="detail"></table></div>
   </div>
   <div class="card panel">
     <h3>Methodology &amp; sources</h3>
     <p class="sub">How each number is produced, so you can judge how far to rely on it.</p>
-    <details open><summary>Rent: House of Student listings data</summary><div id="mRent"></div></details>
-    <details><summary>Assumptions for the selected country</summary><div class="tablewrap"><table class="assump" id="assump"></table></div></details>
+    <details open><summary>Rent</summary><div id="mRent"></div></details>
+    <details><summary>Living-cost assumptions for the selected country</summary><div class="tablewrap"><table class="assump" id="assump"></table></div></details>
     <details><summary>How the total is calculated</summary>
       <ul>
-        <li><b>Total</b> = monthly running cost × months of stay + one-time costs. The refundable deposit is not a cost and is excluded from the total.</li>
-        <li><b>Monthly running cost</b> includes yearly items (trips) spread evenly per month, plus your contingency buffer.</li>
-        <li><b>One-time costs</b> are visa and residence fees, insurance and levies paid upfront, flights at the start and end of your stay, a starter household kit and winter clothing where needed.</li>
-        <li><b>Cash needed to get started</b> = one-time costs + refundable deposit + your first month of running costs.</li>
-        <li><b>Meals</b>: the plan always adds up to 21 meals a week; home cooking covers every meal you do not eat out.</li>
-        <li><b>Segments</b> in the chart group the detailed categories: Lifestyle = everyday living, leisure and clothing; Transport &amp; travel = local transport and trips; Fees, setup &amp; buffer = visa, insurance, moving costs and contingency.</li>
-        <li><b>Likely range</b> widens with uncertainty: ±5% on DB-backed and official items, ±15% on sourced estimates, ±30% on estimates.</li>
+        <li><b>Monthly cost</b> = rent + living costs + any other expenses you add that recur (yearly items such as trips are spread evenly per month).</li>
+        <li><b>Total for your stay</b> = monthly cost × months + one-time costs you added (flights at the start and end, visa fees, setup).</li>
+        <li><b>Living costs</b> cover food, local transport, phone and bills, and personal essentials. Lean, Standard and Comfortable set how much you eat out, travel by taxi and spend on essentials; Fine-tune lets you set each one.</li>
+        <li>A refundable deposit is not a cost, so it is never in the total. It appears only in cash needed to get started.</li>
       </ul>
     </details>
     <details><summary>Exchange rates and sources</summary><div id="mSources"></div></details>
@@ -392,11 +471,11 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 <footer>
   <div class="foot-in">
     <img src="data:image/png;base64,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" alt="House of Student" width="116" height="30">
-    <span>Estimates for planning only. Confirm visa, insurance and fee amounts on official government sites before paying. Tuition is not included.</span>
+    <span>Estimates for planning only. Tuition is not included. Confirm visa, insurance and fee amounts on official government sites before paying.</span>
   </div>
 </footer>
 
-<div class="mbar"><div><span>Estimated total</span><b class="num" id="mTotal">–</b></div><a href="#results">View summary</a></div>
+<div class="mbar"><div><span>Estimated per month</span><b class="num" id="mTotal">–</b></div><a href="#results">View summary</a></div>
 <div class="tip" id="tip" role="tooltip"></div>
 
 <script>
@@ -499,7 +578,7 @@ const MEDIA={flightBudget:'Budget airline',flightStd:'Full-service airline',trai
               | persemester (per started 6 months) | prorata (annual amount × months/12, paid upfront) | monthly */
 const COUNTRIES={
  'United Kingdom':{code:'GB',cold:true,
-  p:{cheap:12,mid:28,coffee:3.5,groc:38,canteen:5,pass:55,ride:9,utils:95,net:28,mobile:12,gym:28,cinema:11.5,sub:9,cloth:18,car:450},
+  p:{cheap:12,mid:28,coffee:3.5,groc:39.3,canteen:5,pass:55,ride:9,utils:95,net:28,mobile:12,gym:28,cinema:11.5,sub:9,cloth:18,car:450},
   cited:['groc'],cityP:{London:{pass:140,ride:14}},
   fees:[
    {g:'visa',label:'Student visa application',amt:558,kind:'once',q:'fee',note:'£558 from 8 Apr 2026 (previously £524). Confirm on gov.uk.'},
@@ -562,109 +641,107 @@ const SOURCES=[
  ['Dublin student costs (TU Dublin)','https://www.tudublin.ie/media/website/for-students/documents/TU-Dublin-Cost-of-Living-Guide-2026.pdf','university budget guide'],
  ['Exchange rates','https://indiashippingnews.com/custom-exchange-rates/','Indian Customs notified rates, 2 Oct 2026'],
  ['Exchange rates (CAD, JPY)','https://www.logisticsresourceguide.com/custom-exchange-rates','Indian Customs Notification No. 27/2026'],
- ['Official customs exchange rates','https://www.icegate.gov.in/guidelines/others/exchange-automation-module','ICEGATE, CBIC']
+ ['Official customs exchange rates','https://www.icegate.gov.in/guidelines/others/exchange-automation-module','ICEGATE, CBIC'],
+ ['UK student living costs (groceries £146/month, going out £61/month)','https://www.savethestudent.org/accommodation/national-student-accommodation-survey.html','Save the Student, as quoted in the UK Outlook, Aug 2026']
 ];
 
 /* =====================================================================
-   3. CATEGORIES, SEGMENTS, QUALITY LEVELS, FORM DEFINITION
+   3. RENT MODEL: anchored to House of Student Outlook reports
+   ---------------------------------------------------------------------
+   The published Outlook reports set the "Typical" weekly rent per city. Our listings data (DB above)
+   supplies the shape around it: the Budget/Premium bands and neighbourhood differences, scaled so the
+   whole-city Typical figure equals the report exactly.
+     src 'report' : city appears in the report → Typical = report figure.
+     src 'cal'    : city is in our listings but not in the report → listings median × the country's
+                    calibration factor (median of report ÷ listings across the report's cities).
+     src 'db'     : no report for the country → listings data as-is.
    ===================================================================== */
-const CATS=[
- {id:'rent',n:'Rent & bills'},{id:'food',n:'Food'},{id:'living',n:'Everyday living'},{id:'lux',n:'Leisure & luxury'},
- {id:'cloth',n:'Clothing'},{id:'trans',n:'Local transport'},{id:'travel',n:'Travel'},
- {id:'fees',n:'Visa, insurance & fees'},{id:'setup',n:'Moving & setup'},{id:'buffer',n:'Contingency'}
-];
-/* Major segments for the chart; minor categories are clubbed into these. Colours: validated categorical slots 1–5. */
-const MAJORS=[
- {id:'home',n:'Rent & bills',c:'#2a78d6',subs:['rent']},
- {id:'food',n:'Food',c:'#eb6834',subs:['food']},
- {id:'life',n:'Lifestyle',c:'#1baf7a',subs:['living','lux','cloth']},
- {id:'move',n:'Transport & travel',c:'#eda100',subs:['trans','travel']},
- {id:'feeg',n:'Fees, setup & buffer',c:'#e87ba4',subs:['fees','setup','buffer']}
-];
-const catName=id=>CATS.find(c=>c.id===id).n;
-const QUAL={db:{n:'House of Student data',s:'DB data',c:'var(--q-db)',w:.05},fee:{n:'Official fee',s:'Official fee',c:'var(--q-fee)',w:.05},cited:{n:'Sourced estimate',s:'Sourced',c:'var(--q-cited)',w:.15},est:{n:'Estimate',s:'Estimate',c:'var(--q-est)',w:.30}};
-const MEALS=[['mCanteen','Campus canteen','#6F9A8D'],['mCheap','Cheap eats','#E2B04A'],['mRest','Restaurants','#D08C6B'],['mDeliv','Delivery','#A487C2']];
-const MEAL_KEYS=MEALS.map(m=>m[0]);
-const lc=v=>fmtCcy(v,localCcy(),Math.abs(v)<100&&Math.round(v)!==v?2:0);   // local unit prices keep their pence/cents
-
-/* Always-visible steps */
-const MAIN=[
- {t:'Destination',d:'Only places with enough listings in our database to give a reliable rent figure are offered.',f:[
-   {k:'country',t:'cards',full:1,opts:()=>Object.keys(DB).map(c=>[c,c,COUNTRIES[c].code+' · '+DB[c].ccy+' · '+DB[c].cities.length+(DB[c].cities.length>1?' cities':' city')])},
-   {k:'city',t:'select',l:'City',opts:()=>DB[S.country].cities.map((c,i)=>[i,c.c+'  ·  '+c.n+' listings'])},
-   {k:'locality',t:'select',l:'Neighbourhood',opts:()=>localities().map((l,i)=>[i,l.label]),hint:()=>{const l=curLoc();return l.whole?'Choose a postcode area for a more precise rent figure.':l.n+' listings in this area.'}},
-   {k:'months',t:'stay',l:'Length of stay',full:1}]},
- {t:'Rent type',d:'The biggest single cost. Prices are the real range of House of Student listings in the area you chose.',f:[
-   {k:'tier',t:'rentcards',full:1}]},
- {t:'Lifestyle',d:'Standard is a typical student budget. Pick another profile, or customise every detail below.',tag:1,f:[
-   {k:'preset',t:'presets',full:1},
-   {k:'lifesum',t:'lifesum',full:1},
-   {k:'expander',t:'expander',full:1}]}
-];
-/* Detailed options, collapsed by default */
-const DETAIL=[
- {t:'Home & bills',d:'What your rent includes and what you pay upfront.',f:[
-   {k:'billsIncl',t:'toggle',full:1,l:'Bills included in rent',desc:'Most purpose-built student homes include utilities and Wi-Fi. Switch off if your listing does not.'},
-   {k:'laundry',t:'seg',l:'Laundry',opts:()=>[['free','Included'],['paid','Pay per wash']]},
-   {k:'deposit',t:'seg',l:'Refundable deposit',opts:()=>[[0,'None'],[1,'1 mo'],[1.5,'1.5 mo'],[2,'2 mo']],hint:()=>'Not a cost, so it is excluded from the total. It is included in cash needed to get started.'}]},
- {t:'Food',d:'Plan a typical week of 21 meals. Home cooking automatically covers every meal you do not eat out.',f:[
-   {k:'meals',t:'meals',full:1},
-   ...MEALS.map(m=>({k:m[0],t:'range',l:m[1]+' per week',min:0,max:14,step:1})),
-   {k:'diet',t:'seg',l:'Diet',opts:()=>[['veg','Veg'],['mixed','Mixed'],['nonveg','Non-veg'],['vegan','Vegan']]},
-   {k:'groc',t:'seg',l:'Grocery shopping',opts:()=>[['b','Budget'],['m','Regular'],['p','Premium']]},
-   {k:'coffee',t:'range',l:'Coffees and snacks per week',min:0,max:15,step:1,full:1}]},
- {t:'Everyday living',d:'Phone, fitness, personal care and entertainment.',f:[
-   {k:'mobile',t:'seg',l:'Mobile plan',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Unlimited']]},
-   {k:'gym',t:'seg',l:'Fitness',opts:()=>[[0,'None'],[1,'Campus'],[2,'Gym'],[3,'Premium']]},
-   {k:'care',t:'seg',l:'Personal care',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Premium']]},
-   {k:'outings',t:'range',l:'Cinema and outings per month',min:0,max:10,step:1},
-   {k:'subs',t:'range',l:'Paid subscriptions',min:0,max:8,step:1,hint:()=>'About '+lc(P_().sub)+' per service per month.'}]},
- {t:'Leisure & luxury',d:'Discretionary spending. Prices scale with local restaurant prices.',f:[
-   {k:'salon',t:'range',l:'Salon or spa visits per month',min:0,max:6,step:1},
-   {k:'night',t:'range',l:'Nights out per month',min:0,max:12,step:1},
-   {k:'events',t:'range',l:'Concerts and events per month',min:0,max:6,step:1},
-   {k:'fine',t:'range',l:'Fine-dining meals per month',min:0,max:6,step:1},
-   {k:'brands',t:'seg',l:'Gadgets and accessories (excl. clothing)',full:1,opts:()=>[0,2,5,12].map((m,i)=>[i,['None','Occasional','Regular','Frequent'][i],m?lc(m*P_().mid)+' /mo':''])},
-   {k:'hobby',t:'seg',l:'Hobbies and classes',full:1,opts:()=>[0,1.5,3.5,7].map((m,i)=>[i,['None','Light','Active','Serious'][i],m?lc(m*P_().mid)+' /mo':''])}]},
- {t:'Getting around',d:'Your daily commute and trips around the city.',f:[
-   {k:'tMode',t:'seg',l:'Main way to get around',full:1,opts:()=>{const P=P_();return [['pass','Transit pass',P.pass?lc(P.pass)+' /mo':'Included'],['bike','Bicycle',lc(P.cheap*2)+' /mo'],['walk','Walking','Free'],['car','Car',lc(P.car)+' /mo']]}},
-   {k:'rides',t:'range',l:'Taxi or ride-share trips per month',min:0,max:30,step:1,full:1}]},
- {t:'Travel',d:'Visits home, trips within the country and to neighbouring countries. Counts are per year and spread across your stay.',f:[
-   {k:'homeTrips',t:'range',l:'Trips home per year',min:0,max:4,step:1,hint:()=>'Return flight from India about '+fmtP(cn().flightINR)+'.'},
-   {k:'domTrips',t:'range',l:'Domestic trips per year',min:0,max:12,step:1},
-   {k:'domDays',t:'range',l:'Days per domestic trip',min:1,max:10,step:1},
-   {k:'domStyle',t:'seg',l:'Domestic travel style',opts:()=>[[0,'Budget'],[1,'Comfort'],[2,'Premium']]},
-   {k:'nearTrips',t:'range',l:'Trips abroad per year',min:0,max:12,step:1,hint:()=>'Nearby: '+cn().near.name+'.'},
-   {k:'nearDays',t:'range',l:'Days per trip abroad',min:1,max:14,step:1},
-   {k:'nearMedium',t:'seg',cls:'wrap',l:'How you travel abroad',full:1,opts:()=>{const nr=cn().near;return Object.entries(nr.f).filter(e=>e[1]!=null).map(e=>[e[0],MEDIA[e[0]],fmtCcy(e[1],nr.ccy)+' return'])}},
-   {k:'nearStyle',t:'seg',l:'Travel style abroad',full:1,opts:()=>[[0,'Budget'],[1,'Comfort'],[2,'Premium']]}]},
- {t:'Clothing',d:'Regular shopping, plus one-time winter wear in cold climates.',f:[
-   {k:'clothRange',t:'seg',l:'Shopping range',full:1,opts:()=>[[0,'Value'],[1,'Mid-range'],[2,'Premium'],[3,'Designer']]},
-   {k:'clothItems',t:'range',l:'New items per month',min:0,max:12,step:1,full:1,hint:()=>cn().cold?'Cold climate: a one-time winter wardrobe is added to moving costs.':'Mild climate: no winter wardrobe needed.'}]},
- {t:'Fees, setup & buffer',d:'Government fees, mandatory insurance, moving costs and a safety margin.',f:[
-   {k:'incVisa',t:'toggle',l:'Visa and residence fees',desc:()=>feeSummary('visa')},
-   {k:'incIns',t:'toggle',l:'Health insurance and student levies',desc:()=>feeSummary('ins')},
-   {k:'incFlight',t:'toggle',l:'Flights at the start and end of your stay',desc:()=>'One return flight, about '+fmtP(cn().flightINR)+', plus a first week of budget accommodation.'},
-   {k:'incKit',t:'toggle',l:'Starter household kit',desc:()=>'Bedding, kitchenware and a local SIM, about '+fmtP(15000)+'.'},
-   {k:'buffer',t:'range',l:'Contingency buffer on monthly spend',min:0,max:20,step:1,unit:'%',full:1}]}
-];
-
-const PRESETS={
- frugal:{label:'Essential',desc:'Cook most meals, public transport, few extras.',billsIncl:true,laundry:'paid',deposit:1,diet:'mixed',groc:'b',mCanteen:3,mCheap:2,mRest:0,mDeliv:0,coffee:1,mobile:0,gym:0,care:0,outings:1,subs:1,buffer:5,salon:0,night:0,events:0,fine:0,brands:0,hobby:0,tMode:'pass',rides:0,homeTrips:1,domTrips:1,domDays:2,domStyle:0,nearTrips:1,nearDays:3,nearMedium:'bus',nearStyle:0,clothRange:0,clothItems:1},
- balanced:{label:'Standard',desc:'Typical student: some eating out, a trip home and a few short trips a year.',billsIncl:true,laundry:'free',deposit:1,diet:'mixed',groc:'m',mCanteen:2,mCheap:3,mRest:1,mDeliv:1,coffee:3,mobile:1,gym:1,care:1,outings:2,subs:2,buffer:7,salon:1,night:1,events:0,fine:0,brands:1,hobby:1,tMode:'pass',rides:3,homeTrips:1,domTrips:3,domDays:3,domStyle:1,nearTrips:2,nearDays:4,nearMedium:'flightBudget',nearStyle:1,clothRange:1,clothItems:2},
- comfortable:{label:'Comfortable',desc:'Regular dining out, a gym, more travel.',billsIncl:true,laundry:'free',deposit:1.5,diet:'mixed',groc:'m',mCanteen:1,mCheap:3,mRest:3,mDeliv:2,coffee:5,mobile:2,gym:2,care:1,outings:3,subs:3,buffer:8,salon:2,night:3,events:1,fine:1,brands:2,hobby:2,tMode:'pass',rides:8,homeTrips:2,domTrips:3,domDays:3,domStyle:1,nearTrips:4,nearDays:5,nearMedium:'flightBudget',nearStyle:1,clothRange:2,clothItems:3},
- premium:{label:'Premium',desc:'Dining out often, premium services, frequent travel.',billsIncl:true,laundry:'free',deposit:2,diet:'mixed',groc:'p',mCanteen:0,mCheap:3,mRest:6,mDeliv:4,coffee:7,mobile:2,gym:3,care:2,outings:4,subs:4,buffer:10,salon:3,night:5,events:2,fine:3,brands:3,hobby:3,tMode:'pass',rides:15,homeTrips:3,domTrips:4,domDays:4,domStyle:2,nearTrips:6,nearDays:6,nearMedium:'flightStd',nearStyle:2,clothRange:3,clothItems:4}
+const REPORTS={
+ uk:{name:'House of Student Outlook: UK Student Housing, August 2026 Edition',short:'UK Outlook, Aug 2026',basis:'Exhibit E, typical weekly rent by city, compiled from live listings and confirmed lettings (2025/26 cycle)'},
+ au:{name:'House of Student Outlook: Australia, October 2026',short:'Australia Outlook, Oct 2026',basis:'Exhibit E, typical weekly rent by city (AUD). The report itself marks these figures as placeholders pending a live data refresh',placeholder:true}
 };
+const ANCHOR={
+ 'United Kingdom':{rep:'uk',weekly:{'Sheffield':113,'Coventry':151,'Newcastle Upon Tyne':144,'Nottingham':144,'Liverpool':156,'Leicester':159,'Aberdeen':161,'Birmingham':172,'Leeds':184,'Glasgow':218,'Exeter':232,'Cardiff':235,'Manchester':236,'Edinburgh':263,'Bristol':285,'London':334}},
+ 'Australia':{rep:'au',weekly:{'Hobart':430,'Wollongong':460,'Newcastle':470,'Adelaide':480,'Gold Coast':500,'Perth':510,'Brisbane':540,'Canberra':560,'Melbourne':620,'Sydney':780}}
+};
+const WEEKLY_MARKETS=['United Kingdom','Australia','Ireland','New Zealand'];   // tbl_country.prise_unit = 2
+const W2M=52/12;
+const median=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2};
+
+/* MODEL: per country, cities with rent bands already on the report basis (local currency per month) */
+const MODEL={};
+function buildModel(){
+  for(const country of Object.keys(DB)){
+    const A=ANCHOR[country],cities=DB[country].cities;
+    const out=[];let calib=1;
+    if(A){
+      const f=cities.filter(c=>A.weekly[c.c]!=null).map(c=>A.weekly[c.c]*W2M/c.r[1]);
+      calib=median(f);
+    }
+    cities.forEach(c=>{
+      const a=A&&A.weekly[c.c];
+      const k=a!=null?a*W2M/c.r[1]:calib;
+      out.push({c:c.c,n:c.n,k,src:A?(a!=null?'report':'cal'):'db',r:c.r.map(v=>v*k),L:(c.L||[]).map(l=>[l[0],l[1],l[2],l[3]*k,l[4]*k,l[5]*k]),raw:c});
+    });
+    if(A){   // cities in the report that our listings data does not cover
+      const anch=cities.filter(c=>A.weekly[c.c]!=null);
+      const lo=median(anch.map(c=>c.r[0]/c.r[1])),hi=median(anch.map(c=>c.r[2]/c.r[1]));
+      Object.entries(A.weekly).forEach(([name,w])=>{
+        if(cities.some(c=>c.c===name))return;
+        const m=w*W2M;out.push({c:name,n:null,k:null,src:'report',reportOnly:true,r:[m*lo,m,m*hi],L:[]});
+      });
+    }
+    MODEL[country]={ccy:DB[country].ccy,calib,rep:A?A.rep:null,cities:out};
+  }
+}
 
 /* =====================================================================
-   4. STATE & HELPERS
+   4. LIVING COSTS & ADD-ONS
    ===================================================================== */
-const S={country:'United Kingdom',city:0,locality:0,months:12,tier:1,home:'INR',swap:false,rates:{},detailOpen:false,incVisa:true,incIns:true,incFlight:true,incKit:true,preset:'balanced'};
+const LEVELS=[
+ {n:'Lean',d:'Cook almost every meal, public transport only',s:{eatOut:1,grocStyle:'b',coffee:1,tMode:'pass',rides:0,mobile:0,care:0}},
+ {n:'Standard',d:'Mostly home cooking, a few meals out a week',s:{eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1}},
+ {n:'Comfortable',d:'Eat out often, a taxi now and then',s:{eatOut:7,grocStyle:'m',coffee:6,tMode:'pass',rides:6,mobile:2,care:2}}
+];
+const SEGS=[
+ {id:'rent',n:'Rent',c:'#2a78d6',cats:['rent']},
+ {id:'food',n:'Food',c:'#eb6834',cats:['food']},
+ {id:'trans',n:'Transport',c:'#1baf7a',cats:['trans']},
+ {id:'ess',n:'Bills & essentials',c:'#eda100',cats:['bills','ess']},
+ {id:'extra',n:'Other expenses',c:'#e87ba4',cats:['flights','visa','leisure','travel','shopping','setup','buffer']}
+];
+const CATNAME={rent:'Rent',food:'Food',trans:'Transport',bills:'Phone & bills',ess:'Personal essentials',flights:'Flights',visa:'Visa & insurance',leisure:'Going out & leisure',travel:'Travel & trips',shopping:'Clothes & shopping',setup:'Moving-in setup',buffer:'Contingency'};
+const LIVING_CATS=['food','trans','bills','ess'];
+const QUAL={report:{s:'Outlook report',c:'var(--q-db)'},db:{s:'Listings data',c:'var(--q-db)'},cal:{s:'Calibrated',c:'var(--q-fee)'},fee:{s:'Official fee',c:'var(--q-fee)'},cited:{s:'Sourced',c:'var(--q-cited)'},est:{s:'Estimate',c:'var(--q-est)'},user:{s:'Your figure',c:'var(--lime-deep)'}};
+
+const ADDONS=[
+ {id:'flights',t:'Flights',d:'Flights at the start and end of your stay, plus trips home. Enter your own fare.'},
+ {id:'visa',t:'Visa & health insurance',d:'Student visa, residence permit, mandatory insurance and student levies.'},
+ {id:'leisure',t:'Going out & leisure',d:'Nights out, events, cinema, subscriptions and the gym.'},
+ {id:'travel',t:'Travel & trips',d:'Weekend trips in the country and to neighbouring countries.'},
+ {id:'shopping',t:'Clothes & shopping',d:'Regular clothes shopping, plus a winter wardrobe in cold countries.'},
+ {id:'setup',t:'Moving-in setup',d:'Starter household kit, first week on arrival and a refundable deposit.'},
+ {id:'buffer',t:'Contingency buffer',d:'A safety margin on your monthly costs for the unexpected.'}
+];
+
+/* =====================================================================
+   5. STATE & HELPERS
+   ===================================================================== */
+const DEFAULTS={country:'United Kingdom',city:0,locality:0,months:12,tier:1,level:1,billsIncl:true,
+  eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1,
+  ao:{flights:false,visa:false,leisure:false,travel:false,shopping:false,setup:false,buffer:false},
+  flightINR:null,flightStart:true,homeTrips:1,
+  night:1,events:0,outings:2,subs:2,gym:1,
+  domTrips:2,domDays:3,domStyle:1,nearTrips:1,nearDays:4,nearMedium:'flightBudget',nearStyle:1,
+  clothRange:1,clothItems:2,deposit:1,kit:true,firstWeek:true,buffer:7};
+const S=JSON.parse(JSON.stringify(DEFAULTS));
+Object.assign(S,{home:'INR',swap:false,rates:{},tuneOpen:false});
 const $=s=>document.querySelector(s);
-const cn=()=>COUNTRIES[S.country];
-const cityDB=()=>DB[S.country].cities[S.city];
-const localCcy=()=>DB[S.country].ccy;
-const P_=()=>({...cn().p,...(cn().cityP[cityDB().c]||{})});
+const cn=(st=S)=>COUNTRIES[st.country];
+const cityM=(st=S)=>MODEL[st.country].cities[st.city];
+const localCcy=(st=S)=>MODEL[st.country].ccy;
+const isWeekly=(st=S)=>WEEKLY_MARKETS.includes(st.country);
+const P_=(st=S)=>({...cn(st).p,...(cn(st).cityP[cityM(st).c]||{})});
 const nf={};
 function fmtCcy(v,ccy,dp=0){
   const key=ccy+dp;
@@ -672,44 +749,35 @@ function fmtCcy(v,ccy,dp=0){
   catch(e){return ccy+' '+Math.round(v)}
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const lc=v=>fmtCcy(v,localCcy(),Math.abs(v)<100&&Math.round(v)!==v?2:0);
 
-/* ---- Currency pair: destination (local) currency ⇄ the student's own currency ----
-   Engine works in INR. 1 local = pairRate() home. The pair rate defaults to the reference rates
-   and can be overridden by the user (e.g. with their bank's rate). */
+/* Currency pair: 1 local = pairRate() home; defaults to reference rates, user can override */
 const sameCcy=()=>localCcy()===S.home;
 const pairKey=()=>localCcy()+'_'+S.home;
 const refRate=()=>FX[localCcy()]/FX[S.home];
 const pairRate=()=>S.rates[pairKey()]??refRate();
 const toLocal=inr=>inr/FX[localCcy()];
 const toHome=inr=>toLocal(inr)*pairRate();
+const homeToINR=h=>h/pairRate()*FX[localCcy()];
 const pCcy=()=>S.swap&&!sameCcy()?localCcy():S.home;
 const sCcy=()=>sameCcy()?null:(S.swap?S.home:localCcy());
 const inCcy=(inr,c)=>c===localCcy()?toLocal(inr):toHome(inr);
 const fmtP=inr=>fmtCcy(inCcy(inr,pCcy()),pCcy());
 const fmtS=inr=>sCcy()?fmtCcy(inCcy(inr,sCcy()),sCcy()):'';
 const money=inr=>`<span class="m1">${fmtP(inr)}</span>${sCcy()?`<span class="m2">${fmtS(inr)}</span>`:''}`;
-const localToHome=v=>v*pairRate();
 
-function localities(){
-  const c=cityDB();
-  const list=[{label:'Whole city · all '+c.n+' listings',n:c.n,r:c.r,whole:true}];
-  (c.L||[]).forEach(l=>list.push({label:l[0]+(l[1]?' · '+l[1]:'')+'  ('+l[2]+' listings)',short:l[0]+(l[1]?' '+l[1]:''),n:l[2],r:[l[3],l[4],l[5]],code:l[0]}));
+function localities(st=S){
+  const c=cityM(st);
+  const list=[{label:c.reportOnly?'Whole city (report figure)':'Whole city · all '+c.n+' listings',n:c.n,r:c.r,whole:true}];
+  c.L.forEach(l=>list.push({label:l[0]+(l[1]?' · '+l[1]:'')+'  ('+l[2]+' listings)',short:l[0]+(l[1]?' '+l[1]:''),n:l[2],r:[l[3],l[4],l[5]],code:l[0]}));
   return list;
 }
-const curLoc=()=>{const l=localities();return l[Math.min(S.locality,l.length-1)]};
-const rentLocal=()=>curLoc().r[S.tier];
-const mealsOut=()=>MEAL_KEYS.reduce((a,k)=>a+S[k],0);
-
-function applyPreset(name){
-  const p=PRESETS[name];S.preset=name;
-  for(const k in p){if(k!=='label'&&k!=='desc')S[k]=p[k]}
-  fixNearMedium();
-}
+const curLoc=(st=S)=>{const l=localities(st);return l[Math.min(st.locality,l.length-1)]};
+function applyLevel(i){Object.assign(S,LEVELS[i].s);S.level=i}
 function fixNearMedium(){
   const av=Object.entries(cn().near.f).filter(e=>e[1]!=null).map(e=>e[0]);
   if(!av.includes(S.nearMedium))S.nearMedium=av.includes('flightBudget')?'flightBudget':av[0];
 }
-/* Amount (local currency) a fee item costs over a stay of `mo` months. Returns {o: lump sum, m: monthly}. */
 function feeCost(f,mo){
   switch(f.kind){
     case 'once':return {o:f.amt,m:0};
@@ -720,271 +788,316 @@ function feeCost(f,mo){
     case 'monthly':return {o:0,m:f.amt};
   }
 }
-function feeSummary(g){
-  const items=cn().fees.filter(f=>f.g===g);
-  const tot=items.reduce((a,f)=>{const c=feeCost(f,S.months);return a+c.o+c.m*S.months},0);
-  return items.map(f=>f.label).join(', ')+'. About '+lc(tot)+' for '+S.months+' months.';
-}
+const flightINR=(st=S)=>st.flightINR??cn(st).flightINR;
 
 /* =====================================================================
-   5. COST ENGINE
-   Every line: {cat,label,note,q, m: monthly running (INR), y: yearly running (INR), o: one-time (INR)}
-   Total = Σm·months + Σy·months/12 + Σo.  Refundable deposit is tracked separately.
+   6. COST ENGINE  (pure: takes a state, returns lines in INR)
+   line: {cat,label,note,q, m: monthly, y: yearly, o: one-time}
+   Total = Σm·months + Σy·months/12 + Σo.  Deposit is tracked separately (refundable).
    ===================================================================== */
 const WEEKS=52/12;
-function compute(){
-  const c=cn(),ccy=localCcy(),X=FX[ccy],mo=S.months;
-  const P=P_(),loc=curLoc();
+function compute(st=S){
+  const c=cn(st),ccy=localCcy(st),X=FX[ccy],mo=st.months,P=P_(st),loc=curLoc(st),city=cityM(st);
   const q=k=>c.cited.includes(k)?'cited':'est';
   const L=[];
   const add=(cat,label,note,qual,x)=>{ if((x.m||0)+(x.y||0)+(x.o||0)>0.004)L.push({cat,label,note,q:qual,m:x.m||0,y:x.y||0,o:x.o||0}) };
+  const lcs=v=>fmtCcy(v,ccy,Math.abs(v)<100&&Math.round(v)!==v?2:0);
 
-  // Rent & bills
-  const rentL=loc.r[S.tier],rent=rentL*X;
-  add('rent','Rent',`${['Budget','Typical','Premium'][S.tier]} rent, ${loc.whole?'whole city':loc.short}: ${lc(rentL)} per month from ${loc.n} listings`,'db',{m:rent});
-  if(!S.billsIncl){
-    add('rent','Utilities',`Electricity, water and heating: ${lc(P.utils)} per month`,q('utils'),{m:P.utils*X});
-    add('rent','Home internet',`${lc(P.net)} per month`,q('net'),{m:P.net*X});
+  // Rent
+  const rentL=loc.r[st.tier];
+  const per=isWeekly(st)?`${lcs(rentL/W2M)} a week (${lcs(rentL)} a month)`:`${lcs(rentL)} a month`;
+  add('rent','Rent',`${['Budget','Typical','Premium'][st.tier]} room, ${loc.whole?'whole city':loc.short}: ${per}`,city.src,{m:rentL*X});
+  if(!st.billsIncl){
+    add('bills','Utilities',`Electricity, water and heating: ${lcs(P.utils)} a month`,q('utils'),{m:P.utils*X});
+    add('bills','Home internet',`${lcs(P.net)} a month`,q('net'),{m:P.net*X});
   }
-  if(S.laundry==='paid')add('rent','Laundry','About 4 washes a month','est',{m:P.cheap*1.3*X});
+  add('bills','Mobile plan',['Basic','Standard','Unlimited'][st.mobile]+' plan',q('mobile'),{m:P.mobile*[.6,1,1.7][st.mobile]*X});
 
-  // Food: 21 meals a week; home cooking = the rest
-  const home=Math.max(0,21-mealsOut());
-  const dietF={veg:.9,mixed:1,nonveg:1.12,vegan:.92}[S.diet],gs={b:.8,m:1,p:1.5}[S.groc];
-  add('food','Groceries for home cooking',`${home} meals a week; full self-catering costs ${lc(P.groc)} a week`,q('groc'),{m:home*(P.groc/21)*gs*dietF*WEEKS*X});
-  add('food','Campus canteen',`${S.mCanteen} a week × ${lc(P.canteen)}`,q('canteen'),{m:S.mCanteen*P.canteen*WEEKS*X});
-  add('food','Cheap eats',`${S.mCheap} a week × ${lc(P.cheap)}`,q('cheap'),{m:S.mCheap*P.cheap*WEEKS*X});
-  add('food','Restaurant meals',`${S.mRest} a week × ${lc(P.mid)}`,q('mid'),{m:S.mRest*P.mid*WEEKS*X});
-  add('food','Food delivery',`${S.mDeliv} a week × ${lc(P.cheap*1.6)} incl. fees`,'est',{m:S.mDeliv*P.cheap*1.6*WEEKS*X});
-  add('food','Coffees and snacks',`${S.coffee} a week × ${lc(P.coffee)}`,q('coffee'),{m:S.coffee*P.coffee*WEEKS*X});
+  // Food: 21 meals a week, home cooking covers whatever is not eaten out
+  const home=21-st.eatOut,gs={b:.8,m:1,p:1.5}[st.grocStyle];
+  add('food','Groceries',`${home} home-cooked meals a week (${['budget','regular','premium'][['b','m','p'].indexOf(st.grocStyle)]} shop)`,q('groc'),{m:home/21*P.groc*gs*WEEKS*X});
+  add('food','Eating out',`${st.eatOut} meals a week × ${lcs(P.cheap)}`,q('cheap'),{m:st.eatOut*P.cheap*WEEKS*X});
+  add('food','Coffees and snacks',`${st.coffee} a week × ${lcs(P.coffee)}`,q('coffee'),{m:st.coffee*P.coffee*WEEKS*X});
 
-  // Everyday living
-  add('living','Mobile plan',['Basic','Standard','Unlimited'][S.mobile]+' plan',q('mobile'),{m:P.mobile*[.6,1,1.7][S.mobile]*X});
-  add('living','Fitness',['','Campus gym','Standard gym','Premium club'][S.gym],'est',{m:P.gym*[0,.4,1,2.2][S.gym]*X});
-  add('living','Personal care and toiletries',['Basic','Standard','Premium'][S.care],'est',{m:P.mid*.9*[.6,1,1.8][S.care]*X});
-  add('living','Pharmacy and minor medical','Out-of-pocket costs','est',{m:P.mid*.45*X});
-  add('living','Cinema and outings',`${S.outings} a month × ${lc(P.cinema)}`,'est',{m:S.outings*P.cinema*X});
-  add('living','Subscriptions',`${S.subs} × ${lc(P.sub)}`,'est',{m:S.subs*P.sub*X});
+  // Transport
+  const tm={pass:P.pass,bike:P.cheap*2,walk:0,car:P.car}[st.tMode];
+  if(st.tMode==='pass'&&P.pass===0)L.push({cat:'trans',label:'Student transit pass',note:'Included in the semester contribution',q:'fee',m:0,y:0,o:0});
+  add('trans',{pass:'Student transit pass',bike:'Bicycle upkeep',walk:'Walking',car:'Car: lease, fuel, insurance, parking'}[st.tMode],'',st.tMode==='pass'?q('pass'):'est',{m:tm*X});
+  add('trans','Taxis and ride-share',`${st.rides} a month × ${lcs(P.ride)}`,'est',{m:st.rides*P.ride*X});
 
-  // Leisure & luxury (multiples of a local mid-range meal)
-  add('lux','Salon and spa',`${S.salon} a month × ${lc(P.mid*1.4)}`,'est',{m:S.salon*P.mid*1.4*X});
-  add('lux','Nights out',`${S.night} a month × ${lc(P.mid*1.6)}`,'est',{m:S.night*P.mid*1.6*X});
-  add('lux','Concerts and events',`${S.events} a month × ${lc(P.mid*2.3)}`,'est',{m:S.events*P.mid*2.3*X});
-  add('lux','Fine dining',`${S.fine} a month × ${lc(P.mid*3.5)}`,'est',{m:S.fine*P.mid*3.5*X});
-  add('lux','Gadgets and accessories',['','Occasional','Regular','Frequent'][S.brands],'est',{m:[0,2,5,12][S.brands]*P.mid*X});
-  add('lux','Hobbies and classes',['','Light','Active','Serious'][S.hobby],'est',{m:[0,1.5,3.5,7][S.hobby]*P.mid*X});
+  // Personal essentials
+  add('ess','Toiletries and household items',['Basic','Standard','Premium'][st.care],'est',{m:P.mid*.9*[.6,1,1.8][st.care]*X});
+  add('ess','Pharmacy and minor medical','Out-of-pocket costs','est',{m:P.mid*.45*X});
 
-  // Clothing
-  const rf=[1,2.4,5,12][S.clothRange];
-  add('cloth','New clothes and shoes',`${S.clothItems} items a month`,'est',{m:S.clothItems*P.cloth*rf*X});
+  // ---- Optional add-ons ----
+  const ao=st.ao;
+  if(ao.flights){
+    const fq=st.flightINR!=null?'user':'est';
+    if(st.flightStart)add('flights','Flights at start and end of stay','One return flight from home',fq,{o:flightINR(st)});
+    add('flights','Trips home',`${st.homeTrips} return flight${st.homeTrips===1?'':'s'} a year`,fq,{y:st.homeTrips*flightINR(st)});
+  }
+  if(ao.visa)c.fees.forEach(f=>{const fc=feeCost(f,mo);add('visa',f.label,f.note,f.q,{o:fc.o*X,m:fc.m*X})});
+  if(ao.leisure){
+    add('leisure','Nights out',`${st.night} a month × ${lcs(P.mid*1.6)}`,'est',{m:st.night*P.mid*1.6*X});
+    add('leisure','Concerts and events',`${st.events} a month × ${lcs(P.mid*2.3)}`,'est',{m:st.events*P.mid*2.3*X});
+    add('leisure','Cinema and outings',`${st.outings} a month × ${lcs(P.cinema)}`,'est',{m:st.outings*P.cinema*X});
+    add('leisure','Subscriptions',`${st.subs} × ${lcs(P.sub)}`,'est',{m:st.subs*P.sub*X});
+    add('leisure','Gym',['','Campus gym','Standard gym','Premium club'][st.gym],'est',{m:P.gym*[0,.4,1,2.2][st.gym]*X});
+  }
+  if(ao.travel){
+    add('travel','Domestic trips',`${st.domTrips} a year, ${st.domDays} days each`,'est',{y:st.domTrips*(st.domDays*c.dom[st.domStyle]+c.domT)*X});
+    const nr=c.near,fare=nr.f[st.nearMedium]??0;
+    add('travel','Trips abroad',`${st.nearTrips} a year, ${st.nearDays} days each by ${(MEDIA[st.nearMedium]||'').toLowerCase()}`,'est',{y:st.nearTrips*(fare+st.nearDays*nr.d[st.nearStyle])*FX[nr.ccy]});
+  }
+  if(ao.shopping){
+    add('shopping','Clothes and shoes',`${st.clothItems} items a month, ${['value','mid-range','premium','designer'][st.clothRange]}`,'est',{m:st.clothItems*P.cloth*[1,2.4,5,12][st.clothRange]*X});
+    if(c.cold)add('shopping','Winter wardrobe','Coat, boots and thermals, one-time','est',{o:P.cloth*[6,13,28,65][st.clothRange]*X});
+  }
+  if(ao.setup){
+    if(st.kit)add('setup','Starter household kit','Bedding, kitchenware, local SIM','est',{o:15000});
+    if(st.firstWeek)add('setup','First week on arrival','7 nights budget accommodation before move-in','est',{o:7*c.dom[0]*X});
+  }
+  if(ao.buffer){
+    const run=L.reduce((a,l)=>a+l.m+l.y/12,0);
+    add('buffer','Contingency buffer',`${st.buffer}% of monthly costs`,'est',{m:run*st.buffer/100});
+  }
 
-  // Local transport
-  const tm={pass:P.pass,bike:P.cheap*2,walk:0,car:P.car}[S.tMode];
-  add('trans',{pass:'Student transit pass',bike:'Bicycle upkeep',walk:'Walking',car:'Car: lease, fuel, insurance, parking'}[S.tMode],'',S.tMode==='pass'?q('pass'):'est',{m:tm*X});
-  add('trans','Taxis and ride-share',`${S.rides} a month × ${lc(P.ride)}`,'est',{m:S.rides*P.ride*X});
-
-  // Travel (per year, spread over the stay)
-  const span=n=>`${n} a year (≈ ${(n*mo/12).toFixed(n*mo/12%1?1:0)} over your stay)`;
-  add('travel','Trips home',span(S.homeTrips)+` × ${fmtP(c.flightINR)} return`,'est',{y:S.homeTrips*c.flightINR});
-  add('travel','Domestic trips',span(S.domTrips)+`, ${S.domDays} days each`,'est',{y:S.domTrips*(S.domDays*c.dom[S.domStyle]+c.domT)*X});
-  const nr=c.near,fare=nr.f[S.nearMedium]??0;
-  add('travel','Trips abroad',span(S.nearTrips)+`, ${S.nearDays} days each by ${(MEDIA[S.nearMedium]||'').toLowerCase()}`,'est',{y:S.nearTrips*(fare+S.nearDays*nr.d[S.nearStyle])*FX[nr.ccy]});
-
-  // Contingency on all running costs
-  const run=L.reduce((a,l)=>a+l.m+l.y/12,0);
-  add('buffer','Contingency buffer',`${S.buffer}% of monthly running costs`,'est',{m:run*S.buffer/100});
-
-  // Fees (lump sums for the stay, or monthly)
-  c.fees.forEach(f=>{
-    if((f.g==='visa'&&!S.incVisa)||(f.g==='ins'&&!S.incIns))return;
-    const fc=feeCost(f,mo);
-    add('fees',f.label,f.note,f.q,{o:fc.o*X,m:fc.m*X});
-  });
-
-  // Moving & setup
-  if(S.incFlight)add('setup','Flights at start and end of stay','One return flight from India + 7 nights budget stay on arrival','est',{o:c.flightINR+7*c.dom[0]*X});
-  if(S.incKit)add('setup','Starter household kit','Bedding, kitchenware, local SIM','est',{o:15000});
-  if(c.cold)add('setup','Winter wardrobe','Coat, boots and thermals, one-time','est',{o:P.cloth*[6,13,28,65][S.clothRange]*X});
-
-  L.forEach(l=>{l.total=l.m*mo+l.y*mo/12+l.o;l.avg=l.total/mo});
+  L.forEach(l=>{l.total=l.m*mo+l.y*mo/12+l.o});
   const total=L.reduce((a,l)=>a+l.total,0);
   const running=L.reduce((a,l)=>a+l.m+l.y/12,0);
   const oneTime=L.reduce((a,l)=>a+l.o,0);
-  const deposit=rent*S.deposit;
-  const byCat=CATS.map(k=>({...k,total:L.filter(l=>l.cat===k.id).reduce((a,l)=>a+l.total,0)}));
-  const byMajor=MAJORS.map(m=>({...m,parts:m.subs.map(s=>byCat.find(x=>x.id===s)),total:m.subs.reduce((a,s)=>a+byCat.find(x=>x.id===s).total,0)}));
-  const byQ=Object.keys(QUAL).map(k=>({k,...QUAL[k],total:L.filter(l=>l.q===k).reduce((a,l)=>a+l.total,0)}));
-  const spread=L.reduce((a,l)=>a+l.total*QUAL[l.q].w,0);
-  return {L,total,running,oneTime,deposit,upfront:oneTime+deposit+running,byCat,byMajor,byQ,spread,mo,loc,P,home};
+  const sumM=f=>L.filter(f).reduce((a,l)=>a+l.m+l.y/12,0);
+  const rentM=sumM(l=>l.cat==='rent'),livingM=sumM(l=>LIVING_CATS.includes(l.cat)),extraM=running-rentM-livingM;
+  const deposit=ao.setup?rentL*X*st.deposit:0;
+  const segs=SEGS.map(s=>({...s,total:L.filter(l=>s.cats.includes(l.cat)).reduce((a,l)=>a+l.total,0),parts:s.cats.map(k=>({n:CATNAME[k],total:L.filter(l=>l.cat===k).reduce((a,l)=>a+l.total,0)}))}));
+  return {L,total,running,oneTime,rentM,livingM,extraM,deposit,upfront:oneTime+deposit+running,segs,mo,loc,P,home,city};
+}
+/* cost of one add-on in isolation, for its preview */
+function addonCost(id){
+  const st=JSON.parse(JSON.stringify(S));
+  for(const k in st.ao)st.ao[k]=(k===id);
+  if(id==='buffer')for(const k in st.ao)st.ao[k]=(k==='buffer');
+  const base=JSON.parse(JSON.stringify(st));for(const k in base.ao)base.ao[k]=false;
+  const a=compute(st),b=compute(base);
+  return {m:a.running-b.running,o:a.oneTime-b.oneTime,dep:a.deposit};
 }
 
 /* =====================================================================
-   6. RENDERING
+   7. FORM
    ===================================================================== */
 const ICON={
  db:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
- map:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>',
- cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+ doc:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
  fx:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg>',
  swap:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B3733" stroke-width="2"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg>',
  chev:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22201D" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>'
 };
-const ALL=()=>[...MAIN,...DETAIL];
-const fieldDefs=()=>ALL().flatMap(s=>s.f);
+/* generic fields used inside fine-tune and add-on panels */
+const F={
+ eatOut:{t:'range',l:'Meals eaten out per week',min:0,max:21,step:1,hint:()=>`${21-S.eatOut} of 21 weekly meals cooked at home.`},
+ grocStyle:{t:'seg',l:'Grocery shopping',opts:()=>[['b','Budget'],['m','Regular'],['p','Premium']]},
+ coffee:{t:'range',l:'Coffees and snacks per week',min:0,max:15,step:1},
+ tMode:{t:'seg',l:'Getting around',full:1,opts:()=>{const P=P_();return [['pass','Transit pass',P.pass?lc(P.pass)+' /mo':'Included'],['bike','Bicycle',lc(P.cheap*2)+' /mo'],['walk','Walking','Free'],['car','Car',lc(P.car)+' /mo']]}},
+ rides:{t:'range',l:'Taxi rides per month',min:0,max:30,step:1},
+ mobile:{t:'seg',l:'Mobile plan',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Unlimited']]},
+ care:{t:'seg',l:'Toiletries & household',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Premium']]},
+ billsIncl:{t:'toggle',full:1,l:'Bills included in my rent',desc:()=>'Most purpose-built student homes include utilities and Wi-Fi. Switch off to add about '+lc(P_().utils+P_().net)+' a month.'},
+ flightStart:{t:'toggle',full:1,l:'Flights at the start and end of my stay',desc:()=>'One return flight.'},
+ homeTrips:{t:'range',l:'Trips home per year',min:0,max:4,step:1},
+ night:{t:'range',l:'Nights out per month',min:0,max:12,step:1},
+ events:{t:'range',l:'Concerts and events per month',min:0,max:6,step:1},
+ outings:{t:'range',l:'Cinema and outings per month',min:0,max:10,step:1},
+ subs:{t:'range',l:'Paid subscriptions',min:0,max:8,step:1},
+ gym:{t:'seg',l:'Gym',full:1,opts:()=>[[0,'None'],[1,'Campus'],[2,'Standard'],[3,'Premium']]},
+ domTrips:{t:'range',l:'Domestic trips per year',min:0,max:12,step:1},
+ domDays:{t:'range',l:'Days per domestic trip',min:1,max:10,step:1},
+ domStyle:{t:'seg',l:'Domestic travel style',full:1,opts:()=>[[0,'Budget'],[1,'Comfort'],[2,'Premium']]},
+ nearTrips:{t:'range',l:'Trips abroad per year',min:0,max:12,step:1,hint:()=>'Nearby: '+cn().near.name+'.'},
+ nearDays:{t:'range',l:'Days per trip abroad',min:1,max:14,step:1},
+ nearMedium:{t:'seg',cls:'wrap',l:'How you travel abroad',full:1,opts:()=>{const nr=cn().near;return Object.entries(nr.f).filter(e=>e[1]!=null).map(e=>[e[0],MEDIA[e[0]],fmtCcy(e[1],nr.ccy)+' return'])}},
+ nearStyle:{t:'seg',l:'Travel style abroad',full:1,opts:()=>[[0,'Budget'],[1,'Comfort'],[2,'Premium']]},
+ clothRange:{t:'seg',l:'Shopping range',full:1,opts:()=>[[0,'Value'],[1,'Mid-range'],[2,'Premium'],[3,'Designer']]},
+ clothItems:{t:'range',l:'New items per month',min:0,max:12,step:1,full:1,hint:()=>cn().cold?'Cold climate: a one-time winter wardrobe is included.':''},
+ kit:{t:'toggle',l:'Starter household kit',desc:()=>'Bedding, kitchenware, SIM: about '+fmtP(15000)+'.'},
+ firstWeek:{t:'toggle',l:'First week on arrival',desc:()=>'7 nights budget stay: about '+fmtP(7*cn().dom[0]*FX[localCcy()])+'.'},
+ deposit:{t:'seg',l:'Refundable deposit',full:1,opts:()=>[[0,'None'],[1,'1 month'],[1.5,'1.5 months'],[2,'2 months']],hint:()=>'Returned at the end of your tenancy, so it is not part of the total. Shown in cash needed to get started.'},
+ buffer:{t:'range',l:'Buffer on monthly costs',min:0,max:20,step:1,unit:'%',full:1}
+};
+const ADDON_FIELDS={flights:['flightStart','homeTrips'],visa:[],leisure:['night','events','outings','subs','gym'],travel:['domTrips','domDays','domStyle','nearTrips','nearDays','nearMedium','nearStyle'],shopping:['clothRange','clothItems'],setup:['kit','firstWeek','deposit'],buffer:['buffer']};
+const TUNE_FIELDS=['eatOut','grocStyle','coffee','mobile','tMode','rides','care','billsIncl'];
+const NUM=['city','locality','tier','level','mobile','care','gym','domStyle','nearStyle','clothRange','deposit'];
 
-function stepCard(sec,i){
-  const card=document.createElement('section');card.className='card step';
-  card.innerHTML=`<div class="step-head"><div class="step-num">${String(i+1).padStart(2,'0')}</div><div><h2>${sec.t}${sec.tag?'<span id="lifeTag"></span>':''}</h2><p>${sec.d}</p></div></div>`;
-  const g=document.createElement('div');g.className='grid';
-  sec.f.forEach(f=>g.appendChild(buildField(f)));
-  card.appendChild(g);return card;
+function field(k){
+  const f=F[k],d=document.createElement('div');d.className='field'+(f.full?' full':'');const id='f_'+k;
+  if(f.t==='seg')d.innerHTML=`<div class="flabel" id="l_${k}">${f.l}</div><div class="seg ${f.cls||''}" role="radiogroup" aria-labelledby="l_${k}" id="${id}"></div>`;
+  else if(f.t==='range')d.innerHTML=`<label class="flabel" for="${id}"><span>${f.l}</span><output id="o_${k}" class="num"></output></label><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}">`;
+  else if(f.t==='toggle')d.innerHTML=`<label class="tog"><input type="checkbox" id="${id}"><span class="sw" aria-hidden="true"></span><span><b>${f.l}</b><small id="d_${k}"></small></span></label>`;
+  d.insertAdjacentHTML('beforeend',`<div class="hint" id="h_${k}"></div>`);
+  const el=d.querySelector('#'+id);
+  if(f.t==='seg')el.addEventListener('click',e=>{const b=e.target.closest('button');if(b)set(k,f.opts()[+b.dataset.i][0])});
+  if(f.t==='range')el.addEventListener('input',()=>set(k,+el.value));
+  if(f.t==='toggle')el.addEventListener('change',()=>set(k,el.checked));
+  return d;
+}
+function card(n,title,desc,inner){
+  const s=document.createElement('section');s.className='card step';
+  s.innerHTML=`<div class="step-head"><div class="step-num">${n}</div><div><h2>${title}</h2><p>${desc}</p></div></div>`;
+  if(typeof inner==='string')s.insertAdjacentHTML('beforeend',inner);else s.appendChild(inner);
+  return s;
 }
 function buildForm(){
   const root=$('#form');root.innerHTML='';
-  MAIN.forEach((sec,i)=>root.appendChild(stepCard(sec,i)));
-  const det=document.createElement('section');det.className='card step detail';det.id='detailPanel';det.hidden=true;
-  det.innerHTML=`<div class="step-head"><div class="step-num">04</div><div><h2>Detailed customisation</h2><p>Every assumption behind your lifestyle cost. Changes here switch your profile to Customised.</p></div></div>`;
-  DETAIL.forEach(sec=>{
-    const g=document.createElement('div');g.className='grp';
-    g.innerHTML=`<div class="grp-head"><h3>${sec.t}</h3><p>${sec.d}</p></div>`;
-    const grid=document.createElement('div');grid.className='grid';
-    sec.f.forEach(f=>grid.appendChild(buildField(f)));
-    g.appendChild(grid);det.appendChild(g);
+  // 01 where
+  root.appendChild(card('01','Where are you going?','Pick a country and city. A neighbourhood is optional.',`
+    <div class="where">
+      <div class="field"><label class="flabel" for="f_country">Country</label><select class="sel" id="f_country"></select></div>
+      <div class="field"><label class="flabel" for="f_city">City</label><select class="sel" id="f_city"></select></div>
+      <div class="field loc"><label class="flabel" for="f_locality">Neighbourhood <span style="font-weight:600;color:var(--faint)">optional</span></label><select class="sel" id="f_locality"></select><div class="hint" id="h_locality"></div></div>
+      <div class="field stay"><label class="flabel" for="f_months"><span>Length of stay</span><output id="o_months" class="num"></output></label><div class="chips" id="c_months">${[6,9,12,18,24,36].map(m=>`<button type="button" data-m="${m}">${m} months</button>`).join('')}</div><input type="range" id="f_months" min="3" max="60" step="1"></div>
+    </div>`));
+  // 02 rent
+  root.appendChild(card('02','Your rent','Choose the kind of room you are aiming for. Typical is the city figure from our Outlook report where we publish one.',`<div class="rentcards" role="radiogroup" aria-label="Room price band" id="f_tier"></div><div class="src" id="rentSrc"></div>`));
+  // 03 living
+  const liv=card('03','Living costs','Food, local transport, phone and bills, and everyday essentials.',`<div class="levels" role="radiogroup" aria-label="Living cost level" id="f_level"></div>
+     <div class="linkrow"><button type="button" class="textbtn" id="tuneBtn" aria-expanded="false" aria-controls="tune">Fine-tune living costs ${ICON.chev}</button></div>
+     <div class="tune" id="tune" hidden><div class="grid" id="tuneGrid"></div></div>`);
+  root.appendChild(liv);
+  TUNE_FIELDS.forEach(k=>$('#tuneGrid').appendChild(field(k)));
+  // 04 add-ons
+  const ad=document.createElement('div');ad.className='addons';ad.id='addons';
+  ADDONS.forEach(a=>{
+    const el=document.createElement('div');el.className='addon';el.id='ao_'+a.id;
+    el.innerHTML=`<div class="addon-head" role="switch" tabindex="0" aria-checked="false" id="aoh_${a.id}"><span class="sw" aria-hidden="true"></span><span><b>${a.t}</b><small>${a.d}</small></span><span class="addon-amt num" id="aoa_${a.id}"></span></div><div class="addon-body" id="aob_${a.id}" hidden></div>`;
+    ad.appendChild(el);
   });
-  root.appendChild(det);
-}
-function buildField(f){
-  const d=document.createElement('div');d.className='field'+(f.full?' full':'');
-  const id='f_'+f.k;
-  if(f.t==='select')d.innerHTML=`<label class="flabel" for="${id}">${f.l}</label><select class="sel" id="${id}"></select>`;
-  else if(f.t==='seg')d.innerHTML=`<div class="flabel" id="l_${f.k}">${f.l}</div><div class="seg ${f.cls||''}" role="radiogroup" aria-labelledby="l_${f.k}" id="${id}"></div>`;
-  else if(f.t==='cards')d.innerHTML=`<div class="cards" role="radiogroup" aria-label="Country" id="${id}"></div>`;
-  else if(f.t==='rentcards')d.innerHTML=`<div class="rentcards" role="radiogroup" aria-label="Rent type" id="${id}"></div>`;
-  else if(f.t==='presets')d.innerHTML=`<div class="presets" role="radiogroup" aria-label="Lifestyle profile" id="${id}"></div>`;
-  else if(f.t==='lifesum')d.innerHTML=`<div class="lifesum" id="${id}"></div>`;
-  else if(f.t==='expander')d.innerHTML=`<button type="button" class="expander" id="${id}" aria-expanded="false" aria-controls="detailPanel"><span><b id="expT"></b><small>Food, everyday living, leisure, transport, travel, clothing, bills and fees</small></span><span class="chev">${ICON.chev}</span></button>`;
-  else if(f.t==='range')d.innerHTML=`<label class="flabel" for="${id}"><span>${f.l}</span><output id="o_${f.k}" class="num"></output></label><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}">`;
-  else if(f.t==='toggle')d.innerHTML=`<label class="tog"><input type="checkbox" id="${id}"><span class="sw" aria-hidden="true"></span><span><b>${f.l}</b><small id="d_${f.k}"></small></span></label>`;
-  else if(f.t==='stay')d.innerHTML=`<label class="flabel" for="${id}"><span>${f.l}</span><output id="o_${f.k}" class="num"></output></label><div class="chips" id="c_${f.k}">${[6,9,12,18,24,36].map(m=>`<button type="button" data-m="${m}">${m} months</button>`).join('')}</div><input type="range" id="${id}" min="3" max="60" step="1">`;
-  else if(f.t==='meals')d.innerHTML=`<div class="mealbar" id="mealbar" aria-hidden="true"></div><div class="meallegend" id="meallegend"></div><div class="mealnote" id="mealnote"></div>`;
-  d.insertAdjacentHTML('beforeend',`<div class="hint" id="h_${f.k}"></div>`);
-  const el=d.querySelector('#'+id);
-  if(f.t==='select')el.addEventListener('change',()=>set(f.k,isNaN(+el.value)?el.value:+el.value));
-  if(f.t==='range'||f.t==='stay')el.addEventListener('input',()=>set(f.k,+el.value));
-  if(f.t==='toggle')el.addEventListener('change',()=>set(f.k,el.checked));
-  if(f.t==='seg'||f.t==='cards')el.addEventListener('click',e=>{const b=e.target.closest('button');if(b)set(f.k,f.opts()[+b.dataset.i][0])});
-  if(f.t==='rentcards')el.addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('tier',+b.dataset.i)});
-  if(f.t==='presets')el.addEventListener('click',e=>{const b=e.target.closest('button');if(b){applyPreset(b.dataset.p);update()}});
-  if(f.t==='expander')el.addEventListener('click',()=>{S.detailOpen=!S.detailOpen;update();if(S.detailOpen)$('#detailPanel').scrollIntoView({behavior:'smooth',block:'start'})});
-  if(f.t==='stay')d.querySelector('#c_months').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('months',+b.dataset.m)});
-  return d;
+  root.appendChild(card('04','Other expenses','Optional. Switch on anything you want included in your estimate.',ad));
+  ADDONS.forEach(a=>{
+    const body=$('#aob_'+a.id);
+    if(a.id==='flights'){
+      body.insertAdjacentHTML('beforeend',`<div class="grid"><div class="field full"><label class="flabel" for="flightPrice"><span>Return flight price</span></label><div class="money-in"><span id="flightCcy"></span><input type="number" id="flightPrice" min="0" step="any" inputmode="decimal"></div><div class="hint" id="flightHint"></div></div></div>`);
+      $('#flightPrice').addEventListener('change',e=>{const v=parseFloat(e.target.value);S.flightINR=v>0?homeToINR(v):null;update()});
+    }
+    if(a.id==='visa')body.insertAdjacentHTML('beforeend','<ul class="feelist" id="feelist"></ul>');
+    if(ADDON_FIELDS[a.id].length){const g=document.createElement('div');g.className='grid';ADDON_FIELDS[a.id].forEach(k=>g.appendChild(field(k)));body.appendChild(g)}
+    const head=$('#aoh_'+a.id),tog=()=>{S.ao[a.id]=!S.ao[a.id];update()};
+    head.addEventListener('click',tog);
+    head.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog()}});
+  });
+  // events for fixed controls
+  ['country','city','locality'].forEach(k=>$('#f_'+k).addEventListener('change',e=>set(k,k==='country'?e.target.value:+e.target.value)));
+  $('#f_months').addEventListener('input',e=>set('months',+e.target.value));
+  $('#c_months').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('months',+b.dataset.m)});
+  $('#f_tier').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('tier',+b.dataset.i)});
+  $('#f_level').addEventListener('click',e=>{const b=e.target.closest('button');if(b){applyLevel(+b.dataset.i);update()}});
+  $('#tuneBtn').addEventListener('click',()=>{S.tuneOpen=!S.tuneOpen;update()});
 }
 
 function set(k,v){
-  if(MEAL_KEYS.includes(k))v=Math.min(v,21-(mealsOut()-S[k]));     // a week has 21 meals
   if(S[k]===v){update();return}
   S[k]=v;
-  if(!['country','city','locality','months','tier'].includes(k))S.preset=null;
+  if(TUNE_FIELDS.includes(k)&&k!=='billsIncl')S.level=null;   // fine-tuning makes the level custom
   if(k==='country'){S.city=0;S.locality=0;fixNearMedium()}
   if(k==='city')S.locality=0;
   update();
 }
 
-function lifeSummary(){
-  const out=mealsOut();
-  const mode={pass:'Student transit pass',bike:'Cycling',walk:'Mostly walking',car:'Own car'}[S.tMode];
-  const items=[
-    `${21-out} home-cooked and ${out} eaten-out meals a week`,
-    `${mode}${S.rides?`, ${S.rides} taxi rides a month`:''}`,
-    `${S.homeTrips} trip${S.homeTrips===1?'':'s'} home, ${S.domTrips} domestic and ${S.nearTrips} abroad a year`,
-    `${['Value','Mid-range','Premium','Designer'][S.clothRange]} clothing, ${S.clothItems} item${S.clothItems===1?'':'s'} a month`,
-    `${['Basic','Standard','Unlimited'][S.mobile]} mobile plan, ${['no gym','campus gym','standard gym','premium club'][S.gym]}`,
-    `${S.buffer}% contingency buffer`];
-  const name=S.preset?PRESETS[S.preset].label:'Customised';
-  return `<b>${name} lifestyle includes</b><ul>${items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`;
+/* =====================================================================
+   8. RENDER
+   ===================================================================== */
+function opts(el,list,val){
+  const sig=JSON.stringify(list);
+  if(el.dataset.sig!==sig){el.innerHTML=list.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('');el.dataset.sig=sig}
+  el.value=String(val);
 }
-
-/* Sync every control with state. Option lists are rebuilt only when their content changes. */
-function refreshControls(){
-  fieldDefs().forEach(f=>{
-    const el=$('#f_'+f.k);if(!el)return;
-    if(f.t==='select'){
-      const opts=f.opts(),sig=JSON.stringify(opts);
-      if(el.dataset.sig!==sig){el.innerHTML=opts.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('');el.dataset.sig=sig}
-      el.value=String(S[f.k]);
-    }else if(f.t==='seg'||f.t==='cards'){
-      const opts=f.opts(),sig=JSON.stringify(opts);
-      if(el.dataset.sig!==sig){
-        el.innerHTML=opts.map((o,i)=>f.t==='cards'?`<button type="button" role="radio" data-i="${i}"><b>${esc(o[1])}</b><small>${esc(o[2])}</small></button>`:`<button type="button" role="radio" data-i="${i}">${esc(o[1])}${o[2]?`<small>${esc(o[2])}</small>`:''}</button>`).join('');
-        el.dataset.sig=sig;
-      }
-      [...el.children].forEach((b,i)=>b.setAttribute('aria-checked',String(opts[i][0]===S[f.k])));
-    }else if(f.t==='rentcards'){
-      const l=curLoc(),names=['Budget','Typical','Premium'],desc=['Cheapest quarter of listings (25th percentile)','Median listing: half cost less, half more','Top quarter of listings (75th percentile)'];
-      const opts=l.r.map((v,i)=>[names[i],lc(v),sameCcy()?'':'≈ '+fmtCcy(localToHome(v),S.home),desc[i]]),sig=JSON.stringify(opts);
-      if(el.dataset.sig!==sig){el.innerHTML=opts.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="rn">${o[0]}</span><span class="rp num">${o[1]}<small> /mo</small></span>${o[2]?`<span class="rh num">${o[2]} /mo</span>`:''}<span class="rd">${o[3]}</span></button>`).join('');el.dataset.sig=sig}
-      [...el.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.tier)));
-    }else if(f.t==='presets'){
-      if(!el.children.length)el.innerHTML=Object.entries(PRESETS).map(([k,p])=>`<button type="button" role="radio" data-p="${k}"><b>${p.label}</b><small>${p.desc}</small></button>`).join('');
-      [...el.children].forEach(b=>b.setAttribute('aria-checked',String(b.dataset.p===S.preset)));
-    }else if(f.t==='lifesum'){
-      el.innerHTML=lifeSummary();
-    }else if(f.t==='expander'){
-      el.setAttribute('aria-expanded',String(S.detailOpen));
-      $('#expT').textContent=S.detailOpen?'Hide detailed options':'Customise every detail';
-    }else if(f.t==='range'||f.t==='stay'){
-      el.value=S[f.k];
-      const pct=(S[f.k]-el.min)/(el.max-el.min)*100;el.style.setProperty('--p',pct+'%');
-      $('#o_'+f.k).textContent=f.t==='stay'?S.months+' months':S[f.k]+(f.unit||'');
-      if(f.t==='stay')document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.months)));
-    }else if(f.t==='toggle'){
-      el.checked=!!S[f.k];
-      $('#d_'+f.k).textContent=typeof f.desc==='function'?f.desc():(f.desc||'');
-    }
-    const h=$('#h_'+f.k);if(h){h.textContent=f.hint?f.hint():'';h.classList.toggle('warn',!!(f.warn&&f.warn()))}
+function refreshFields(keys){
+  keys.forEach(k=>{
+    const f=F[k],el=$('#f_'+k);if(!el)return;
+    if(f.t==='seg'){
+      const o=f.opts(),sig=JSON.stringify(o);
+      if(el.dataset.sig!==sig){el.innerHTML=o.map((x,i)=>`<button type="button" role="radio" data-i="${i}">${esc(x[1])}${x[2]?`<small>${esc(x[2])}</small>`:''}</button>`).join('');el.dataset.sig=sig}
+      [...el.children].forEach((b,i)=>b.setAttribute('aria-checked',String(o[i][0]===S[k])));
+    }else if(f.t==='range'){
+      el.value=S[k];el.style.setProperty('--p',(S[k]-f.min)/(f.max-f.min)*100+'%');$('#o_'+k).textContent=S[k]+(f.unit||'');
+    }else if(f.t==='toggle'){el.checked=!!S[k];$('#d_'+k).textContent=f.desc?f.desc():''}
+    const h=$('#h_'+k);if(h)h.textContent=f.hint?f.hint():'';
   });
-  $('#detailPanel').hidden=!S.detailOpen;
-  $('#lifeTag').innerHTML=S.preset?'':'<span class="tag">Customised</span> <button type="button" class="tagbtn" id="resetStd">Reset to Standard</button>';
-  const rs=$('#resetStd');if(rs)rs.onclick=()=>{applyPreset('balanced');update()};
-  // meal plan visual
-  const segs=[];MEALS.forEach(m=>{for(let i=0;i<S[m[0]];i++)segs.push(m[2])});
-  while(segs.length<21)segs.push('#C9E89E');
-  $('#mealbar').innerHTML=segs.map(c=>`<i style="--c:${c}"></i>`).join('');
-  $('#meallegend').innerHTML=`<span style="--c:#C9E89E">Home cooked ${21-mealsOut()}</span>`+MEALS.map(m=>`<span style="--c:${m[2]}">${m[1]} ${S[m[0]]}</span>`).join('');
-  $('#mealnote').textContent=mealsOut()>=21?'All 21 weekly meals are eaten out. Reduce one to add home cooking.':`${21-mealsOut()} of 21 weekly meals are cooked at home. Adjust eating out below; home cooking fills the rest.`;
+}
+function rentText(m){return isWeekly()?{main:lc(m/W2M),unit:'/wk',sub:lc(m)+' /mo'}:{main:lc(m),unit:'/mo',sub:''}}
+function refreshControls(){
+  opts($('#f_country'),Object.keys(MODEL).map(c=>[c,c+' · '+MODEL[c].ccy]),S.country);
+  opts($('#f_city'),MODEL[S.country].cities.map((c,i)=>[i,c.c]),S.city);
+  opts($('#f_locality'),localities().map((l,i)=>[i,l.label]),S.locality);
+  $('#f_locality').disabled=localities().length<2;
+  const l=curLoc(),c=cityM();
+  $('#h_locality').textContent=c.reportOnly?'No neighbourhood breakdown for this city yet.':l.whole?(c.L.length?'Pick a postcode area for a more local figure.':'No neighbourhood breakdown for this city yet.'):l.n+' listings in this area.';
+  const fm=$('#f_months');fm.value=S.months;fm.style.setProperty('--p',(S.months-3)/57*100+'%');$('#o_months').textContent=S.months+' months';
+  document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.months)));
+  // rent cards
+  const names=['Budget','Typical','Premium'],desc=['Cheaper quarter of rooms','Typical room in this area','Pricier quarter of rooms'];
+  const rc=l.r.map((v,i)=>{const t=rentText(v);return [names[i],t.main,t.unit,t.sub,sameCcy()?'':'≈ '+fmtCcy(v*pairRate(),S.home)+' /mo',desc[i]]}),rsig=JSON.stringify(rc),rt=$('#f_tier');
+  if(rt.dataset.sig!==rsig){rt.innerHTML=rc.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="rn">${o[0]}</span><span class="rp num">${o[1]}<small> ${o[2]}</small></span>${o[3]?`<span class="rh num">${o[3]}</span>`:''}${o[4]?`<span class="rh num">${o[4]}</span>`:''}<span class="rd">${o[5]}</span></button>`).join('');rt.dataset.sig=rsig}
+  [...rt.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.tier)));
+  $('#rentSrc').innerHTML=rentSource();
+  // living levels with their monthly amount
+  const lv=LEVELS.map((L,i)=>{const st=JSON.parse(JSON.stringify(S));Object.assign(st,L.s);for(const k in st.ao)st.ao[k]=false;return [L.n,fmtP(compute(st).livingM),L.d]}),lsig=JSON.stringify(lv),le=$('#f_level');
+  if(le.dataset.sig!==lsig){le.innerHTML=lv.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="ln">${o[0]}</span><span class="la num">${o[1]}<small> /mo</small></span><span class="ld">${o[2]}</span></button>`).join('');le.dataset.sig=lsig}
+  [...le.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.level)));
+  $('#tuneBtn').setAttribute('aria-expanded',String(S.tuneOpen));
+  $('#tuneBtn').firstChild.textContent=S.level===null?'Fine-tune living costs (customised) ':'Fine-tune living costs ';
+  $('#tune').hidden=!S.tuneOpen;
+  refreshFields(TUNE_FIELDS);
+  // add-ons
+  ADDONS.forEach(a=>{
+    const on=!!S.ao[a.id];
+    $('#ao_'+a.id).classList.toggle('on',on);$('#aoh_'+a.id).setAttribute('aria-checked',String(on));$('#aob_'+a.id).hidden=!on;
+    const c=addonCost(a.id),parts=[];
+    if(c.m>0.5)parts.push(fmtP(c.m)+' /mo');
+    if(c.o>0.5)parts.push(fmtP(c.o)+' one-time');
+    $('#aoa_'+a.id).innerHTML=(parts.join('<br>')||'—')+(c.dep>0.5?`<small>+ ${fmtP(c.dep)} deposit</small>`:'');
+    refreshFields(ADDON_FIELDS[a.id]);
+  });
+  $('#flightCcy').textContent=S.home;
+  $('#flightPrice').value=Math.round(toHome(flightINR()));
+  $('#flightHint').innerHTML=S.flightINR!=null?`Your fare. <button type="button" class="linkbtn" id="fpReset">Use our estimate (${fmtCcy(toHome(cn().flightINR),S.home)})</button>`:`Our estimate for a return flight from India. Type the fare you found to use it instead.`;
+  const fr=$('#fpReset');if(fr)fr.onclick=()=>{S.flightINR=null;update()};
+  $('#feelist').innerHTML=cn().fees.map(f=>{const fc=feeCost(f,S.months),tot=(fc.o+fc.m*S.months);return `<li><span>${esc(f.label)}<small>${esc(f.note)}</small></span><span>${esc(lc(tot))}</span></li>`}).join('');
   $('#home').value=S.home;
+}
+function rentSource(){
+  const c=cityM(),M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep];
+  if(c.src==='report'){
+    const w=ANCHOR[S.country].weekly[c.c];
+    return `<span class="badge">Outlook report</span><span>Typical rent for ${esc(c.c)} matches the <b>${esc(rep.short)}</b>: ${lc(w)} a week.${rep.placeholder?' Note: that report marks its rent figures as placeholders.':''}${c.reportOnly?' Budget and Premium use the typical spread across other '+esc(S.country)+' cities.':' Budget, Premium and neighbourhood figures keep the spread from '+c.n+' House of Student listings.'}</span>`;
+  }
+  if(c.src==='cal')return `<span class="badge cal">Calibrated</span><span>${esc(c.c)} is not in the ${esc(rep.short)}, so its rent comes from ${c.n} House of Student listings adjusted ${M.calib<1?'down':'up'} ${Math.abs(Math.round((M.calib-1)*100))}% to the report's basis, so it compares fairly with report cities.</span>`;
+  return `<span class="badge db">Listings data</span><span>Rent from ${c.n} live House of Student listings (snapshot ${SNAPSHOT}). We do not publish an Outlook report for ${esc(S.country)} yet.</span>`;
 }
 
 function renderPair(){
   const L=localCcy(),H=S.home,el=$('#pair');
-  if(sameCcy()){el.innerHTML=`<div class="pair-top"><span class="ccy">${L}</span><span class="pair-note">Destination currency is the same as your currency.</span></div>`;return}
-  const edited=S.rates[pairKey()]!=null;
-  const left=S.swap?H:L,right=S.swap?L:H;
+  if(sameCcy()){el.innerHTML=`<div class="pair-top"><span class="lbl">Currency</span><span class="ccy">${L}</span><span class="pair-note">Same as the destination currency.</span></div>`;return}
+  const edited=S.rates[pairKey()]!=null,left=S.swap?H:L,right=S.swap?L:H;
   el.innerHTML=`<div class="pair-top"><span class="lbl">Currency pair</span><span class="ccy">${left}<small>${left===L?'destination':'yours'}</small></span><button type="button" class="swap" id="swap" aria-label="Swap which currency is shown first">${ICON.swap}</button><span class="ccy">${right}<small>${right===L?'destination':'yours'}</small></span></div>
    <label class="pair-rate">1 ${L} = <input type="number" id="rate" min="0" step="any" inputmode="decimal" value="${+pairRate().toPrecision(6)}" aria-label="Exchange rate, ${H} per ${L}"> ${H}</label>
    <div class="pair-note">${edited?`Your custom rate. <button type="button" class="linkbtn" id="rateReset">Use reference rate (${+refRate().toPrecision(6)})</button>`:'Reference rate from Indian Customs, 2 Oct 2026. Type your bank\'s rate to override.'}</div>`;
   $('#swap').onclick=()=>{S.swap=!S.swap;update()};
-  const ri=$('#rate');
-  ri.onchange=()=>{const v=parseFloat(ri.value);if(v>0)S.rates[pairKey()]=v;else delete S.rates[pairKey()];saveRates();update()};
+  const ri=$('#rate');ri.onchange=()=>{const v=parseFloat(ri.value);if(v>0)S.rates[pairKey()]=v;else delete S.rates[pairKey()];saveRates();update()};
   const rr=$('#rateReset');if(rr)rr.onclick=()=>{delete S.rates[pairKey()];saveRates();update()};
 }
 function saveRates(){try{localStorage.setItem('hos_rates',JSON.stringify(S.rates))}catch(_){ }}
 
-/* Donut chart of the five major segments */
 function arc(cx,cy,R,r,a0,a1){
   const p=(rad,a)=>[cx+rad*Math.cos(a),cy+rad*Math.sin(a)].map(n=>n.toFixed(2)).join(' ');
   const large=a1-a0>Math.PI?1:0;
   return `M${p(R,a0)}A${R} ${R} 0 ${large} 1 ${p(R,a1)}L${p(r,a1)}A${r} ${r} 0 ${large} 0 ${p(r,a0)}Z`;
 }
 function renderDonut(r){
-  const data=r.byMajor.filter(m=>m.total>0.5),svg=$('#donut');
+  const data=r.segs.filter(m=>m.total>0.5),svg=$('#donut');
   const R=96,ri=64,gap=2/R;let a=-Math.PI/2,paths='';
   data.forEach((m,i)=>{
-    const sweep=m.total/r.total*Math.PI*2;
-    const a0=a+(data.length>1?gap/2:0),a1=a+sweep-(data.length>1?gap/2:0);
-    const full=data.length===1;
-    paths+=full?`<path data-i="${i}" fill="${m.c}" d="M100 4A96 96 0 1 1 99.99 4L99.99 36A64 64 0 1 0 100 36Z" tabindex="0" aria-label="${m.n}"/>`
-      :`<path data-i="${i}" fill="${m.c}" d="${arc(100,100,R,ri,a0,Math.max(a0+.001,a1))}" tabindex="0" aria-label="${esc(m.n)}: ${Math.round(m.total/r.total*100)}%, ${esc(fmtP(m.total))}"/>`;
+    const sweep=m.total/r.total*Math.PI*2,g=data.length>1?gap/2:0;
+    paths+=data.length===1?`<path data-i="${i}" fill="${m.c}" d="M100 4A96 96 0 1 1 99.99 4L99.99 36A64 64 0 1 0 100 36Z" tabindex="0" aria-label="${esc(m.n)}"/>`
+      :`<path data-i="${i}" fill="${m.c}" d="${arc(100,100,R,ri,a+g,Math.max(a+g+.001,a+sweep-g))}" tabindex="0" aria-label="${esc(m.n)}: ${Math.round(m.total/r.total*100)}%, ${esc(fmtP(m.total))}"/>`;
     a+=sweep;
   });
   svg.innerHTML=`<title id="donutTitle">Share of total cost by segment</title>${paths}<text class="c2" x="100" y="90" text-anchor="middle">${r.mo} months</text><text class="c1" x="100" y="110" text-anchor="middle">${esc(fmtP(r.total))}</text>`;
@@ -994,23 +1107,20 @@ function renderDonut(r){
     const m=data[i];
     svg.classList.add('dim');svg.querySelectorAll('path').forEach(p=>p.classList.toggle('on',+p.dataset.i===i));
     document.querySelectorAll('#dleg button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
-    tip.innerHTML=`<b>${m.n}</b> · ${Math.round(m.total/r.total*100)}%<br>${esc(fmtP(m.total))}${sCcy()?` (${esc(fmtS(m.total))})`:''}`+(m.parts.length>1?'<div style="margin-top:6px">'+m.parts.filter(p=>p.total>0.5).map(p=>`<div class="row"><span>${p.n}</span><span>${esc(fmtP(p.total))}</span></div>`).join('')+'</div>':'');
+    const parts=m.parts.filter(p=>p.total>0.5);
+    tip.innerHTML=`<b>${m.n}</b> · ${Math.round(m.total/r.total*100)}%<br>${esc(fmtP(m.total))}${sCcy()?` (${esc(fmtS(m.total))})`:''}`+(parts.length>1?'<div style="margin-top:6px">'+parts.map(p=>`<div class="row"><span>${p.n}</span><span>${esc(fmtP(p.total))}</span></div>`).join('')+'</div>':'');
     tip.classList.add('show');
     const w=tip.offsetWidth,h=tip.offsetHeight;
-    tip.style.left=Math.min(window.innerWidth-w-8,Math.max(8,x+14))+'px';
-    tip.style.top=Math.max(8,y-h-12)+'px';
+    tip.style.left=Math.min(window.innerWidth-w-8,Math.max(8,x+14))+'px';tip.style.top=Math.max(8,y-h-12)+'px';
   };
   const hide=()=>{svg.classList.remove('dim');tip.classList.remove('show');document.querySelectorAll('#dleg button').forEach(b=>b.classList.remove('on'))};
   svg.querySelectorAll('path').forEach(p=>{
-    p.addEventListener('pointermove',e=>show(+p.dataset.i,e.clientX,e.clientY));
-    p.addEventListener('pointerleave',hide);
-    p.addEventListener('focus',()=>{const b=p.getBoundingClientRect();show(+p.dataset.i,b.right,b.top)});
-    p.addEventListener('blur',hide);
+    p.addEventListener('pointermove',e=>show(+p.dataset.i,e.clientX,e.clientY));p.addEventListener('pointerleave',hide);
+    p.addEventListener('focus',()=>{const b=p.getBoundingClientRect();show(+p.dataset.i,b.right,b.top)});p.addEventListener('blur',hide);
   });
   document.querySelectorAll('#dleg button').forEach(b=>{
     const go=()=>{const rc=b.getBoundingClientRect();show(+b.dataset.i,rc.left,rc.top)};
-    b.addEventListener('pointerenter',go);b.addEventListener('focus',go);
-    b.addEventListener('pointerleave',hide);b.addEventListener('blur',hide);
+    b.addEventListener('pointerenter',go);b.addEventListener('focus',go);b.addEventListener('pointerleave',hide);b.addEventListener('blur',hide);
   });
 }
 
@@ -1018,76 +1128,77 @@ const qpill=k=>`<span class="q" style="--c:${QUAL[k].c}">${QUAL[k].s}</span>`;
 function update(){
   refreshControls();renderPair();
   const r=compute(),mo=r.mo,c=cn();
-  const where=(r.loc.whole?'':r.loc.short+', ')+cityDB().c+', '+S.country;
+  const where=(r.loc.whole?'':r.loc.short+', ')+cityM().c+', '+S.country;
+  $('#sMonthly').innerHTML=money(r.running);
+  $('#mTotal').textContent=fmtP(r.running)+' /mo';
+  $('#sWhere').textContent=`${['Budget','Typical','Premium'][S.tier]} room in ${where}`;
+  const rows=[['Rent','#2a78d6',r.rentM],['Living costs','#eb6834',r.livingM]];
+  if(r.extraM>0.5)rows.push(['Other expenses','#e87ba4',r.extraM]);
+  $('#split').innerHTML=rows.map(x=>`<li style="--c:${x[1]}"><span>${x[0]}</span><b>${money(x[2])}</b></li>`).join('');
+  $('#tLabel').textContent=`Total for ${mo} months`;
   $('#sTotal').innerHTML=money(r.total);
-  $('#mTotal').textContent=fmtP(r.total);
-  $('#sWhere').textContent=`For ${mo} months in ${where}`;
-  $('#sEq').innerHTML=`<b>${fmtP(r.running)}</b> a month × ${mo} months + <b>${fmtP(r.oneTime)}</b> one-time = <b>${fmtP(r.total)}</b>`;
-  $('#sRec').innerHTML=money(r.running);
-  $('#sAvg').innerHTML=money(r.total/mo);
-  $('#sUp').innerHTML=money(r.upfront);
-  $('#sUpNote').textContent=`One-time costs ${fmtP(r.oneTime)} + refundable deposit ${fmtP(r.deposit)} + first month ${fmtP(r.running)}`;
+  $('#sEq').textContent=`${fmtP(r.running)} a month × ${mo}`+(r.oneTime>0.5?` + ${fmtP(r.oneTime)} one-time`:'');
+  const showUp=r.oneTime>0.5||r.deposit>0.5;$('#upBox').hidden=!showUp;
+  if(showUp){$('#sUp').innerHTML=money(r.upfront);$('#sUpNote').textContent=[r.oneTime>0.5?`one-time ${fmtP(r.oneTime)}`:'',r.deposit>0.5?`refundable deposit ${fmtP(r.deposit)}`:'',`first month ${fmtP(r.running)}`].filter(Boolean).join(' + ')}
   renderDonut(r);
-  const qs=r.byQ.filter(x=>x.total>0.5);
-  $('#qbar').innerHTML=qs.map(x=>`<i title="${x.n}" style="width:${x.total/r.total*100}%;--c:${x.c}"></i>`).join('');
-  $('#qleg').innerHTML=qs.map(x=>`<span style="--c:${x.c}">${x.n} <b>${x.total/r.total<.005?'<1':Math.round(x.total/r.total*100)}%</b></span>`).join('');
   const al=[];
-  if(r.loc.n<30)al.push(`Rent is based on only ${r.loc.n} listings here, so treat it as indicative.`);
+  if(r.loc.n!=null&&r.loc.n<30&&r.city.src!=='report')al.push(`Rent here is based on only ${r.loc.n} listings, so treat it as indicative.`);
+  if(r.city.src==='report'&&REPORTS[MODEL[S.country].rep].placeholder)al.push('The Australia Outlook report marks its rent figures as placeholders, so this rent will change when the report is refreshed.');
   $('#alerts').innerHTML=al.map(a=>`<div class="alert">${a}</div>`).join('');
-  $('#sRange').innerHTML=`Likely range <b>${fmtP(r.total-r.spread)} – ${fmtP(r.total+r.spread)}</b>, wider where figures are estimates.`;
 
-  // breakdown table, grouped by major segment
+  // breakdown table, grouped by segment
   let h=`<thead><tr><th class="l">Item</th><th class="l">Basis</th><th class="l">Source</th><th>Per month</th><th>Total for ${mo} months</th></tr></thead><tbody>`;
-  r.byMajor.forEach(mj=>{
-    const rows=r.L.filter(l=>mj.subs.includes(l.cat));if(!rows.length)return;
-    h+=`<tr class="grp"><td class="l" colspan="3"><span class="dt" style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${mj.c};margin-right:8px"></span>${mj.n}</td><td class="num">${money(mj.total/mo)}</td><td class="num">${money(mj.total)}</td></tr>`;
-    mj.subs.forEach(sid=>{
-      const sr=rows.filter(l=>l.cat===sid);if(!sr.length)return;
-      if(mj.subs.length>1)h+=`<tr class="sub"><td class="l" colspan="5">${catName(sid)}</td></tr>`;
+  r.segs.forEach(sg=>{
+    const rows=r.L.filter(l=>sg.cats.includes(l.cat));if(!rows.length)return;
+    h+=`<tr class="grp"><td class="l" colspan="3"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${sg.c};margin-right:8px"></span>${sg.n}</td><td class="num">${money(sg.total/mo)}</td><td class="num">${money(sg.total)}</td></tr>`;
+    sg.cats.forEach(cid=>{
+      const sr=rows.filter(l=>l.cat===cid);if(!sr.length)return;
+      if(sg.cats.length>1)h+=`<tr class="sub"><td class="l" colspan="5">${CATNAME[cid]}</td></tr>`;
       sr.forEach(l=>{h+=`<tr><td class="l">${esc(l.label)}</td><td class="basis">${esc(l.note)}</td><td class="l">${qpill(l.q)}</td><td class="num">${l.o&&!l.m&&!l.y?'<span style="color:var(--faint)">one-time</span>':money(l.m+l.y/12)}</td><td class="num">${money(l.total)}</td></tr>`});
     });
   });
-  h+=`<tr class="tot"><td class="l" colspan="3">Total cost of living (excl. tuition)</td><td class="num">${money(r.running)}</td><td class="num">${money(r.total)}</td></tr>`;
-  if(r.deposit)h+=`<tr><td class="l">Refundable deposit</td><td class="basis">${S.deposit} × monthly rent. Returned at the end of the tenancy, so not part of the total.</td><td class="l">${qpill('db')}</td><td></td><td class="num">${money(r.deposit)}</td></tr>`;
+  h+=`<tr class="tot"><td class="l" colspan="3">Total (excl. tuition)</td><td class="num">${money(r.running)}</td><td class="num">${money(r.total)}</td></tr>`;
+  if(r.deposit>0.5)h+=`<tr><td class="l">Refundable deposit</td><td class="basis">${S.deposit} × monthly rent, returned at the end of the tenancy. Not part of the total.</td><td class="l">${qpill(r.city.src)}</td><td></td><td class="num">${money(r.deposit)}</td></tr>`;
   $('#detail').innerHTML=h+'</tbody>';
 
   // methodology
-  $('#mRent').innerHTML=`<p>Rent comes from House of Student listings (snapshot ${SNAPSHOT}): live properties whose price window ends on or after the snapshot date, one value per property and room type, weekly prices converted to monthly (× 52 ÷ 12), and extreme outliers (outside each country's 3rd–97th percentile) removed. The rent types are the 25th percentile (Budget), median (Typical) and 75th percentile (Premium) of what remains. Your selection (${esc(curLoc().whole?'whole city':curLoc().short)}, ${esc(cityDB().c)}) is based on <b>${curLoc().n} listings</b>.</p>`;
-  const P=r.P,ccy=localCcy();
-  const prow=[['Inexpensive meal','cheap',''],['Mid-range restaurant meal','mid',''],['Coffee','coffee',''],['Groceries, full self-catering','groc',' / week'],['Campus canteen meal','canteen',''],['Student transit pass','pass',' / month'],['Taxi or ride-share trip','ride',''],['Utilities','utils',' / month'],['Home internet','net',' / month'],['Mobile plan','mobile',' / month'],['Gym membership','gym',' / month'],['Cinema ticket','cinema',''],['Subscription','sub',' / month']];
+  const M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep];
+  $('#mRent').innerHTML=(rep?`<p><b>Typical rent</b> for each city in the ${esc(rep.name)} equals the report figure (${esc(rep.basis)}). Budget, Premium and neighbourhood figures keep the relative spread from our listings data, scaled so the whole-city Typical figure matches the report exactly. Cities that are in our listings but not in the report use their listings median adjusted by the country's calibration factor (×${M.calib.toFixed(3)}, the median of report ÷ listings across the report's cities) so they compare fairly with report cities.</p>`:`<p>No Outlook report is published for ${esc(S.country)} yet, so rent comes straight from House of Student listings.</p>`)+
+   `<p>Listings data (snapshot ${SNAPSHOT}): live properties with a price window ending on or after the snapshot, one value per property and room type, weekly prices converted to monthly (× 52 ÷ 12), outliers outside each country's 3rd–97th percentile removed. Budget and Premium are the 25th and 75th percentiles; Typical is the median. ${isWeekly()?'Rent in this market is quoted per week; monthly figures are weekly × 52 ÷ 12.':''}</p>`;
+  const P=r.P;
+  const prow=[['Groceries, full self-catering','groc',' / week',S.country==='United Kingdom'?'At Standard (18 home-cooked meals a week) this is £146 a month, the national student figure from Save the Student quoted in the UK Outlook':''],['Meal out','cheap','',''],['Coffee','coffee','',''],['Student transit pass','pass',' / month',!P.pass?'Included in the semester contribution':''],['Taxi or ride-share trip','ride','',''],['Mobile plan (standard)','mobile',' / month',''],['Utilities (if not in rent)','utils',' / month',''],['Home internet (if not in rent)','net',' / month',''],['Mid-range restaurant meal (sets leisure prices)','mid','',''],['Cinema ticket','cinema',''],['Subscription','sub',' / month',''],['Gym','gym',' / month','']];
   let a='<thead><tr><th class="l">Assumption</th><th>Value</th><th class="l">Source</th><th class="l">Note</th></tr></thead><tbody>';
-  prow.forEach(x=>{a+=`<tr><td class="l">${x[0]}</td><td class="num">${lc(P[x[1]])}${x[2]}</td><td class="l">${qpill(c.cited.includes(x[1])?'cited':'est')}</td><td class="basis">${x[1]==='pass'&&!P.pass?'Included in the semester contribution':''}</td></tr>`});
-  c.fees.forEach(f=>{a+=`<tr><td class="l">${esc(f.label)}</td><td class="num">${fmtCcy(f.amt,ccy)}${{once:'',halfyear:' / year',peryear:' / year',persemester:' / semester',prorata:' / year',monthly:' / month'}[f.kind]}</td><td class="l">${qpill(f.q)}</td><td class="basis">${esc(f.note)}</td></tr>`});
-  a+=`<tr><td class="l">Return flight from India</td><td class="num">${fmtCcy(c.flightINR,'INR')}</td><td class="l">${qpill('est')}</td><td class="basis">Published fares vary widely by month and route; use your own quote.</td></tr></tbody>`;
+  prow.forEach(x=>{a+=`<tr><td class="l">${x[0]}</td><td class="num">${lc(P[x[1]])}${x[2]}</td><td class="l">${qpill(c.cited.includes(x[1])?'cited':'est')}</td><td class="basis">${esc(x[3]||'')}</td></tr>`});
+  a+=`<tr><td class="l">Return flight from India</td><td class="num">${fmtCcy(c.flightINR,'INR')}</td><td class="l">${qpill('est')}</td><td class="basis">Fares vary widely by month and route. Enter your own fare under Flights.</td></tr></tbody>`;
   $('#assump').innerHTML=a;
   window.__last=r;
 }
 
 function summaryText(){
-  const r=window.__last;
-  const where=(r.loc.whole?'':r.loc.short+', ')+cityDB().c+', '+S.country;
-  const both=v=>fmtP(v)+(sCcy()?` (${fmtS(v)})`:'');
-  const out=['House of Student: cost of living estimate (excl. tuition)',`${where}, ${r.mo} months, ${['Budget','Typical','Premium'][S.tier]} rent, ${S.preset?PRESETS[S.preset].label:'Customised'} lifestyle`,'',
-   `Total: ${both(r.total)}`,`= ${fmtP(r.running)} a month × ${r.mo} months + ${fmtP(r.oneTime)} one-time`,
-   `Cash needed to get started: ${both(r.upfront)} (incl. ${fmtP(r.deposit)} refundable deposit)`,''];
-  r.byMajor.filter(x=>x.total>0.5).forEach(x=>out.push(`${x.n}: ${both(x.total)} (${Math.round(x.total/r.total*100)}%)`));
-  if(!sameCcy())out.push('',`Exchange rate used: 1 ${localCcy()} = ${+pairRate().toPrecision(6)} ${S.home}${S.rates[pairKey()]!=null?' (custom)':' (Indian Customs reference, 2 Oct 2026)'}`);
-  out.push(`Rent from ${r.loc.n} House of Student listings, snapshot ${SNAPSHOT}.`);
+  const r=window.__last,both=v=>fmtP(v)+(sCcy()?` (${fmtS(v)})`:'');
+  const where=(r.loc.whole?'':r.loc.short+', ')+cityM().c+', '+S.country;
+  const out=['House of Student: rent and living cost estimate (excl. tuition)',`${['Budget','Typical','Premium'][S.tier]} room in ${where}, ${S.level!=null?LEVELS[S.level].n:'custom'} living costs`,'',
+   `Per month: ${both(r.running)}`,`  Rent ${both(r.rentM)}`,`  Living costs ${both(r.livingM)}`];
+  if(r.extraM>0.5)out.push(`  Other expenses ${both(r.extraM)}`);
+  out.push('',`Total for ${r.mo} months: ${both(r.total)}`+(r.oneTime>0.5?` (incl. ${fmtP(r.oneTime)} one-time)`:''));
+  const on=ADDONS.filter(a=>S.ao[a.id]).map(a=>a.t);if(on.length)out.push('Includes: '+on.join(', '));
+  if(!sameCcy())out.push(`Exchange rate: 1 ${localCcy()} = ${+pairRate().toPrecision(6)} ${S.home}`);
   return out.join('\n');
 }
 
 /* =====================================================================
-   7. INIT
+   9. INIT
    ===================================================================== */
 (function init(){
-  const nCities=Object.values(DB).reduce((a,c)=>a+c.cities.length,0);
-  const nListings=Object.values(DB).reduce((a,c)=>a+c.cities.reduce((b,x)=>b+x.n,0),0);
-  $('#trust').innerHTML=`<span>${ICON.db}Rent from ${nListings.toLocaleString('en-IN')} room listings</span><span>${ICON.map}${nCities} cities in ${Object.keys(DB).length} countries</span><span>${ICON.fx}See costs in ${HOME_CCYS.length} currencies</span><span>${ICON.cal}Data updated ${new Date(SNAPSHOT).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>`;
+  buildModel();
+  const nCities=Object.values(MODEL).reduce((a,c)=>a+c.cities.length,0);
+  $('#trust').innerHTML=`<span>${ICON.doc}Rent matches our UK &amp; Australia Outlook reports</span><span>${ICON.db}${nCities} cities in ${Object.keys(MODEL).length} countries</span><span>${ICON.fx}Shown in your currency</span>`;
   $('#home').innerHTML=HOME_CCYS.map(c=>`<option value="${c}">${c} · ${CCY_NAMES[c]}</option>`).join('');
   $('#home').addEventListener('change',e=>{S.home=e.target.value;try{localStorage.setItem('hos_home',S.home)}catch(_){ }update()});
   try{const c=localStorage.getItem('hos_home');if(c&&FX[c])S.home=c;const r=JSON.parse(localStorage.getItem('hos_rates')||'{}');if(r&&typeof r==='object')S.rates=r}catch(_){ }
-  $('#mSources').innerHTML=`<p>Reference exchange rates: ${FX_NOTE}. ${HOME_CCYS.filter(c=>c!=='INR').map(c=>`1 ${c} = ₹${FX[c]}`).join(' · ')}. Conversions between two non-INR currencies use these as cross rates. You can type your own rate for any currency pair in the summary panel.</p><p>Fees and everyday costs come from the sources below, mostly secondary summaries of official pages; confirm on official sites before paying.</p><ul>`+SOURCES.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>, ${s[2]}</li>`).join('')+'</ul>';
-  applyPreset('balanced');
+  $('#mSources').innerHTML=`<p>Reference exchange rates: ${FX_NOTE}. ${HOME_CCYS.filter(c=>c!=='INR').map(c=>`1 ${c} = ₹${FX[c]}`).join(' · ')}. You can type your own rate for the currency pair in the summary panel.</p><ul>`+
+    Object.values(REPORTS).map(r=>`<li>${esc(r.name)}: ${esc(r.basis)}.</li>`).join('')+
+    SOURCES.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>, ${s[2]}</li>`).join('')+'</ul>';
   buildForm();update();
   $('#btnPrint').addEventListener('click',()=>window.print());
   $('#btnCopy').addEventListener('click',async e=>{

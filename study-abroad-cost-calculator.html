@@ -361,6 +361,7 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 .addon:not(.on) .addon-amt{color:var(--faint)}
 .addon-body{padding:4px 16px 18px;border-top:1px solid var(--line)}
 .addon-body[hidden]{display:none}
+.kpis[hidden]{display:none}
 .addon-body .grid{margin-top:14px}
 .money-in{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:var(--r-sm);overflow:hidden;background:var(--surface)}
 .money-in span{padding:0 12px;font-weight:800;color:var(--muted);background:var(--sunken);align-self:stretch;display:grid;place-items:center;border-right:1px solid var(--line-strong)}
@@ -480,85 +481,137 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 
 <script>
 /* =====================================================================
-   1. RENT DATA: snapshot of the House of Student listings database
+   1. RENT DATA: live House of Student listings, validated (snapshot below)
    ---------------------------------------------------------------------
-   Source: BigQuery houseofstudent-ga.warehouse.tbl_p_details + tbl_r_wpd (+ tbl_city, tbl_country)
-   Rules:  property status=1, not deleted; price row status=1, price>0;
-           availability window ends on/after the snapshot date;
-           one value per property × room-type code (median across its date windows);
-           weekly prices (prise_unit=2) ×52/12 → monthly; monthly prices (prise_unit=3) as-is;
-           per country, prices outside the 3rd–97th percentile dropped (data-entry outliers).
-   Tiers:  [25th percentile, median, 75th percentile] monthly rent per room, LOCAL currency.
-   city:   n = listings in sample (property × room type). Cities with n >= 15 only.
-   L:      postcode districts with n >= 8 (top 8 per city, cities with n >= 40):
-           [postcode, area name (researched; null = not confident), n, p25, median, p75]
-   Verification checksum (BigQuery = this file): 91 cities, Σ(n+p25+med+p75)=277111;
-           152 localities, Σ=545658.
+   Source: BigQuery houseofstudent-ga.warehouse.tbl_r_wpd (weekly/monthly rent per room type and tenancy)
+           joined to tbl_p_details, tbl_city, tbl_country.
+   Validation rules:
+     - property live (status=1, not deleted); rent row active (status=1), rent > 0;
+     - tenancy window ends on or after the snapshot date (current and upcoming tenancies only);
+     - price unit: prise_unit 2 = per week (× 52 ÷ 12 → per month), 3 = per month;
+     - rents outside each country's 1st–99th percentile removed as data-entry errors;
+     - each room type = median of its tenancy options; each PROPERTY = median of its room types,
+       so every property counts once however many room types it lists.
+   Bands:  r = [25th percentile, median, 75th percentile] across properties, per month, LOCAL currency.
+   city:   n = priced properties, rooms = room types. Cities need >= 5 priced properties.
+   L:      postcode areas with >= 4 priced properties (top 8 per city):
+           [postcode, area name (null = not confident), properties, p25, median, p75]
+   Verification checksum (BigQuery = this file): 99 cities, Σ(n+p25+med+p75)=291998;
+           123 areas, Σ(properties+p25+med+p75)=407599.
    ===================================================================== */
-const SNAPSHOT='2026-10-28';
+const SNAPSHOT='2026-11-12';
 const DB={
- 'United Kingdom':{ccy:'GBP',cities:[
-  {c:'London',n:347,r:[1569,1907,2336],L:[['SE1','Southwark / Waterloo',69,2276,2374,2435],['HA9','Wembley',43,1265,1478,1690],['N7','Holloway',36,1859,2032,2327],['E1','Whitechapel / Stepney',32,2058,2206,2349],['E15','Stratford',14,1625,2357,2466],['TW8','Brentford',14,1192,1343,1777],['E16','Royal Docks / Canning Town',13,1382,1569,1798],['W12',"Shepherd's Bush",12,1820,1829,1928]]},
-  {c:'Birmingham',n:152,r:[776,906,1218],L:[['B4','City Centre (Aston)',56,711,819,893],['B16','Edgbaston / Ladywood',39,802,1040,1287],['B29','Selly Oak',17,1105,1278,1387],['B19','Newtown / Hockley',13,693,758,1105],['B15','Edgbaston',12,802,1062,1209],['B5','Digbeth / Highgate',9,862,1179,1313]]},
-  {c:'Nottingham',n:135,r:[715,802,940],L:[['NG1','City Centre',51,763,802,888],['NG7','Lenton / Radford',41,689,737,858],['NG2','West Bridgford / Meadows',18,802,953,1213],['NG3','Sneinton / Mapperley',14,776,841,932],['NG9','Beeston',8,732,1083,1127]]},
-  {c:'Glasgow',n:121,r:[862,1001,1244],L:[['G3','Finnieston / Kelvingrove',36,884,971,1244],['G2','City Centre',36,932,1105,1343],['G4','Cowcaddens / Garnethill',34,767,906,1018]]},
-  {c:'Cardiff',n:108,r:[767,854,962],L:[['CF24','Cathays / Roath',59,771,854,966],['CF10','City Centre / Bay',48,732,845,945]]},
-  {c:'Bristol',n:104,r:[1131,1343,1582],L:[['BS2','St Pauls / Old Market',52,1127,1322,1603],['BS1','City Centre / Harbourside',38,1291,1387,1582],['BS34','Filton / Patchway',9,802,845,1131]]},
-  {c:'Newcastle Upon Tyne',n:66,r:[732,819,1049],L:[['NE2','Jesmond / Sandyford',35,737,845,1135],['NE1','City Centre',26,715,819,1018]]},
-  {c:'Belfast',n:61,r:[732,858,1001],L:[['BT15','North Belfast',35,689,776,888],['BT1','City Centre',9,737,888,1018],['BT7','Stranmillis / Holylands',9,802,1127,1170]]},
-  {c:'Liverpool',n:59,r:[815,875,1018],L:[['L1','City Centre',29,845,940,1023],['L3','Knowledge Quarter',22,763,858,1018]]},
-  {c:'Southampton',n:56,r:[945,1062,1213],L:[['SO14','City Centre / Ocean Village',37,932,1044,1105],['SO15','Shirley / Millbrook',13,1062,1313,1421]]},
-  {c:'Leicester',n:55,r:[672,780,880],L:[['LE2','Clarendon Park / Knighton',24,672,741,832],['LE1','City Centre',19,750,823,914],['LE3','Westcotes / Braunstone',8,602,646,667]]},
-  {c:'Edinburgh',n:47,r:[988,1170,1473],L:[['EH7','Calton / Leith Walk',13,888,953,1148],['EH6','Leith',10,1170,1170,1387],['EH8','Old Town / Holyrood',9,1582,1668,1950]]},
-  {c:'Manchester',n:47,r:[880,1053,1170],L:[['M13','Ardwick / Oxford Road',15,849,997,1127],['M15','Hulme / Castlefield',13,1101,1170,1252],['M14','Fallowfield / Moss Side',9,862,880,932]]},
-  {c:'Sheffield',n:44,r:[667,797,906],L:[['S11','Broomhill / Ecclesall',18,763,797,875],['S1','City Centre',9,607,689,802]]},
-  {c:'Exeter',n:39,r:[997,1170,1310]},{c:'York',n:39,r:[1062,1452,1538]},{c:'Coventry',n:36,r:[676,845,1005]},
-  {c:'Leeds',n:32,r:[776,997,1231]},{c:'Cambridge',n:32,r:[1018,1148,1430]},{c:'Aberdeen',n:26,r:[715,802,867]},
-  {c:'Bournemouth',n:22,r:[793,997,1157]},{c:'Plymouth',n:21,r:[602,672,802]},{c:'Portsmouth',n:21,r:[875,997,1040]},
-  {c:'Brighton',n:20,r:[1018,1105,1278]},{c:'Swansea',n:18,r:[672,802,845]},{c:'Oxford',n:18,r:[1235,1430,1560]},
-  {c:'Lancaster',n:17,r:[628,741,923]},{c:'Durham',n:16,r:[958,1192,1426]},{c:'Loughborough',n:16,r:[815,945,1014]},{c:'Lincoln',n:15,r:[607,737,849]}]},
- 'France':{ccy:'EUR',cities:[
-  {c:'Paris',n:1754,r:[1297,1900,2915],L:[['75017','17e · Batignolles',183,1220,1570,2555],['75015','15e · Vaugirard',153,1135,1736,2399],['75016','16e · Passy',135,1375,2080,3074],['75018','18e · Montmartre',127,1124,1338,1974],['75008','8e · Champs-Élysées',93,1677,2814,4167],['75019','19e · Buttes-Chaumont / La Villette',85,1001,1092,1882],['75002','2e · Bourse / Sentier',82,1789,2500,4000],['75006','6e · Saint-Germain / Luxembourg',73,2008,2710,3914]]},
-  {c:'Lille',n:623,r:[450,495,530],L:[['59000',null,348,450,477,500],['59800',null,243,440,515,560],['59160','Lomme',11,410,410,420]]},
-  {c:'Toulouse',n:266,r:[450,465,540],L:[['31400',null,53,450,465,480],['31300',null,53,430,460,476],['31100',null,46,435,450,460],['31200',null,43,440,456,515],['31000',null,42,525,615,765],['31500',null,28,453,557,660]]},
-  {c:'Reims',n:239,r:[410,430,450]},
-  {c:'Lyon',n:166,r:[550,623,697],L:[['69007','7e · Gerland / Jean Macé',41,570,599,660],['69003','3e · Part-Dieu / Montchat',33,616,690,710],['69008','8e · Monplaisir / États-Unis',30,527,554,675],['69002','2e · Presqu\'île / Perrache',19,665,695,810],['69009','9e · Vaise',16,530,540,565],['69005','5e · Vieux Lyon',8,495,590,626]]},
-  {c:'Bordeaux',n:165,r:[550,590,682],L:[['33300','Chartrons / Bacalan',61,550,590,620],['33000','Centre',57,530,620,770],['33800','Sud (Saint-Michel / Nansouty)',29,560,593,638],['33100','La Bastide',12,550,671,715]]},
-  {c:'Nantes',n:158,r:[470,530,600],L:[['44300',null,60,450,475,530],['44000',null,40,540,600,705],['44200',null,39,490,570,594],['44100',null,19,480,500,600]]},
-  {c:'Villeurbanne',n:141,r:[500,550,650]},{c:'Nancy',n:100,r:[400,400,420]},
-  {c:'Marseille',n:86,r:[530,594,1015],L:[['13004','4e arrondissement',27,561,671,1500],['13006','6e arrondissement',12,495,682,715],['13001','1er arrondissement',12,550,560,590],['13009','9e arrondissement',9,616,660,2200],['13003','3e arrondissement',9,530,530,565]]},
-  {c:'Amiens',n:85,r:[390,400,420],L:[['80000',null,52,390,400,420],['80090',null,19,390,400,400],['80080',null,11,390,400,436]]},
-  {c:'Montpellier',n:84,r:[430,490,590],L:[['34000',null,39,450,590,687],['34070',null,29,420,420,430],['34080',null,10,440,497,530]]},
-  {c:'Strasbourg',n:81,r:[671,704,726],L:[['67000',null,69,676,704,726],['67100',null,8,671,693,715]]},
-  {c:'Grenoble',n:69,r:[403,440,473],L:[['38000',null,36,430,450,495],['38100',null,33,400,420,440]]},
-  {c:'Rennes',n:69,r:[415,430,450],L:[['35000',null,44,420,430,450],['35200',null,23,400,430,438]]},
-  {c:'Saint-Denis',n:61,r:[759,781,858],L:[['93210',null,48,770,792,869],['93200',null,13,702,720,745]]},
-  {c:'Brest',n:61,r:[380,390,400]},
-  {c:'Rouen',n:56,r:[390,400,420],L:[['76100',null,40,380,390,400],['76000',null,16,395,400,420]]},
-  {c:'Clermont-Ferrand',n:56,r:[380,400,433],L:[['63000',null,44,390,400,430],['63100',null,12,370,380,506]]},
-  {c:'Nanterre',n:54,r:[814,880,897]},{c:'Villejuif',n:44,r:[810,940,970]},{c:'Dijon',n:41,r:[400,400,410]},
-  {c:'Rueil-Malmaison',n:37,r:[803,847,880]},{c:'Valenciennes',n:36,r:[380,400,420]},{c:'Colombes',n:32,r:[720,770,800]},
-  {c:'Courbevoie',n:31,r:[895,930,1136]},{c:'Talence',n:29,r:[515,550,570]},{c:'Puteaux',n:27,r:[792,895,895]},
-  {c:'Levallois-Perret',n:26,r:[935,1480,2756]},{c:'Toulon',n:22,r:[390,420,420]},{c:'Roubaix',n:22,r:[410,420,444]},
-  {c:'Saint-Étienne',n:22,r:[416,510,650]},{c:'Montreuil',n:21,r:[718,867,926]},{c:'Cergy',n:21,r:[499,550,648]},
-  {c:'Bron',n:20,r:[450,480,500]},{c:'Lambersart',n:18,r:[420,420,450]},{c:'Poitiers',n:18,r:[388,393,410]},
-  {c:'Le Bouscat',n:17,r:[475,485,588]},{c:'Clamart',n:16,r:[770,895,920]},{c:'Pessac',n:16,r:[475,510,545]}]},
- 'Germany':{ccy:'EUR',cities:[
-  {c:'Berlin',n:1770,r:[665,780,1350],L:[['10557','Moabit / Hauptbahnhof',114,665,710,760],['13347','Wedding',110,700,730,760],['10245','Friedrichshain',95,655,799,1200],['10179','Mitte (Jannowitzbrücke)',95,665,720,825],['10439','Prenzlauer Berg',85,625,999,1350],['10317','Rummelsburg / Lichtenberg',75,730,1105,1190],['12347','Britz',62,690,700,730],['12459','Oberschöneweide',51,630,680,1235]]},
-  {c:'Frankfurt',n:224,r:[899,999,1750],L:[['60322','Westend / Nordend',34,899,1200,2400],['60323','Westend',29,899,899,999],['60329','Bahnhofsviertel',24,899,899,1090],['60325','Westend / Bockenheim',24,675,999,1270],['60318','Nordend',18,899,899,1200],['60326','Gallus',14,1590,1990,2470],['60314','Ostend',11,655,685,690],['60313','Innenstadt',10,899,1100,1400]]},
-  {c:'Hamburg',n:124,r:[1045,1295,2146],L:[['22301','Winterhude / Barmbek',21,895,1295,2550],['20457','HafenCity',15,1195,1295,2410],['20251','Eppendorf / Hoheluft',12,995,1045,1145],['22525','Stellingen',12,1972,2262,2494],['20359','St. Pauli',9,995,1095,1295],['20099','St. Georg',8,1195,1295,1345],['20257','Eimsbüttel / Lokstedt',8,695,995,1045],['22085','Uhlenhorst',8,2436,2670,2970]]},
-  {c:'Dusseldorf',n:118,r:[799,990,1350],L:[['40589',null,22,609,619,619],['40476',null,17,799,799,799],['40479','Pempelfort',16,1080,1230,1325],['40233',null,13,1500,1500,1500],['40235',null,8,799,1200,1300]]},
-  {c:'Cologne',n:67,r:[980,1490,1980],L:[['50676','Altstadt-Süd',15,1960,1980,2180],['51063','Mülheim',10,1490,1529,2000],['51105',null,8,795,860,890]]},
-  {c:'Essen',n:54,r:[620,620,963]},{c:'Stuttgart',n:29,r:[890,1290,2354]},{c:'Potsdam',n:22,r:[610,630,690]},
-  {c:'Leipzig',n:21,r:[695,905,1050]},{c:'Mannheim',n:20,r:[900,1399,1450]},{c:'Dresden',n:17,r:[1195,1295,1876]}]},
- 'Australia':{ccy:'AUD',cities:[
-  {c:'Melbourne',n:394,r:[1902,2292,2752],L:[['3000','CBD',119,2184,2466,2773],['3053','Carlton',108,1894,2115,2591],['3051','North Melbourne',36,1772,1937,2206],['3052','Parkville',27,1946,2379,2596],['3008','Docklands',13,3402,3792,4052],['3072','Preston',11,1850,2548,3272],['3083','Bundoora',10,1235,1278,1673],['3122','Hawthorn',9,1590,1655,1677]]},
-  {c:'Sydney',n:174,r:[2047,3055,3640],L:[['2033','Kensington / Kingsford',45,2544,3202,3939],['2008','Chippendale / Darlington',22,3250,3506,3748],['2113','Macquarie Park',21,1859,2596,3406],['2150','Parramatta',9,1533,1583,1675],['2016','Redfern',8,2986,3272,3748],['2042','Newtown',8,2056,2550,2882]]},
-  {c:'Brisbane',n:129,r:[1686,2076,2682],L:[['4000','CBD',36,1729,2119,2942],['4101','South Brisbane / West End',28,1989,2509,3029],['4006','Fortitude Valley',24,1170,1430,1686],['4066','Toowong',15,2032,2552,2596],['4102','Woolloongabba',10,1816,2076,2596]]},
-  {c:'Adelaide',n:46,r:[1599,2037,2639]},{c:'Perth',n:35,r:[1361,1638,2154]},{c:'Darwin',n:17,r:[1226,1452,2058]},
-  {c:'Canberra',n:17,r:[1395,1933,2643]},{c:'Gold Coast',n:15,r:[1707,1906,2460]}]},
- 'Ireland':{ccy:'EUR',cities:[{c:'Dublin',n:24,r:[1302,1413,1712]}]},
- 'New Zealand':{ccy:'NZD',cities:[{c:'Auckland',n:35,r:[1907,2076,2297]}]}
+ "United Kingdom":{ccy:'GBP',cities:[
+  {c:"London",n:57,rooms:384,r:[1382,1729,2102],L:[["HA9","Wembley",6,1122,1339,1473],["SE1","Southwark / Waterloo",5,1517,2110,2271],["E1","Whitechapel / Stepney",4,1759,2037,2128]]},
+  {c:"Nottingham",n:39,rooms:156,r:[650,802,884],L:[["NG1","City Centre",20,702,841,884],["NG7","Lenton / Radford",9,650,706,758]]},
+  {c:"Birmingham",n:26,rooms:154,r:[802,953,1183],L:[["B4","City Centre (Aston)",6,758,806,819],["B15","Edgbaston",5,888,1062,1192],["B29","Selly Oak",5,1036,1166,1183],["B5","Digbeth / Highgate",5,672,1105,1313]]},
+  {c:"Glasgow",n:24,rooms:121,r:[884,997,1105],L:[["G3","Finnieston / Kelvingrove",7,884,997,1322],["G4","Cowcaddens / Garnethill",7,793,914,992],["G2","City Centre",4,1001,1062,1105]]},
+  {c:"Cardiff",n:19,rooms:108,r:[763,845,940],L:[["CF24","Cathays / Roath",11,763,802,940],["CF10","City Centre / Bay",7,737,845,888]]},
+  {c:"Leicester",n:19,rooms:61,r:[641,741,854],L:[["LE1","City Centre",8,641,780,823],["LE2","Clarendon Park / Knighton",8,594,732,802]]},
+  {c:"Newcastle Upon Tyne",n:19,rooms:66,r:[715,802,1010],L:[["NE1","City Centre",9,715,819,997],["NE2","Jesmond / Sandyford",8,676,737,802]]},
+  {c:"Manchester",n:18,rooms:47,r:[849,988,1127],L:[["M13","Ardwick / Oxford Road",6,849,988,1127],["M14","Fallowfield / Moss Side",6,871,880,1057]]},
+  {c:"Bristol",n:17,rooms:104,r:[1079,1356,1495],L:[["BS1","City Centre / Harbourside",7,1079,1408,1517],["BS2","St Pauls / Old Market",6,1148,1166,1387]]},
+  {c:"Liverpool",n:17,rooms:62,r:[715,858,962],L:[["L3","Knowledge Quarter",8,498,828,910],["L1","City Centre",6,802,845,975]]},
+  {c:"Exeter",n:16,rooms:39,r:[910,1018,1310],L:[["EX4","St David's / Streatham",11,953,1018,1330],["EX1","City Centre / Heavitree",5,888,1062,1310]]},
+  {c:"Sheffield",n:16,rooms:52,r:[468,524,693],L:[["S1","City Centre",5,472,585,628],["S3","Kelham Island / Netherthorpe",5,472,524,650],["S2","Sharrow / Park Hill",4,433,468,472]]},
+  {c:"Edinburgh",n:14,rooms:47,r:[988,1036,1365]},
+  {c:"Leeds",n:14,rooms:33,r:[650,845,1018]},
+  {c:"Coventry",n:13,rooms:38,r:[520,776,862]},
+  {c:"Southampton",n:10,rooms:56,r:[932,1014,1105]},
+  {c:"Aberdeen",n:9,rooms:28,r:[715,793,888]},
+  {c:"Belfast",n:8,rooms:61,r:[737,780,906]},
+  {c:"Brighton",n:8,rooms:20,r:[906,1018,1083]},
+  {c:"Portsmouth",n:8,rooms:21,r:[732,953,988]},
+  {c:"Cambridge",n:7,rooms:32,r:[1018,1148,1534]},
+  {c:"Lancaster",n:7,rooms:17,r:[628,715,845]},
+  {c:"Plymouth",n:7,rooms:21,r:[550,672,771]},
+  {c:"Bournemouth",n:6,rooms:22,r:[732,975,1127]},
+  {c:"Bath",n:5,rooms:14,r:[1235,1382,1538]},
+  {c:"Lincoln",n:5,rooms:18,r:[468,676,737]},
+  {c:"Swansea",n:5,rooms:19,r:[672,780,823]},
+  {c:"York",n:5,rooms:39,r:[1066,1209,1495]}
+ ]},
+ "France":{ccy:'EUR',cities:[
+  {c:"Paris",n:1431,rooms:1860,r:[1500,2128,3215],L:[["75017","17e · Batignolles",128,1394,1908,2746],["75015","15e · Vaugirard",127,1248,1944,2616],["75016","16e · Passy",120,1508,2200,3173],["75008","8e · Champs-Élysées",95,1900,3224,6456],["75018","18e · Montmartre",91,1250,1637,2418],["75007","7e · Invalides / Eiffel Tower",72,2102,2684,3744],["75011","11e · Bastille / Oberkampf",69,1500,2060,2399],["75002","2e · Bourse / Sentier",66,1800,2907,5431]]},
+  {c:"Lille",n:183,rooms:623,r:[450,485,520],L:[["59000",null,101,450,480,500],["59800",null,73,440,500,550],["59160","Lomme",4,375,400,410]]},
+  {c:"Toulouse",n:146,rooms:266,r:[450,465,560],L:[["31300",null,32,430,460,490],["31200",null,28,440,456,594],["31000",null,26,530,635,1565],["31400",null,26,450,453,475],["31100",null,22,430,450,465],["31500",null,11,450,485,816]]},
+  {c:"Lyon",n:97,rooms:166,r:[550,620,690],L:[["69007","7e · Gerland / Jean Macé",24,550,595,660],["69008","8e · Monplaisir / États-Unis",18,512,550,625],["69003","3e · Part-Dieu / Montchat",17,581,650,700],["69002","2e · Presqu'île / Perrache",13,665,695,810],["69009","9e · Vaise",8,530,540,595],["69001","1er · Terreaux / Pentes",5,640,746,820],["69005","5e · Vieux Lyon",5,495,495,620],["69006","6e · Brotteaux",5,690,730,1190]]},
+  {c:"Reims",n:72,rooms:243,r:[410,430,450]},
+  {c:"Villeurbanne",n:61,rooms:141,r:[490,510,550]},
+  {c:"Bordeaux",n:59,rooms:165,r:[530,583,649],L:[["33300","Chartrons / Bacalan",22,540,583,599],["33000","Centre",20,525,550,760],["33800","Sud (Saint-Michel / Nansouty)",8,500,550,590],["33100","La Bastide",5,595,671,682]]},
+  {c:"Nantes",n:57,rooms:158,r:[475,540,600],L:[["44300",null,19,450,485,530],["44000",null,18,540,675,1500],["44200",null,11,470,550,594],["44100",null,9,480,500,600]]},
+  {c:"Brest",n:53,rooms:96,r:[360,370,395]},
+  {c:"Amiens",n:46,rooms:90,r:[385,400,432],L:[["80000",null,28,380,400,430],["80090",null,11,380,400,1300],["80080",null,6,390,400,900]]},
+  {c:"Montpellier",n:45,rooms:84,r:[425,450,548],L:[["34000",null,18,450,490,615],["34070",null,16,410,420,436],["34080",null,6,423,440,530],["34090",null,5,440,523,576]]},
+  {c:"Marseille",n:44,rooms:86,r:[490,561,967],L:[["13004","4e arrondissement",12,490,572,795],["13001","1er arrondissement",8,540,551,590],["13003","3e arrondissement",5,479,530,565],["13006","6e arrondissement",5,490,495,682],["13009","9e arrondissement",4,490,616,1400]]},
+  {c:"Nancy",n:44,rooms:113,r:[390,400,420]},
+  {c:"Rennes",n:43,rooms:69,r:[410,430,444],L:[["35000",null,28,420,430,450],["35200",null,13,400,420,432]]},
+  {c:"Grenoble",n:39,rooms:77,r:[395,420,450],L:[["38100",null,26,375,400,440],["38000",null,13,430,440,450]]},
+  {c:"Clermont-Ferrand",n:30,rooms:56,r:[390,400,450],L:[["63000",null,25,390,400,445],["63100",null,5,370,380,450]]},
+  {c:"Rouen",n:29,rooms:69,r:[380,390,400],L:[["76100",null,23,380,390,400],["76000",null,6,390,400,420]]},
+  {c:"Saint-Étienne",n:22,rooms:35,r:[360,380,650],L:[["42000",null,17,380,580,750],["42100",null,5,350,360,370]]},
+  {c:"Strasbourg",n:22,rooms:81,r:[600,682,715]},
+  {c:"Dijon",n:21,rooms:41,r:[390,400,410]},
+  {c:"Nanterre",n:21,rooms:54,r:[795,870,895]},
+  {c:"Levallois-Perret",n:19,rooms:26,r:[1230,1789,2873]},
+  {c:"Villejuif",n:17,rooms:44,r:[785,939,970]},
+  {c:"Courbevoie",n:16,rooms:31,r:[910,1000,1990]},
+  {c:"Valenciennes",n:14,rooms:38,r:[380,390,400]},
+  {c:"Cergy",n:13,rooms:21,r:[499,580,648],L:[["95000",null,7,524,580,710],["95800",null,6,480,497,648]]},
+  {c:"Roubaix",n:13,rooms:25,r:[400,420,432]},
+  {c:"Colombes",n:12,rooms:32,r:[710,730,860]},
+  {c:"Saint-Denis",n:12,rooms:61,r:[695,735,792],L:[["93200",null,7,652,710,745],["93210",null,5,780,792,792]]},
+  {c:"Toulon",n:12,rooms:22,r:[390,420,420]},
+  {c:"Talence",n:11,rooms:29,r:[490,540,570]},
+  {c:"Bron",n:10,rooms:20,r:[450,450,500]},
+  {c:"Montreuil",n:9,rooms:21,r:[715,850,877]},
+  {c:"Nice",n:9,rooms:11,r:[520,530,1243]},
+  {c:"Puteaux",n:9,rooms:27,r:[895,2237,2300]},
+  {c:"Choisy-Le-Roi",n:8,rooms:13,r:[665,703,745]},
+  {c:"Massy",n:8,rooms:14,r:[562,600,684]},
+  {c:"Pessac",n:8,rooms:16,r:[505,510,545]},
+  {c:"Poitiers",n:8,rooms:19,r:[375,393,430]},
+  {c:"Cannes",n:7,rooms:7,r:[1000,1040,1177]},
+  {c:"Lambersart",n:7,rooms:18,r:[420,430,450]},
+  {c:"Bezons",n:6,rooms:11,r:[712,751,780]},
+  {c:"Nîmes",n:6,rooms:10,r:[410,425,657]},
+  {c:"Pau",n:6,rooms:9,r:[370,390,400]},
+  {c:"Bagnolet",n:5,rooms:8,r:[788,798,881]},
+  {c:"Gennevilliers",n:5,rooms:9,r:[740,765,786]},
+  {c:"Le Bouscat",n:5,rooms:17,r:[481,485,500]},
+  {c:"Montrouge",n:5,rooms:6,r:[847,899,1518]},
+  {c:"Orléans",n:5,rooms:5,r:[432,432,442]}
+ ]},
+ "Germany":{ccy:'EUR',cities:[
+  {c:"Berlin",n:643,rooms:1857,r:[730,1380,1800],L:[["10245","Friedrichshain",33,999,1399,1990],["10439","Prenzlauer Berg",29,645,1299,1750],["10247","Friedrichshain (north)",23,1100,1380,1800],["10437","Prenzlauer Berg",22,1500,1780,2100],["10557","Moabit / Hauptbahnhof",20,665,730,1280],["10115","Mitte",19,1560,1940,2450],["10119","Mitte (Rosenthaler Platz)",17,1440,1790,2100],["10317","Rummelsburg / Lichtenberg",16,875,1150,1195]]},
+  {c:"Frankfurt",n:77,rooms:228,r:[899,1489,2470],L:[["60322","Westend / Nordend",11,899,1400,2700],["60325","Westend / Bockenheim",8,665,999,1305],["60313","Innenstadt",7,1100,1400,2990],["60329","Bahnhofsviertel",7,899,1260,2700],["60318","Nordend",6,899,899,2400],["60323","Westend",5,899,2700,2990],["60326","Gallus",4,1489,1550,1590],["60327","Gutleutviertel",4,1190,1740,1990]]},
+  {c:"Dusseldorf",n:60,rooms:119,r:[799,1250,1500],L:[["40589",null,8,609,619,619],["40235",null,6,1200,1300,1700],["40476",null,6,799,1125,2950],["40223","Bilk",5,1100,1350,1550],["40233",null,5,1500,1500,1500],["40477",null,4,1200,1500,1500],["40479","Pempelfort",4,799,1190,1230]]},
+  {c:"Cologne",n:29,rooms:69,r:[1090,1490,1690],L:[["50676","Altstadt-Süd",4,1290,1399,1980],["51063","Mülheim",4,1290,1512,1690]]},
+  {c:"Hamburg",n:28,rooms:128,r:[1045,1590,2220]},
+  {c:"Stuttgart",n:15,rooms:30,r:[890,1290,2450]},
+  {c:"Dresden",n:14,rooms:18,r:[1195,1295,1876]},
+  {c:"Mannheim",n:13,rooms:19,r:[900,1449,1450]},
+  {c:"Essen",n:11,rooms:54,r:[963,1250,1395]},
+  {c:"Leipzig",n:11,rooms:31,r:[880,1050,1200]},
+  {c:"Nuremberg",n:8,rooms:9,r:[1149,1590,1935]},
+  {c:"Potsdam",n:8,rooms:23,r:[610,640,1650]},
+  {c:"Bonn",n:7,rooms:15,r:[1260,1800,3000]},
+  {c:"Bremen",n:5,rooms:5,r:[1400,1860,1860]},
+  {c:"Darmstadt",n:5,rooms:9,r:[1500,1749,1890]}
+ ]},
+ "Australia":{ccy:'AUD',cities:[
+  {c:"Melbourne",n:74,rooms:395,r:[1677,2162,2509],L:[["3053","Carlton",20,1898,2093,2292],["3000","CBD",17,2292,2466,2600],["3051","North Melbourne",5,1859,1894,1946],["3083","Bundoora",5,1170,1278,1603],["3550","Bendigo",5,1127,1148,1192],["3125","Burwood",4,975,1582,1582]]},
+  {c:"Sydney",n:37,rooms:192,r:[2550,3358,3748],L:[["2033","Kensington / Kingsford",6,2903,3852,3982],["2008","Chippendale / Darlington",5,3462,3488,3506]]},
+  {c:"Brisbane",n:18,rooms:131,r:[1902,2032,2466],L:[["4000","CBD",4,1902,2032,2336],["4101","South Brisbane / West End",4,1989,2466,2639]]},
+  {c:"Adelaide",n:6,rooms:46,r:[1625,1946,2119]},
+  {c:"Perth",n:5,rooms:36,r:[1625,1976,1989]}
+ ]},
+ "Ireland":{ccy:'EUR',cities:[
+  {c:"Cork",n:6,rooms:8,r:[1140,1335,1447]}
+ ]},
+ "New Zealand":{ccy:'NZD',cities:[
+  {c:"Auckland",n:5,rooms:35,r:[2067,2076,2080]}
+ ]}
 };
 
 /* =====================================================================
@@ -646,15 +699,12 @@ const SOURCES=[
 ];
 
 /* =====================================================================
-   3. RENT MODEL: anchored to House of Student Outlook reports
+   3. RENT MODEL
    ---------------------------------------------------------------------
-   The published Outlook reports set the "Typical" weekly rent per city. Our listings data (DB above)
-   supplies the shape around it: the Budget/Premium bands and neighbourhood differences, scaled so the
-   whole-city Typical figure equals the report exactly.
-     src 'report' : city appears in the report → Typical = report figure.
-     src 'cal'    : city is in our listings but not in the report → listings median × the country's
-                    calibration factor (median of report ÷ listings across the report's cities).
-     src 'db'     : no report for the country → listings data as-is.
+   Default basis 'db': rent is the validated live-listings figure above.
+   Optional basis 'report' (UK and Australia only): for cities listed in the Outlook report, the whole-city
+   Typical rent is set to the report figure and Budget, Premium and neighbourhoods keep the listings spread.
+   The report figure is always shown next to the listings figure so the two can be compared.
    ===================================================================== */
 const REPORTS={
  uk:{name:'House of Student Outlook: UK Student Housing, August 2026 Edition',short:'UK Outlook, Aug 2026',basis:'Exhibit E, typical weekly rent by city, compiled from live listings and confirmed lettings (2025/26 cycle)'},
@@ -668,32 +718,17 @@ const WEEKLY_MARKETS=['United Kingdom','Australia','Ireland','New Zealand'];   /
 const W2M=52/12;
 const median=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2};
 
-/* MODEL: per country, cities with rent bands already on the report basis (local currency per month) */
+/* MODEL: per country, cities with their report figure attached when the Outlook report lists them */
 const MODEL={};
 function buildModel(){
   for(const country of Object.keys(DB)){
-    const A=ANCHOR[country],cities=DB[country].cities;
-    const out=[];let calib=1;
-    if(A){
-      const f=cities.filter(c=>A.weekly[c.c]!=null).map(c=>A.weekly[c.c]*W2M/c.r[1]);
-      calib=median(f);
-    }
-    cities.forEach(c=>{
-      const a=A&&A.weekly[c.c];
-      const k=a!=null?a*W2M/c.r[1]:calib;
-      out.push({c:c.c,n:c.n,k,src:A?(a!=null?'report':'cal'):'db',r:c.r.map(v=>v*k),L:(c.L||[]).map(l=>[l[0],l[1],l[2],l[3]*k,l[4]*k,l[5]*k]),raw:c});
-    });
-    if(A){   // cities in the report that our listings data does not cover
-      const anch=cities.filter(c=>A.weekly[c.c]!=null);
-      const lo=median(anch.map(c=>c.r[0]/c.r[1])),hi=median(anch.map(c=>c.r[2]/c.r[1]));
-      Object.entries(A.weekly).forEach(([name,w])=>{
-        if(cities.some(c=>c.c===name))return;
-        const m=w*W2M;out.push({c:name,n:null,k:null,src:'report',reportOnly:true,r:[m*lo,m,m*hi],L:[]});
-      });
-    }
-    MODEL[country]={ccy:DB[country].ccy,calib,rep:A?A.rep:null,cities:out};
+    const A=ANCHOR[country];
+    MODEL[country]={ccy:DB[country].ccy,rep:A?A.rep:null,cities:DB[country].cities.map(c=>({c:c.c,n:c.n,rooms:c.rooms,rep:A&&A.weekly[c.c]!=null?A.weekly[c.c]:null,r:c.r,L:c.L||[]}))};
   }
 }
+const useReport=(st=S)=>st.basis==='report'&&cityM(st).rep!=null;
+const cityK=(st=S)=>useReport(st)?cityM(st).rep*W2M/cityM(st).r[1]:1;
+const citySrc=(st=S)=>useReport(st)?'report':'db';
 
 /* =====================================================================
    4. LIVING COSTS & ADD-ONS
@@ -727,7 +762,7 @@ const ADDONS=[
 /* =====================================================================
    5. STATE & HELPERS
    ===================================================================== */
-const DEFAULTS={country:'United Kingdom',city:0,locality:0,months:12,tier:1,level:1,billsIncl:true,
+const DEFAULTS={country:'United Kingdom',city:0,locality:0,months:12,tier:1,level:1,billsIncl:true,basis:'db',
   eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1,
   ao:{flights:false,visa:false,leisure:false,travel:false,shopping:false,setup:false,buffer:false},
   flightINR:null,flightStart:true,homeTrips:1,
@@ -767,9 +802,9 @@ const fmtS=inr=>sCcy()?fmtCcy(inCcy(inr,sCcy()),sCcy()):'';
 const money=inr=>`<span class="m1">${fmtP(inr)}</span>${sCcy()?`<span class="m2">${fmtS(inr)}</span>`:''}`;
 
 function localities(st=S){
-  const c=cityM(st);
-  const list=[{label:c.reportOnly?'Whole city (report figure)':'Whole city · all '+c.n+' listings',n:c.n,r:c.r,whole:true}];
-  c.L.forEach(l=>list.push({label:l[0]+(l[1]?' · '+l[1]:'')+'  ('+l[2]+' listings)',short:l[0]+(l[1]?' '+l[1]:''),n:l[2],r:[l[3],l[4],l[5]],code:l[0]}));
+  const c=cityM(st),k=cityK(st);
+  const list=[{label:'Whole city · '+c.n+' properties',n:c.n,r:c.r.map(v=>v*k),whole:true}];
+  c.L.forEach(l=>list.push({label:l[0]+(l[1]?' · '+l[1]:'')+'  ('+l[2]+' properties)',short:l[0]+(l[1]?' '+l[1]:''),n:l[2],r:[l[3]*k,l[4]*k,l[5]*k],code:l[0]}));
   return list;
 }
 const curLoc=(st=S)=>{const l=localities(st);return l[Math.min(st.locality,l.length-1)]};
@@ -806,7 +841,7 @@ function compute(st=S){
   // Rent
   const rentL=loc.r[st.tier];
   const per=isWeekly(st)?`${lcs(rentL/W2M)} a week (${lcs(rentL)} a month)`:`${lcs(rentL)} a month`;
-  add('rent','Rent',`${['Budget','Typical','Premium'][st.tier]} room, ${loc.whole?'whole city':loc.short}: ${per}`,city.src,{m:rentL*X});
+  add('rent','Rent',`${['Budget','Typical','Premium'][st.tier]} room, ${loc.whole?'whole city':loc.short}: ${per}`,citySrc(st),{m:rentL*X});
   if(!st.billsIncl){
     add('bills','Utilities',`Electricity, water and heating: ${lcs(P.utils)} a month`,q('utils'),{m:P.utils*X});
     add('bills','Home internet',`${lcs(P.net)} a month`,q('net'),{m:P.net*X});
@@ -956,7 +991,7 @@ function buildForm(){
       <div class="field stay"><label class="flabel" for="f_months"><span>Length of stay</span><output id="o_months" class="num"></output></label><div class="chips" id="c_months">${[6,9,12,18,24,36].map(m=>`<button type="button" data-m="${m}">${m} months</button>`).join('')}</div><input type="range" id="f_months" min="3" max="60" step="1"></div>
     </div>`));
   // 02 rent
-  root.appendChild(card('02','Your rent','Choose the kind of room you are aiming for. Typical is the city figure from our Outlook report where we publish one.',`<div class="rentcards" role="radiogroup" aria-label="Room price band" id="f_tier"></div><div class="src" id="rentSrc"></div>`));
+  root.appendChild(card('02','Your rent','Choose the kind of room you are aiming for. Prices come from live House of Student properties in the area you chose.',`<div class="rentcards" role="radiogroup" aria-label="Room price band" id="f_tier"></div><div class="src" id="rentSrc"></div>`));
   // 03 living
   const liv=card('03','Living costs','Food, local transport, phone and bills, and everyday essentials.',`<div class="levels" role="radiogroup" aria-label="Living cost level" id="f_level"></div>
      <div class="linkrow"><button type="button" class="textbtn" id="tuneBtn" aria-expanded="false" aria-controls="tune">Fine-tune living costs ${ICON.chev}</button></div>
@@ -1029,15 +1064,16 @@ function refreshControls(){
   opts($('#f_locality'),localities().map((l,i)=>[i,l.label]),S.locality);
   $('#f_locality').disabled=localities().length<2;
   const l=curLoc(),c=cityM();
-  $('#h_locality').textContent=c.reportOnly?'No neighbourhood breakdown for this city yet.':l.whole?(c.L.length?'Pick a postcode area for a more local figure.':'No neighbourhood breakdown for this city yet.'):l.n+' listings in this area.';
+  $('#h_locality').textContent=l.whole?(c.L.length?'Pick a postcode area for a more local figure.':'Not enough priced properties for a neighbourhood breakdown yet.'):l.n+' priced properties in this area.';
   const fm=$('#f_months');fm.value=S.months;fm.style.setProperty('--p',(S.months-3)/57*100+'%');$('#o_months').textContent=S.months+' months';
   document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.months)));
   // rent cards
-  const names=['Budget','Typical','Premium'],desc=['Cheaper quarter of rooms','Typical room in this area','Pricier quarter of rooms'];
+  const names=['Budget','Typical','Premium'],desc=['Cheaper quarter of properties','Typical property in this area','Pricier quarter of properties'];
   const rc=l.r.map((v,i)=>{const t=rentText(v);return [names[i],t.main,t.unit,t.sub,sameCcy()?'':'≈ '+fmtCcy(v*pairRate(),S.home)+' /mo',desc[i]]}),rsig=JSON.stringify(rc),rt=$('#f_tier');
   if(rt.dataset.sig!==rsig){rt.innerHTML=rc.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="rn">${o[0]}</span><span class="rp num">${o[1]}<small> ${o[2]}</small></span>${o[3]?`<span class="rh num">${o[3]}</span>`:''}${o[4]?`<span class="rh num">${o[4]}</span>`:''}<span class="rd">${o[5]}</span></button>`).join('');rt.dataset.sig=rsig}
   [...rt.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.tier)));
   $('#rentSrc').innerHTML=rentSource();
+  const bb=$('#basisBtn');if(bb)bb.onclick=()=>{S.basis=S.basis==='report'?'db':'report';update()};
   // living levels with their monthly amount
   const lv=LEVELS.map((L,i)=>{const st=JSON.parse(JSON.stringify(S));Object.assign(st,L.s);for(const k in st.ao)st.ao[k]=false;return [L.n,fmtP(compute(st).livingM),L.d]}),lsig=JSON.stringify(lv),le=$('#f_level');
   if(le.dataset.sig!==lsig){le.innerHTML=lv.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="ln">${o[0]}</span><span class="la num">${o[1]}<small> /mo</small></span><span class="ld">${o[2]}</span></button>`).join('');le.dataset.sig=lsig}
@@ -1064,13 +1100,13 @@ function refreshControls(){
   $('#home').value=S.home;
 }
 function rentSource(){
-  const c=cityM(),M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep];
-  if(c.src==='report'){
-    const w=ANCHOR[S.country].weekly[c.c];
-    return `<span class="badge">Outlook report</span><span>Typical rent for ${esc(c.c)} matches the <b>${esc(rep.short)}</b>: ${lc(w)} a week.${rep.placeholder?' Note: that report marks its rent figures as placeholders.':''}${c.reportOnly?' Budget and Premium use the typical spread across other '+esc(S.country)+' cities.':' Budget, Premium and neighbourhood figures keep the spread from '+c.n+' House of Student listings.'}</span>`;
-  }
-  if(c.src==='cal')return `<span class="badge cal">Calibrated</span><span>${esc(c.c)} is not in the ${esc(rep.short)}, so its rent comes from ${c.n} House of Student listings adjusted ${M.calib<1?'down':'up'} ${Math.abs(Math.round((M.calib-1)*100))}% to the report's basis, so it compares fairly with report cities.</span>`;
-  return `<span class="badge db">Listings data</span><span>Rent from ${c.n} live House of Student listings (snapshot ${SNAPSHOT}). We do not publish an Outlook report for ${esc(S.country)} yet.</span>`;
+  const c=cityM(),M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep],dbW=c.r[1]/W2M;
+  const own=isWeekly()?lc(dbW)+' a week':lc(c.r[1])+' a month';
+  if(useReport())return `<span class="badge">Outlook report</span><span>Typical rent for ${esc(c.c)} is the <b>${esc(rep.short)}</b> figure: ${lc(c.rep)} a week${rep.placeholder?' (the report marks it as a placeholder)':''}. Our live listings put it at ${lc(dbW)} a week. <button type="button" class="linkbtn" id="basisBtn">Use live listings instead</button></span>`;
+  let cmp='';
+  if(c.rep!=null){const d=Math.round((dbW-c.rep)/c.rep*100);cmp=` The ${esc(rep.short)} quotes ${lc(c.rep)} a week${rep.placeholder?' (marked as a placeholder in that report)':''}; current listings are ${d===0?'the same':Math.abs(d)+'% '+(d>0?'higher':'lower')}. <button type="button" class="linkbtn" id="basisBtn">Use the report figure instead</button>`}
+  else if(rep)cmp=` ${esc(c.c)} is not in the ${esc(rep.short)}.`;
+  return `<span class="badge db">Live listings</span><span>Typical rent is the median of <b>${c.n} priced properties</b> in ${esc(c.c)} (${c.rooms} room types, current and upcoming tenancies, ${SNAPSHOT}): ${own}.${c.n<10?' Small sample, so treat it as indicative.':''}${cmp}</span>`;
 }
 
 function renderPair(){
@@ -1124,6 +1160,14 @@ function renderDonut(r){
   });
 }
 
+function recon(){
+  const M=MODEL[S.country];if(!M.rep)return `<p>No Outlook report is published for ${esc(S.country)} yet.</p>`;
+  const rp=REPORTS[M.rep],A=ANCHOR[S.country];
+  const rows=Object.entries(A.weekly).sort((a,b)=>a[1]-b[1]).map(([name,w])=>{const c=M.cities.find(x=>x.c===name);
+    if(!c)return `<tr><td class="l">${esc(name)}</td><td class="num">${lc(w)}</td><td class="num" style="color:var(--faint)">fewer than 5 priced properties</td><td></td><td></td></tr>`;
+    const dw=c.r[1]/W2M,d=Math.round((dw-w)/w*100);return `<tr><td class="l">${esc(name)}</td><td class="num">${lc(w)}</td><td class="num">${lc(dw)}</td><td class="num">${d>0?'+':''}${d}%</td><td class="num">${c.n}</td></tr>`}).join('');
+  return `<p><b>Comparison with the ${esc(rp.name)}</b> (${esc(rp.basis)}). Report figures could not be reproduced from the database by any method tested (property starting prices, room prices, property medians, 2025/26 tenancies), so the calculator uses live listings by default and shows the report figure alongside; switch to it under Your rent.</p><div class="tablewrap"><table><thead><tr><th class="l">City</th><th>Report / week</th><th>Live listings / week</th><th>Difference</th><th>Properties</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
 const qpill=k=>`<span class="q" style="--c:${QUAL[k].c}">${QUAL[k].s}</span>`;
 function update(){
   refreshControls();renderPair();
@@ -1132,7 +1176,7 @@ function update(){
   $('#sMonthly').innerHTML=money(r.running);
   $('#mTotal').textContent=fmtP(r.running)+' /mo';
   $('#sWhere').textContent=`${['Budget','Typical','Premium'][S.tier]} room in ${where}`;
-  const rows=[['Rent','#2a78d6',r.rentM],['Living costs','#eb6834',r.livingM]];
+  const rows=[['Rent'+(isWeekly()?' · '+lc(r.loc.r[S.tier]/W2M)+' /wk':''),'#2a78d6',r.rentM],['Living costs','#eb6834',r.livingM]];
   if(r.extraM>0.5)rows.push(['Other expenses','#e87ba4',r.extraM]);
   $('#split').innerHTML=rows.map(x=>`<li style="--c:${x[1]}"><span>${x[0]}</span><b>${money(x[2])}</b></li>`).join('');
   $('#tLabel').textContent=`Total for ${mo} months`;
@@ -1142,8 +1186,8 @@ function update(){
   if(showUp){$('#sUp').innerHTML=money(r.upfront);$('#sUpNote').textContent=[r.oneTime>0.5?`one-time ${fmtP(r.oneTime)}`:'',r.deposit>0.5?`refundable deposit ${fmtP(r.deposit)}`:'',`first month ${fmtP(r.running)}`].filter(Boolean).join(' + ')}
   renderDonut(r);
   const al=[];
-  if(r.loc.n!=null&&r.loc.n<30&&r.city.src!=='report')al.push(`Rent here is based on only ${r.loc.n} listings, so treat it as indicative.`);
-  if(r.city.src==='report'&&REPORTS[MODEL[S.country].rep].placeholder)al.push('The Australia Outlook report marks its rent figures as placeholders, so this rent will change when the report is refreshed.');
+  if(r.loc.n<10)al.push(`Rent here is based on only ${r.loc.n} priced properties, so treat it as indicative.`);
+  if(useReport()&&REPORTS[MODEL[S.country].rep].placeholder)al.push('You are using the Australia Outlook rent figure, which that report marks as a placeholder.');
   $('#alerts').innerHTML=al.map(a=>`<div class="alert">${a}</div>`).join('');
 
   // breakdown table, grouped by segment
@@ -1158,13 +1202,12 @@ function update(){
     });
   });
   h+=`<tr class="tot"><td class="l" colspan="3">Total (excl. tuition)</td><td class="num">${money(r.running)}</td><td class="num">${money(r.total)}</td></tr>`;
-  if(r.deposit>0.5)h+=`<tr><td class="l">Refundable deposit</td><td class="basis">${S.deposit} × monthly rent, returned at the end of the tenancy. Not part of the total.</td><td class="l">${qpill(r.city.src)}</td><td></td><td class="num">${money(r.deposit)}</td></tr>`;
+  if(r.deposit>0.5)h+=`<tr><td class="l">Refundable deposit</td><td class="basis">${S.deposit} × monthly rent, returned at the end of the tenancy. Not part of the total.</td><td class="l">${qpill(citySrc())}</td><td></td><td class="num">${money(r.deposit)}</td></tr>`;
   $('#detail').innerHTML=h+'</tbody>';
 
   // methodology
   const M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep];
-  $('#mRent').innerHTML=(rep?`<p><b>Typical rent</b> for each city in the ${esc(rep.name)} equals the report figure (${esc(rep.basis)}). Budget, Premium and neighbourhood figures keep the relative spread from our listings data, scaled so the whole-city Typical figure matches the report exactly. Cities that are in our listings but not in the report use their listings median adjusted by the country's calibration factor (×${M.calib.toFixed(3)}, the median of report ÷ listings across the report's cities) so they compare fairly with report cities.</p>`:`<p>No Outlook report is published for ${esc(S.country)} yet, so rent comes straight from House of Student listings.</p>`)+
-   `<p>Listings data (snapshot ${SNAPSHOT}): live properties with a price window ending on or after the snapshot, one value per property and room type, weekly prices converted to monthly (× 52 ÷ 12), outliers outside each country's 3rd–97th percentile removed. Budget and Premium are the 25th and 75th percentiles; Typical is the median. ${isWeekly()?'Rent in this market is quoted per week; monthly figures are weekly × 52 ÷ 12.':''}</p>`;
+  $('#mRent').innerHTML=`<p><b>Rent comes from live House of Student listings</b> (snapshot ${SNAPSHOT}), validated as follows: only live properties whose tenancy window ends on or after the snapshot date; weekly prices converted to monthly at 52 weeks ÷ 12 months; prices outside each country's 1st–99th percentile removed as data-entry errors; each room type priced at the median of its tenancy options, and each property at the median of its room types, so every property counts once. <b>Typical</b> is the median across properties, <b>Budget</b> the 25th percentile and <b>Premium</b> the 75th. Cities need at least 5 priced properties and neighbourhoods at least 4.</p>`+recon();
   const P=r.P;
   const prow=[['Groceries, full self-catering','groc',' / week',S.country==='United Kingdom'?'At Standard (18 home-cooked meals a week) this is £146 a month, the national student figure from Save the Student quoted in the UK Outlook':''],['Meal out','cheap','',''],['Coffee','coffee','',''],['Student transit pass','pass',' / month',!P.pass?'Included in the semester contribution':''],['Taxi or ride-share trip','ride','',''],['Mobile plan (standard)','mobile',' / month',''],['Utilities (if not in rent)','utils',' / month',''],['Home internet (if not in rent)','net',' / month',''],['Mid-range restaurant meal (sets leisure prices)','mid','',''],['Cinema ticket','cinema',''],['Subscription','sub',' / month',''],['Gym','gym',' / month','']];
   let a='<thead><tr><th class="l">Assumption</th><th>Value</th><th class="l">Source</th><th class="l">Note</th></tr></thead><tbody>';
@@ -1192,7 +1235,8 @@ function summaryText(){
 (function init(){
   buildModel();
   const nCities=Object.values(MODEL).reduce((a,c)=>a+c.cities.length,0);
-  $('#trust').innerHTML=`<span>${ICON.doc}Rent matches our UK &amp; Australia Outlook reports</span><span>${ICON.db}${nCities} cities in ${Object.keys(MODEL).length} countries</span><span>${ICON.fx}Shown in your currency</span>`;
+  const nProps=Object.values(MODEL).reduce((a,c)=>a+c.cities.reduce((b,x)=>b+x.n,0),0);
+  $('#trust').innerHTML=`<span>${ICON.doc}Rent from ${nProps.toLocaleString('en-IN')} live properties</span><span>${ICON.db}${nCities} cities in ${Object.keys(MODEL).length} countries</span><span>${ICON.fx}Shown in your currency</span>`;
   $('#home').innerHTML=HOME_CCYS.map(c=>`<option value="${c}">${c} · ${CCY_NAMES[c]}</option>`).join('');
   $('#home').addEventListener('change',e=>{S.home=e.target.value;try{localStorage.setItem('hos_home',S.home)}catch(_){ }update()});
   try{const c=localStorage.getItem('hos_home');if(c&&FX[c])S.home=c;const r=JSON.parse(localStorage.getItem('hos_rates')||'{}');if(r&&typeof r==='object')S.rates=r}catch(_){ }

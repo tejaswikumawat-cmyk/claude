@@ -409,6 +409,10 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 .split li>span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
 .split li b{font-weight:800;color:var(--ink-strong);text-align:right}
 .split li b .m2{font-size:11.5px}
+.split li.month1{margin-top:-4px;font-size:12.5px}
+.split li.month1>span{font-weight:600;color:var(--muted);padding-left:18px}
+.split li.month1>span::before{display:none}
+.split li.month1 b{font-weight:700;color:var(--muted)}
 .totalbox{margin-top:16px;border-radius:var(--r-md);background:var(--ink);color:#fff;padding:14px 16px}
 .totalbox .tl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#D9D5CF}
 .totalbox .tv{font-size:24px;font-weight:800;color:var(--lime);margin-top:2px}
@@ -443,7 +447,7 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 <section class="hero">
   <span class="eyebrow"><span class="dot"></span>Study abroad planner</span>
   <h1>What will it cost to <mark>live</mark> there?</h1>
-  <p>Choose a city and see your monthly rent and living costs straight away. Add flights, visa fees or travel only if you want them.</p>
+  <p>Choose a city and see your rent and living costs straight away, weekly or monthly as rooms are let there. Add flights, visa fees or travel only if you want them.</p>
   <div class="trust" id="trust"></div>
 </section>
 
@@ -806,7 +810,7 @@ const ADDONS=[
 /* =====================================================================
    5. STATE & HELPERS
    ===================================================================== */
-const DEFAULTS={country:'United Kingdom',city:0,locality:0,months:12,tier:1,level:1,billsIncl:true,basis:'db',
+const DEFAULTS={country:'United Kingdom',city:0,locality:0,stay:51,months:51*12/52,tier:1,level:1,billsIncl:true,basis:'db',
   eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1,
   ao:{flights:false,visa:false,leisure:false,travel:false,shopping:false,buffer:false},
   flightINR:null,flightStart:true,homeTrips:1,
@@ -823,7 +827,21 @@ const isWeekly=(st=S)=>WEEKLY_MARKETS.includes(st.country);
 /* One period for the whole page: weekly markets show every amount per week, others per month */
 const PER=(st=S)=>isWeekly(st)?{f:12/52,word:'week',adj:'weekly',u:'/wk',col:'Per week',many:'weeks'}:{f:1,word:'month',adj:'monthly',u:'/mo',col:'Per month',many:'months'};
 const perAmt=(monthly,st=S)=>monthly*PER(st).f;          // monthly amount → amount per page period
-const stayUnits=(st=S)=>isWeekly(st)?st.months*52/12:st.months;
+/* Most popular tenancy lengths in House of Student data (live listings, snapshot 2026-11-12), counted by
+   properties offering each length. Weekly markets in weeks (tbl_r_wpd.wpd_weeks); others in months (tenancy date span). */
+const POP_STAY={
+ 'United Kingdom':{opts:[34,43,44,45,50,51],def:51},
+ 'Australia':{opts:[13,21,26,35,44,52],def:52},
+ 'New Zealand':{opts:[12,20,26,40,42,52],def:20},
+ 'France':{opts:[1,2,10,11,12,21],def:12},
+ 'Germany':{opts:[6,12,18,23,24,36],def:12},
+ 'Ireland':{opts:[3,4,5,8,9,12],def:9}
+};
+const STAY_RANGE=(st=S)=>isWeekly(st)?{min:4,max:104}:{min:1,max:60};
+const stayMonths=(st=S)=>isWeekly(st)?st.stay*12/52:st.stay;      // the engine works in months
+const stayUnits=(st=S)=>st.stay;
+const stayLabel=(st=S,n=st.stay)=>isWeekly(st)?`${n} week${n===1?'':'s'}`:`${n} month${n===1?'':'s'}`;
+function setStay(v){S.stay=v;S.months=stayMonths()}
 const nfmt=n=>Math.abs(n-Math.round(n))<1e-9?String(Math.round(n)):n.toFixed(1);
 const P_=(st=S)=>({...cn(st).p,...(cn(st).cityP[cityM(st).c]||{})});
 const nf={};
@@ -889,7 +907,7 @@ function compute(st=S){
 
   // Rent
   const rentL=loc.r[st.tier];
-  const per=`${lcs(perAmt(rentL,st))} a ${PER(st).word}`;
+  const per=`${lcs(perAmt(rentL,st))} a ${PER(st).word}`+(isWeekly(st)?` (1 month: ${lcs(rentL)})`:'');
   add('rent','Rent',`${['Budget','Typical','Premium'][st.tier]} room, ${loc.whole?'whole city':loc.short}: ${per}`,citySrc(st),{m:rentL*X});
   if(!st.billsIncl){
     add('bills','Utilities',`Electricity, water and heating: ${lcs(perAmt(P.utils,st))} a ${PER(st).word}`,q('utils'),{m:P.utils*X});
@@ -1034,7 +1052,7 @@ function buildForm(){
       <div class="field"><label class="flabel" for="f_country">Country</label><select class="sel" id="f_country"></select></div>
       <div class="field"><label class="flabel" for="f_city">City</label><select class="sel" id="f_city"></select></div>
       <div class="field loc"><label class="flabel" for="f_locality">Neighbourhood <span style="font-weight:600;color:var(--faint)">optional</span></label><select class="sel" id="f_locality"></select><div class="hint" id="h_locality"></div></div>
-      <div class="field stay"><label class="flabel" for="f_months"><span>Length of stay</span><output id="o_months" class="num"></output></label><div class="chips" id="c_months">${[6,9,12,18,24,36].map(m=>`<button type="button" data-m="${m}">${m} months</button>`).join('')}</div><input type="range" id="f_months" min="3" max="60" step="1"></div>
+      <div class="field stay"><label class="flabel" for="f_months"><span>Length of stay</span><output id="o_months" class="num"></output></label><div class="chips" id="c_months"></div><input type="range" id="f_months" step="1"><div class="hint" id="h_stay"></div></div>
     </div>`));
   // 02 rent
   root.appendChild(card('02','Your rent','Choose the kind of room you are aiming for. Prices come from live House of Student properties in the area you chose.',`<div class="rentcards" role="radiogroup" aria-label="Room price band" id="f_tier"></div><div class="src" id="rentSrc"></div>`));
@@ -1066,8 +1084,8 @@ function buildForm(){
   });
   // events for fixed controls
   ['country','city','locality'].forEach(k=>$('#f_'+k).addEventListener('change',e=>set(k,k==='country'?e.target.value:+e.target.value)));
-  $('#f_months').addEventListener('input',e=>set('months',+e.target.value));
-  $('#c_months').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('months',+b.dataset.m)});
+  $('#f_months').addEventListener('input',e=>{setStay(+e.target.value);update()});
+  $('#c_months').addEventListener('click',e=>{const b=e.target.closest('button');if(b){setStay(+b.dataset.m);update()}});
   $('#f_tier').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('tier',+b.dataset.i)});
   $('#f_level').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
     if(b.dataset.i==='custom'){S.level=null;S.tuneOpen=true}   // Custom starts from the current settings and unlocks them
@@ -1080,7 +1098,7 @@ function set(k,v){
   if(TUNE_FIELDS.includes(k)&&S.level!==null)return;   // presets are read-only; choose Custom to change them
   if(S[k]===v){update();return}
   S[k]=v;
-  if(k==='country'){S.city=0;S.locality=0;fixNearMedium()}
+  if(k==='country'){S.city=0;S.locality=0;fixNearMedium();setStay(POP_STAY[S.country].def)}
   if(k==='city')S.locality=0;
   update();
 }
@@ -1108,7 +1126,7 @@ function refreshFields(keys){
     if(f.t==='seg')[...el.children].forEach(b=>b.disabled=lock);else el.disabled=lock;
   });
 }
-function rentText(m){return {main:lc(perAmt(m)),unit:PER().u,sub:''}}
+function rentText(m){return {main:lc(perAmt(m)),unit:PER().u,sub:isWeekly()?'1 month: '+lc(m):''}}
 function refreshControls(){
   opts($('#f_country'),Object.keys(MODEL).map(c=>[c,c+' · '+MODEL[c].ccy]),S.country);
   opts($('#f_city'),MODEL[S.country].cities.map((c,i)=>[i,c.c]),S.city);
@@ -1116,11 +1134,15 @@ function refreshControls(){
   $('#f_locality').disabled=localities().length<2;
   const l=curLoc(),c=cityM();
   $('#h_locality').textContent=l.whole?(c.L.length?'Pick a postcode area for a more local figure.':'Not enough priced properties for a neighbourhood breakdown yet.'):l.n+' priced properties in this area.';
-  const fm=$('#f_months');fm.value=S.months;fm.style.setProperty('--p',(S.months-3)/57*100+'%');$('#o_months').textContent=S.months+' months';
-  document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.months)));
+  const pop=POP_STAY[S.country],R=STAY_RANGE(),cm=$('#c_months'),csig=S.country;
+  if(cm.dataset.sig!==csig){cm.innerHTML=[...pop.opts].sort((a,b)=>a-b).map(n=>`<button type="button" data-m="${n}">${stayLabel(S,n)}${n===pop.def?' <small style="font-weight:600;opacity:.8">· most popular</small>':''}</button>`).join('');cm.dataset.sig=csig}
+  const fm=$('#f_months');fm.min=R.min;fm.max=R.max;fm.value=S.stay;fm.style.setProperty('--p',(S.stay-R.min)/(R.max-R.min)*100+'%');
+  $('#o_months').textContent=stayLabel()+(isWeekly()?` (about ${nfmt(Math.round(S.months*10)/10)} months)`:'');
+  $('#h_stay').textContent=`Options show the most popular tenancy lengths in House of Student data for ${S.country}. ${isWeekly()?'Rooms here are let by the week.':'Rooms here are let by the month.'}`;
+  document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.stay)));
   // rent cards
   const names=['Budget','Typical','Premium'],desc=['Cheapest 10% of properties (10th percentile)','Cheaper quarter of properties (25th percentile)','Median property, never above the average'];
-  const rc=l.r.map((v,i)=>{const t=rentText(v);return [names[i],t.main,t.unit,t.sub,sameCcy()?'':'≈ '+fmtCcy(perAmt(v)*pairRate(),S.home)+' '+PER().u,desc[i]]}),rsig=JSON.stringify(rc),rt=$('#f_tier');
+  const rc=l.r.map((v,i)=>{const t=rentText(v);return [names[i],t.main,t.unit,t.sub,sameCcy()?'':fmtCcy(perAmt(v)*pairRate(),S.home)+' '+PER().u,desc[i]]}),rsig=JSON.stringify(rc),rt=$('#f_tier');
   if(rt.dataset.sig!==rsig){rt.innerHTML=rc.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="rn">${o[0]}</span><span class="rp num">${o[1]}<small> ${o[2]}</small></span>${o[3]?`<span class="rh num">${o[3]}</span>`:''}${o[4]?`<span class="rh num">${o[4]}</span>`:''}<span class="rd">${o[5]}</span></button>`).join('');rt.dataset.sig=rsig}
   [...rt.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.tier)));
   $('#rentSrc').innerHTML=rentSource();
@@ -1192,7 +1214,7 @@ function renderDonut(r){
       :`<path data-i="${i}" fill="${m.c}" d="${arc(100,100,R,ri,a+g,Math.max(a+g+.001,a+sweep-g))}" tabindex="0" aria-label="${esc(m.n)}: ${Math.round(m.total/r.total*100)}%, ${esc(fmtP(m.total))}"/>`;
     a+=sweep;
   });
-  svg.innerHTML=`<title id="donutTitle">Share of total cost by segment</title>${paths}<text class="c2" x="100" y="90" text-anchor="middle">${r.mo} months</text><text class="c1" x="100" y="110" text-anchor="middle">${esc(fmtP(r.total))}</text>`;
+  svg.innerHTML=`<title id="donutTitle">Share of total cost by segment</title>${paths}<text class="c2" x="100" y="90" text-anchor="middle">${stayLabel()}</text><text class="c1" x="100" y="110" text-anchor="middle">${esc(fmtP(r.total))}</text>`;
   $('#dleg').innerHTML=data.map((m,i)=>`<li><button type="button" data-i="${i}" style="--c:${m.c}"><span class="dt"></span><span class="nm">${m.n}</span><span class="pc num">${Math.round(m.total/r.total*100)}%</span><span class="am num">${esc(fmtP(m.total))}${sCcy()?' · '+esc(fmtS(m.total)):''}</span></button></li>`).join('');
   const tip=$('#tip');
   const show=(i,x,y)=>{
@@ -1237,8 +1259,8 @@ function update(){
   $('#sWhere').textContent=`${['Budget','Typical','Premium'][S.tier]} room in ${where}`;
   const rows=[['Rent','#2a78d6',perAmt(r.rentM)],['Living costs','#eb6834',perAmt(r.livingM)]];
   if(r.extraM>0.5)rows.push(['Other expenses','#e87ba4',perAmt(r.extraM)]);
-  $('#split').innerHTML=rows.map(x=>`<li style="--c:${x[1]}"><span>${x[0]}</span><b>${money(x[2])}</b></li>`).join('');
-  $('#tLabel').textContent=isWeekly()?`Total for ${nfmt(units)} weeks (${mo} months)`:`Total for ${mo} months`;
+  $('#split').innerHTML=rows.map((x,i)=>`<li style="--c:${x[1]}"><span>${x[0]}</span><b>${money(x[2])}</b></li>`+(i===0&&isWeekly()?`<li class="month1"><span>1 month rent</span><b>${money(r.rentM)}</b></li>`:'')).join('');
+  $('#tLabel').textContent=`Total for ${stayLabel()}`;
   $('#sTotal').innerHTML=money(r.total);
   $('#sEq').textContent=`${fmtP(perAmt(r.running))} a ${PP.word} × ${nfmt(units)} ${PP.many}`+(r.oneTime>0.5?` + ${fmtP(r.oneTime)} one-time`:'');
   const showUp=r.oneTime>0.5;$('#upBox').hidden=!showUp;
@@ -1249,7 +1271,7 @@ function update(){
   $('#alerts').innerHTML=al.map(a=>`<div class="alert">${a}</div>`).join('');
 
   // breakdown table, grouped by segment
-  let h=`<thead><tr><th class="l">Item</th><th class="l">Basis</th><th class="l">Source</th><th>${PP.col}</th><th>Total for ${mo} months</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th class="l">Item</th><th class="l">Basis</th><th class="l">Source</th><th>${PP.col}</th><th>Total for ${stayLabel()}</th></tr></thead><tbody>`;
   r.segs.forEach(sg=>{
     const rows=r.L.filter(l=>sg.cats.includes(l.cat));if(!rows.length)return;
     h+=`<tr class="grp"><td class="l" colspan="3"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${sg.c};margin-right:8px"></span>${sg.n}</td><td class="num">${money(perAmt(sg.total/mo))}</td><td class="num">${money(sg.total)}</td></tr>`;
@@ -1282,7 +1304,7 @@ function summaryText(){
   const out=['House of Student: rent and living cost estimate (excl. tuition)',`${['Budget','Typical','Premium'][S.tier]} room in ${where}, ${S.level!=null?LEVELS[S.level].n:'custom'} living costs`,'',
    `Per ${PER().word}: ${both(perAmt(r.running))}`,`  Rent ${both(perAmt(r.rentM))}`,`  Living costs ${both(perAmt(r.livingM))}`];
   if(r.extraM>0.5)out.push(`  Other expenses ${both(perAmt(r.extraM))}`);
-  out.push('',`Total for ${r.mo} months: ${both(r.total)}`+(r.oneTime>0.5?` (incl. ${fmtP(r.oneTime)} one-time)`:''));
+  out.push('',`Total for ${stayLabel()}: ${both(r.total)}`+(r.oneTime>0.5?` (incl. ${fmtP(r.oneTime)} one-time)`:''));
   const on=ADDONS.filter(a=>S.ao[a.id]).map(a=>a.t);if(on.length)out.push('Includes: '+on.join(', '));
   if(!sameCcy())out.push(`Exchange rate: 1 ${localCcy()} = ${+pairRate().toPrecision(6)} ${S.home}`);
   out.push('','Rent based on House of Student proprietary data. Estimates only; actual costs can vary.');
@@ -1293,7 +1315,7 @@ function summaryText(){
    SHARE: the link carries the student's choices, so a hosted page reopens the same estimate
    ===================================================================== */
 const SHARE_BASE='https://houseofstudent.com/';   // used when the file is opened locally rather than from a website
-const SHARE_KEYS=['country','city','locality','months','tier','level','billsIncl','eatOut','grocStyle','coffee','tMode','rides','mobile','care','ao','flightINR','flightStart','homeTrips','night','events','outings','subs','gym','domTrips','domDays','domStyle','nearTrips','nearDays','nearMedium','nearStyle','clothRange','clothItems','buffer','home'];
+const SHARE_KEYS=['country','city','locality','stay','tier','level','billsIncl','eatOut','grocStyle','coffee','tMode','rides','mobile','care','ao','flightINR','flightStart','homeTrips','night','events','outings','subs','gym','domTrips','domDays','domStyle','nearTrips','nearDays','nearMedium','nearStyle','clothRange','clothItems','buffer','home'];
 function stateHash(){const o={};SHARE_KEYS.forEach(k=>o[k]=S[k]);return 'e='+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'')}
 function loadHash(){
   try{const m=location.hash.match(/e=([A-Za-z0-9+/]+)/);if(!m)return;
@@ -1301,13 +1323,15 @@ function loadHash(){
     if(!o||!MODEL[o.country])return;
     SHARE_KEYS.forEach(k=>{if(o[k]!==undefined)S[k]=k==='ao'?{...S.ao,...o.ao}:o[k]});
     if(!MODEL[S.country].cities[S.city])S.city=0;
+    if(!(S.stay>0))S.stay=POP_STAY[S.country].def;
+    S.months=stayMonths();
     if(!FX[S.home])S.home='INR';
   }catch(_){ }
 }
 function shareURL(){const base=/^https?:$/.test(location.protocol)?location.href.split('#')[0]:SHARE_BASE;return base+'#'+stateHash()}
 function shareText(){
   const r=window.__last,PP=PER(),where=(r.loc.whole?'':r.loc.short+', ')+cityM().c+', '+S.country;
-  return `My study-abroad cost estimate from House of Student: about ${fmtP(perAmt(r.running))} a ${PP.word} for rent and living costs in ${where} (${['Budget','Typical','Premium'][S.tier]} room). Total for ${S.months} months: ${fmtP(r.total)}. Rent based on House of Student proprietary data; actual costs can vary.`;
+  return `My study-abroad cost estimate from House of Student: about ${fmtP(perAmt(r.running))} a ${PP.word} for rent and living costs in ${where} (${['Budget','Typical','Premium'][S.tier]} room). Total for ${stayLabel()}: ${fmtP(r.total)}. Rent based on House of Student proprietary data; actual costs can vary.`;
 }
 const SVGI={
  chat:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/></svg>',

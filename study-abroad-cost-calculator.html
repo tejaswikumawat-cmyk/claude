@@ -346,7 +346,14 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 .src .badge.db{background:var(--sunken);color:var(--ink)}
 
 /* living levels */
-.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.levels button.custom{border-style:dashed}
+.levels button.custom[aria-checked="true"]{border-style:solid}
+.tune-note{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:16px}
+.tune-note b{color:var(--ink-strong)}
+.tune.locked .field{opacity:.6}
+.tune.locked input[type=range],.tune.locked .seg button,.tune.locked .tog{cursor:not-allowed}
+.tune.locked input[type=range]::-webkit-slider-thumb{background:#E7E4DE}
 .levels button{text-align:left;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:border-color .15s}
 .levels button:hover{border-color:var(--ink)}
 .levels .ln{display:block;font-weight:800;font-size:15px;color:var(--ink-strong)}
@@ -411,7 +418,8 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 
 @media (max-width:1040px){ .where{grid-template-columns:1fr 1fr} .where .field.loc{grid-column:1/-1} }
 @media (max-width:720px){
-  .where,.levels{grid-template-columns:1fr}
+  .where{grid-template-columns:1fr}
+  .levels{grid-template-columns:repeat(2,minmax(0,1fr))}
   .addon-head{grid-template-columns:auto 1fr;}
   .addon-amt{grid-column:2;text-align:left}
 }
@@ -771,9 +779,9 @@ const citySrc=(st=S)=>useReport(st)?'report':'db';
    4. LIVING COSTS & ADD-ONS
    ===================================================================== */
 const LEVELS=[
- {n:'Lean',d:'Cook almost every meal, public transport only',s:{eatOut:1,grocStyle:'b',coffee:1,tMode:'pass',rides:0,mobile:0,care:0}},
- {n:'Standard',d:'Mostly home cooking, a few meals out a week',s:{eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1}},
- {n:'Comfortable',d:'Eat out often, a taxi now and then',s:{eatOut:7,grocStyle:'m',coffee:6,tMode:'pass',rides:6,mobile:2,care:2}}
+ {n:'Lean',d:'Cook almost every meal, public transport only',s:{eatOut:1,grocStyle:'b',coffee:1,tMode:'pass',rides:0,mobile:0,care:0,billsIncl:true}},
+ {n:'Standard',d:'Mostly home cooking, a few meals out a week',s:{eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1,billsIncl:true}},
+ {n:'Comfortable',d:'Eat out often, a taxi now and then',s:{eatOut:7,grocStyle:'m',coffee:6,tMode:'pass',rides:6,mobile:2,care:2,billsIncl:true}}
 ];
 const SEGS=[
  {id:'rent',n:'Rent',c:'#2a78d6',cats:['rent']},
@@ -1033,7 +1041,7 @@ function buildForm(){
   // 03 living
   const liv=card('03','Living costs','Food, local transport, phone and bills, and everyday essentials.',`<div class="levels" role="radiogroup" aria-label="Living cost level" id="f_level"></div>
      <div class="linkrow"><button type="button" class="textbtn" id="tuneBtn" aria-expanded="false" aria-controls="tune">Fine-tune living costs ${ICON.chev}</button></div>
-     <div class="tune" id="tune" hidden><div class="grid" id="tuneGrid"></div></div>`);
+     <div class="tune" id="tune" hidden><div class="tune-note" id="tuneNote"></div><div class="grid" id="tuneGrid"></div></div>`);
   root.appendChild(liv);
   TUNE_FIELDS.forEach(k=>$('#tuneGrid').appendChild(field(k)));
   // 04 add-ons
@@ -1061,14 +1069,17 @@ function buildForm(){
   $('#f_months').addEventListener('input',e=>set('months',+e.target.value));
   $('#c_months').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('months',+b.dataset.m)});
   $('#f_tier').addEventListener('click',e=>{const b=e.target.closest('button');if(b)set('tier',+b.dataset.i)});
-  $('#f_level').addEventListener('click',e=>{const b=e.target.closest('button');if(b){applyLevel(+b.dataset.i);update()}});
+  $('#f_level').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.i==='custom'){S.level=null;S.tuneOpen=true}   // Custom starts from the current settings and unlocks them
+    else applyLevel(+b.dataset.i);
+    update()});
   $('#tuneBtn').addEventListener('click',()=>{S.tuneOpen=!S.tuneOpen;update()});
 }
 
 function set(k,v){
+  if(TUNE_FIELDS.includes(k)&&S.level!==null)return;   // presets are read-only; choose Custom to change them
   if(S[k]===v){update();return}
   S[k]=v;
-  if(TUNE_FIELDS.includes(k)&&k!=='billsIncl')S.level=null;   // fine-tuning makes the level custom
   if(k==='country'){S.city=0;S.locality=0;fixNearMedium()}
   if(k==='city')S.locality=0;
   update();
@@ -1093,6 +1104,8 @@ function refreshFields(keys){
       el.value=S[k];el.style.setProperty('--p',(S[k]-f.min)/(f.max-f.min)*100+'%');$('#o_'+k).textContent=S[k]+(f.unit||'');
     }else if(f.t==='toggle'){el.checked=!!S[k];$('#d_'+k).textContent=f.desc?f.desc():''}
     const h=$('#h_'+k);if(h)h.textContent=f.hint?f.hint():'';
+    const lock=TUNE_FIELDS.includes(k)&&S.level!==null;
+    if(f.t==='seg')[...el.children].forEach(b=>b.disabled=lock);else el.disabled=lock;
   });
 }
 function rentText(m){return {main:lc(perAmt(m)),unit:PER().u,sub:''}}
@@ -1114,11 +1127,17 @@ function refreshControls(){
   const bb=$('#basisBtn');if(bb)bb.onclick=()=>{S.basis=S.basis==='report'?'db':'report';update()};
   // living levels with their monthly amount
   const lv=LEVELS.map((L,i)=>{const st=JSON.parse(JSON.stringify(S));Object.assign(st,L.s);for(const k in st.ao)st.ao[k]=false;return [L.n,fmtP(perAmt(compute(st).livingM)),L.d,PER().u]}),lsig=JSON.stringify(lv),le=$('#f_level');
-  if(le.dataset.sig!==lsig){le.innerHTML=lv.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="ln">${o[0]}</span><span class="la num">${o[1]}<small> ${o[3]}</small></span><span class="ld">${o[2]}</span></button>`).join('');le.dataset.sig=lsig}
-  [...le.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.level)));
+  const cst=JSON.parse(JSON.stringify(S));for(const k in cst.ao)cst.ao[k]=false;
+  lv.push(['Custom',S.level===null?fmtP(perAmt(compute(cst).livingM)):'',S.level===null?'Your own choices, set below':'Set every living cost yourself',PER().u]);
+  const lsig2=JSON.stringify(lv);
+  if(le.dataset.sig!==lsig2){le.innerHTML=lv.map((o,i)=>{const cu=i===3;return `<button type="button" role="radio" data-i="${cu?'custom':i}"${cu?' class="custom"':''}><span class="ln">${o[0]}</span>${o[1]?`<span class="la num">${o[1]}<small> ${o[3]}</small></span>`:'<span class="la" style="font-size:15px">Your choice</span>'}<span class="ld">${o[2]}</span></button>`}).join('');le.dataset.sig=lsig2}
+  [...le.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===3?S.level===null:i===S.level)));
+  const custom=S.level===null,name=custom?'Custom':LEVELS[S.level].n;
   $('#tuneBtn').setAttribute('aria-expanded',String(S.tuneOpen));
-  $('#tuneBtn').firstChild.textContent=S.level===null?'Fine-tune living costs (customised) ':'Fine-tune living costs ';
+  $('#tuneBtn').firstChild.textContent=custom?'Customise living costs ':`See what ${name} includes `;
   $('#tune').hidden=!S.tuneOpen;
+  $('#tune').classList.toggle('locked',!custom);
+  $('#tuneNote').innerHTML=custom?'<span><b>Custom:</b> adjust anything below and your estimate updates straight away.</span>':`<span><b>${name}</b> settings are shown below and can't be changed. Choose <b>Custom</b> to set your own.</span>`;
   refreshFields(TUNE_FIELDS);
   // add-ons
   ADDONS.forEach(a=>{

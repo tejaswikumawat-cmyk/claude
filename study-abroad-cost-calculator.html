@@ -156,7 +156,28 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .alert{margin-top:12px;font-size:12.5px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:var(--r-sm);padding:9px 12px}
 .rangeline{margin-top:14px;font-size:12.5px;color:var(--muted)}
 .rangeline b{color:var(--ink-strong)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px}
+.disc{margin-top:12px;font-size:12px;line-height:1.5;color:var(--muted);background:var(--sunken);border-radius:var(--r-sm);padding:10px 12px}
+.disc b{color:var(--ink)}
+.navshare{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:999px;padding:8px 14px;font-weight:800;font-size:13.5px;cursor:pointer}
+.navshare:hover{background:var(--ink-strong)}
+.shade{position:fixed;inset:0;z-index:80;background:rgba(34,32,29,.45);display:grid;place-items:center;padding:16px}
+.shade[hidden]{display:none}
+.sheet{background:var(--surface);border-radius:var(--r-lg);width:min(560px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:24px;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sheet h3{margin:0;font-size:19px;font-weight:800;color:var(--ink-strong)}
+.sheet p{margin:4px 0 0;font-size:13.5px;color:var(--muted)}
+.xbtn{border:0;background:var(--sunken);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;color:var(--ink)}
+.preview{margin:16px 0;background:var(--lime-soft);border:1px solid #DDF5BF;border-radius:var(--r-md);padding:12px 14px;font-size:13px;color:var(--ink);white-space:pre-line}
+.sgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sgrid a,.sgrid button{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-md);padding:14px 6px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:700;color:var(--ink)}
+.sgrid a:hover,.sgrid button:hover{border-color:var(--ink)}
+.sgrid .ico{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--c);font-weight:800;font-size:14px;letter-spacing:-.02em}
+.sgrid .ico svg{display:block}
+.linkrow2{display:flex;gap:8px;margin-top:14px}
+.linkrow2 input{flex:1;min-width:0;border:1px solid var(--line-strong);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--muted)}
+@media (max-width:720px){.navshare{display:none}.mact{display:flex;gap:8px;align-items:center}.mshare{border:1px solid #D9D5CF;background:transparent;color:#fff;font-weight:800;font-size:13px;padding:9px 12px;border-radius:10px;cursor:pointer}}
+@media (max-width:520px){.sgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.actions{grid-template-columns:1fr 1fr}.actions .btn.share{grid-column:1/-1}}
 .btn{border-radius:12px;padding:12px 14px;font-weight:800;font-size:14px;cursor:pointer;border:1px solid var(--ink)}
 .btn.primary{background:var(--lime);color:var(--ink-strong);border-color:var(--lime)}
 .btn.primary:hover{background:#C3F57F}
@@ -406,6 +427,7 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
     <div class="nav-right">
       <label for="home">Your currency</label>
       <select id="home" class="pill-select"></select>
+      <button type="button" class="navshare" data-share aria-haspopup="dialog">Share</button>
     </div>
   </div>
 </header>
@@ -420,7 +442,7 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 <main class="layout">
   <div id="form"></div>
   <aside class="card sum" id="results" aria-live="polite">
-    <div class="lbl">Your estimated monthly cost</div>
+    <div class="lbl" id="sHead">Your estimated monthly cost</div>
     <div class="total num" id="sMonthly">–</div>
     <div class="ctx" id="sWhere"></div>
     <ul class="split num" id="split"></ul>
@@ -439,8 +461,10 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
     </div>
     <div class="pair" id="pair"></div>
     <div id="alerts"></div>
+    <div class="disc"><b>Disclaimer:</b> these are estimates for planning only. Actual costs can vary with the property you choose, availability, exchange rates, season and your own spending. Tuition is not included.</div>
     <div class="actions">
-      <button class="btn primary" id="btnCopy" type="button">Copy summary</button>
+      <button class="btn primary share" type="button" data-share aria-haspopup="dialog">Share</button>
+      <button class="btn ghost" id="btnCopy" type="button">Copy summary</button>
       <button class="btn ghost" id="btnPrint" type="button">Save as PDF</button>
     </div>
   </aside>
@@ -459,10 +483,9 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
     <details><summary>Living-cost assumptions for the selected country</summary><div class="tablewrap"><table class="assump" id="assump"></table></div></details>
     <details><summary>How the total is calculated</summary>
       <ul>
-        <li><b>Monthly cost</b> = rent + living costs + any other expenses you add that recur (yearly items such as trips are spread evenly per month).</li>
-        <li><b>Total for your stay</b> = monthly cost × months + one-time costs you added (flights at the start and end, visa fees, setup).</li>
+        <li><b>Weekly or monthly cost</b>: the UK, Australia and New Zealand let rooms by the week, so every figure there is shown per week; other countries are shown per month. It is rent + living costs + any other expenses you add that recur (yearly items such as trips are spread evenly).</li>
+        <li><b>Total for your stay</b> = weekly (or monthly) cost × weeks (or months) of stay + one-time costs you added (flights, visa fees). A year is 52 weeks.</li>
         <li><b>Living costs</b> cover food, local transport, phone and bills, and personal essentials. Lean, Standard and Comfortable set how much you eat out, travel by taxi and spend on essentials; Fine-tune lets you set each one.</li>
-        <li>A refundable deposit is not a cost, so it is never in the total. It appears only in cash needed to get started.</li>
       </ul>
     </details>
     <details><summary>Exchange rates and sources</summary><div id="mSources"></div></details>
@@ -472,12 +495,20 @@ tr.sub td{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:u
 <footer>
   <div class="foot-in">
     <img src="data:image/png;base64,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" alt="House of Student" width="116" height="30">
-    <span>Estimates for planning only. Tuition is not included. Confirm visa, insurance and fee amounts on official government sites before paying.</span>
+    <span>Rent based on House of Student proprietary data. All figures are estimates for planning only; actual costs can vary. Tuition is not included. Confirm visa, insurance and fee amounts on official government sites before paying.</span>
   </div>
 </footer>
 
-<div class="mbar"><div><span>Estimated per month</span><b class="num" id="mTotal">–</b></div><a href="#results">View summary</a></div>
+<div class="mbar"><div><span id="mLbl">Estimated per month</span><b class="num" id="mTotal">–</b></div><span class="mact"><button type="button" class="mshare" data-share aria-haspopup="dialog">Share</button><a href="#results">Summary</a></span></div>
 <div class="tip" id="tip" role="tooltip"></div>
+<div class="shade" id="shareShade" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="sheet-head"><div><h3 id="shareTitle">Share your estimate</h3><p>Send it to family, friends or your counsellor.</p></div><button type="button" class="xbtn" id="shareClose" aria-label="Close">×</button></div>
+    <div class="preview" id="sharePreview"></div>
+    <div class="sgrid" id="shareGrid"></div>
+    <div class="linkrow2"><input id="shareLink" readonly aria-label="Link to this estimate"><button type="button" class="btn ghost" id="shareCopyLink">Copy link</button></div>
+  </div>
+</div>
 
 <script>
 /* =====================================================================
@@ -717,7 +748,7 @@ const ANCHOR={
  'United Kingdom':{rep:'uk',weekly:{'Sheffield':113,'Coventry':151,'Newcastle Upon Tyne':144,'Nottingham':144,'Liverpool':156,'Leicester':159,'Aberdeen':161,'Birmingham':172,'Leeds':184,'Glasgow':218,'Exeter':232,'Cardiff':235,'Manchester':236,'Edinburgh':263,'Bristol':285,'London':334}},
  'Australia':{rep:'au',weekly:{'Hobart':430,'Wollongong':460,'Newcastle':470,'Adelaide':480,'Gold Coast':500,'Perth':510,'Brisbane':540,'Canberra':560,'Melbourne':620,'Sydney':780}}
 };
-const WEEKLY_MARKETS=['United Kingdom','Australia','Ireland','New Zealand'];   // tbl_country.prise_unit = 2
+const WEEKLY_MARKETS=['United Kingdom','Australia','New Zealand'];   // tenancy quoted weekly; every other country is shown monthly
 const W2M=52/12;
 const median=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2};
 
@@ -749,20 +780,19 @@ const SEGS=[
  {id:'food',n:'Food',c:'#eb6834',cats:['food']},
  {id:'trans',n:'Transport',c:'#1baf7a',cats:['trans']},
  {id:'ess',n:'Bills & essentials',c:'#eda100',cats:['bills','ess']},
- {id:'extra',n:'Other expenses',c:'#e87ba4',cats:['flights','visa','leisure','travel','shopping','setup','buffer']}
+ {id:'extra',n:'Other expenses',c:'#e87ba4',cats:['flights','visa','leisure','travel','shopping','buffer']}
 ];
 const CATNAME={rent:'Rent',food:'Food',trans:'Transport',bills:'Phone & bills',ess:'Personal essentials',flights:'Flights',visa:'Visa & insurance',leisure:'Going out & leisure',travel:'Travel & trips',shopping:'Clothes & shopping',setup:'Moving-in setup',buffer:'Contingency'};
 const LIVING_CATS=['food','trans','bills','ess'];
 const QUAL={report:{s:'Outlook report',c:'var(--q-db)'},db:{s:'Listings data',c:'var(--q-db)'},cal:{s:'Calibrated',c:'var(--q-fee)'},fee:{s:'Official fee',c:'var(--q-fee)'},cited:{s:'Sourced',c:'var(--q-cited)'},est:{s:'Estimate',c:'var(--q-est)'},user:{s:'Your figure',c:'var(--lime-deep)'}};
 
 const ADDONS=[
- {id:'flights',t:'Flights',d:'Flights at the start and end of your stay, plus trips home. Enter your own fare.'},
+ {id:'flights',t:'Flights',d:'Flights at the start and end of your stay, plus trips home, at the fare you enter.'},
  {id:'visa',t:'Visa & health insurance',d:'Student visa, residence permit, mandatory insurance and student levies.'},
  {id:'leisure',t:'Going out & leisure',d:'Nights out, events, cinema, subscriptions and the gym.'},
  {id:'travel',t:'Travel & trips',d:'Weekend trips in the country and to neighbouring countries.'},
  {id:'shopping',t:'Clothes & shopping',d:'Regular clothes shopping, plus a winter wardrobe in cold countries.'},
- {id:'setup',t:'Moving-in setup',d:'Starter household kit, first week on arrival and a refundable deposit.'},
- {id:'buffer',t:'Contingency buffer',d:'A safety margin on your monthly costs for the unexpected.'}
+ {id:'buffer',t:'Contingency buffer',d:'A safety margin on your regular costs for the unexpected.'}
 ];
 
 /* =====================================================================
@@ -770,7 +800,7 @@ const ADDONS=[
    ===================================================================== */
 const DEFAULTS={country:'United Kingdom',city:0,locality:0,months:12,tier:1,level:1,billsIncl:true,basis:'db',
   eatOut:3,grocStyle:'m',coffee:3,tMode:'pass',rides:2,mobile:1,care:1,
-  ao:{flights:false,visa:false,leisure:false,travel:false,shopping:false,setup:false,buffer:false},
+  ao:{flights:false,visa:false,leisure:false,travel:false,shopping:false,buffer:false},
   flightINR:null,flightStart:true,homeTrips:1,
   night:1,events:0,outings:2,subs:2,gym:1,
   domTrips:2,domDays:3,domStyle:1,nearTrips:1,nearDays:4,nearMedium:'flightBudget',nearStyle:1,
@@ -782,6 +812,11 @@ const cn=(st=S)=>COUNTRIES[st.country];
 const cityM=(st=S)=>MODEL[st.country].cities[st.city];
 const localCcy=(st=S)=>MODEL[st.country].ccy;
 const isWeekly=(st=S)=>WEEKLY_MARKETS.includes(st.country);
+/* One period for the whole page: weekly markets show every amount per week, others per month */
+const PER=(st=S)=>isWeekly(st)?{f:12/52,word:'week',adj:'weekly',u:'/wk',col:'Per week',many:'weeks'}:{f:1,word:'month',adj:'monthly',u:'/mo',col:'Per month',many:'months'};
+const perAmt=(monthly,st=S)=>monthly*PER(st).f;          // monthly amount → amount per page period
+const stayUnits=(st=S)=>isWeekly(st)?st.months*52/12:st.months;
+const nfmt=n=>Math.abs(n-Math.round(n))<1e-9?String(Math.round(n)):n.toFixed(1);
 const P_=(st=S)=>({...cn(st).p,...(cn(st).cityP[cityM(st).c]||{})});
 const nf={};
 function fmtCcy(v,ccy,dp=0){
@@ -829,7 +864,7 @@ function feeCost(f,mo){
     case 'monthly':return {o:0,m:f.amt};
   }
 }
-const flightINR=(st=S)=>st.flightINR??cn(st).flightINR;
+const flightINR=(st=S)=>st.flightINR??0;   // no default fare: flights count only once the student enters one
 
 /* =====================================================================
    6. COST ENGINE  (pure: takes a state, returns lines in INR)
@@ -846,11 +881,11 @@ function compute(st=S){
 
   // Rent
   const rentL=loc.r[st.tier];
-  const per=isWeekly(st)?`${lcs(rentL/W2M)} a week (${lcs(rentL)} a month)`:`${lcs(rentL)} a month`;
+  const per=`${lcs(perAmt(rentL,st))} a ${PER(st).word}`;
   add('rent','Rent',`${['Budget','Typical','Premium'][st.tier]} room, ${loc.whole?'whole city':loc.short}: ${per}`,citySrc(st),{m:rentL*X});
   if(!st.billsIncl){
-    add('bills','Utilities',`Electricity, water and heating: ${lcs(P.utils)} a month`,q('utils'),{m:P.utils*X});
-    add('bills','Home internet',`${lcs(P.net)} a month`,q('net'),{m:P.net*X});
+    add('bills','Utilities',`Electricity, water and heating: ${lcs(perAmt(P.utils,st))} a ${PER(st).word}`,q('utils'),{m:P.utils*X});
+    add('bills','Home internet',`${lcs(perAmt(P.net,st))} a ${PER(st).word}`,q('net'),{m:P.net*X});
   }
   add('bills','Mobile plan',['Basic','Standard','Unlimited'][st.mobile]+' plan',q('mobile'),{m:P.mobile*[.6,1,1.7][st.mobile]*X});
 
@@ -873,9 +908,10 @@ function compute(st=S){
   // ---- Optional add-ons ----
   const ao=st.ao;
   if(ao.flights){
-    const fq=st.flightINR!=null?'user':'est';
-    if(st.flightStart)add('flights','Flights at start and end of stay','One return flight from home',fq,{o:flightINR(st)});
-    add('flights','Trips home',`${st.homeTrips} return flight${st.homeTrips===1?'':'s'} a year`,fq,{y:st.homeTrips*flightINR(st)});
+    if(st.flightINR!=null){
+      if(st.flightStart)add('flights','Flights at start and end of stay','One return flight at your fare','user',{o:flightINR(st)});
+      add('flights','Trips home',`${st.homeTrips} return flight${st.homeTrips===1?'':'s'} a year at your fare`,'user',{y:st.homeTrips*flightINR(st)});
+    }
   }
   if(ao.visa)c.fees.forEach(f=>{const fc=feeCost(f,mo);add('visa',f.label,f.note,f.q,{o:fc.o*X,m:fc.m*X})});
   if(ao.leisure){
@@ -894,13 +930,9 @@ function compute(st=S){
     add('shopping','Clothes and shoes',`${st.clothItems} items a month, ${['value','mid-range','premium','designer'][st.clothRange]}`,'est',{m:st.clothItems*P.cloth*[1,2.4,5,12][st.clothRange]*X});
     if(c.cold)add('shopping','Winter wardrobe','Coat, boots and thermals, one-time','est',{o:P.cloth*[6,13,28,65][st.clothRange]*X});
   }
-  if(ao.setup){
-    if(st.kit)add('setup','Starter household kit','Bedding, kitchenware, local SIM','est',{o:15000});
-    if(st.firstWeek)add('setup','First week on arrival','7 nights budget accommodation before move-in','est',{o:7*c.dom[0]*X});
-  }
   if(ao.buffer){
     const run=L.reduce((a,l)=>a+l.m+l.y/12,0);
-    add('buffer','Contingency buffer',`${st.buffer}% of monthly costs`,'est',{m:run*st.buffer/100});
+    add('buffer','Contingency buffer',`${st.buffer}% of ${PER(st).adj} costs`,'est',{m:run*st.buffer/100});
   }
 
   L.forEach(l=>{l.total=l.m*mo+l.y*mo/12+l.o});
@@ -909,7 +941,7 @@ function compute(st=S){
   const oneTime=L.reduce((a,l)=>a+l.o,0);
   const sumM=f=>L.filter(f).reduce((a,l)=>a+l.m+l.y/12,0);
   const rentM=sumM(l=>l.cat==='rent'),livingM=sumM(l=>LIVING_CATS.includes(l.cat)),extraM=running-rentM-livingM;
-  const deposit=ao.setup?rentL*X*st.deposit:0;
+  const deposit=0;
   const segs=SEGS.map(s=>({...s,total:L.filter(l=>s.cats.includes(l.cat)).reduce((a,l)=>a+l.total,0),parts:s.cats.map(k=>({n:CATNAME[k],total:L.filter(l=>l.cat===k).reduce((a,l)=>a+l.total,0)}))}));
   return {L,total,running,oneTime,rentM,livingM,extraM,deposit,upfront:oneTime+deposit+running,segs,mo,loc,P,home,city};
 }
@@ -938,11 +970,11 @@ const F={
  eatOut:{t:'range',l:'Meals eaten out per week',min:0,max:21,step:1,hint:()=>`${21-S.eatOut} of 21 weekly meals cooked at home.`},
  grocStyle:{t:'seg',l:'Grocery shopping',opts:()=>[['b','Budget'],['m','Regular'],['p','Premium']]},
  coffee:{t:'range',l:'Coffees and snacks per week',min:0,max:15,step:1},
- tMode:{t:'seg',l:'Getting around',full:1,opts:()=>{const P=P_();return [['pass','Transit pass',P.pass?lc(P.pass)+' /mo':'Included'],['bike','Bicycle',lc(P.cheap*2)+' /mo'],['walk','Walking','Free'],['car','Car',lc(P.car)+' /mo']]}},
+ tMode:{t:'seg',l:'Getting around',full:1,opts:()=>{const P=P_();return [['pass','Transit pass',P.pass?lc(perAmt(P.pass))+' '+PER().u:'Included'],['bike','Bicycle',lc(perAmt(P.cheap*2))+' '+PER().u],['walk','Walking','Free'],['car','Car',lc(perAmt(P.car))+' '+PER().u]]}},
  rides:{t:'range',l:'Taxi rides per month',min:0,max:30,step:1},
  mobile:{t:'seg',l:'Mobile plan',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Unlimited']]},
  care:{t:'seg',l:'Toiletries & household',opts:()=>[[0,'Basic'],[1,'Standard'],[2,'Premium']]},
- billsIncl:{t:'toggle',full:1,l:'Bills included in my rent',desc:()=>'Most purpose-built student homes include utilities and Wi-Fi. Switch off to add about '+lc(P_().utils+P_().net)+' a month.'},
+ billsIncl:{t:'toggle',full:1,l:'Bills included in my rent',desc:()=>'Most purpose-built student homes include utilities and Wi-Fi. Switch off to add about '+lc(perAmt(P_().utils+P_().net))+' a '+PER().word+'.'},
  flightStart:{t:'toggle',full:1,l:'Flights at the start and end of my stay',desc:()=>'One return flight.'},
  homeTrips:{t:'range',l:'Trips home per year',min:0,max:4,step:1},
  night:{t:'range',l:'Nights out per month',min:0,max:12,step:1},
@@ -962,9 +994,9 @@ const F={
  kit:{t:'toggle',l:'Starter household kit',desc:()=>'Bedding, kitchenware, SIM: about '+fmtP(15000)+'.'},
  firstWeek:{t:'toggle',l:'First week on arrival',desc:()=>'7 nights budget stay: about '+fmtP(7*cn().dom[0]*FX[localCcy()])+'.'},
  deposit:{t:'seg',l:'Refundable deposit',full:1,opts:()=>[[0,'None'],[1,'1 month'],[1.5,'1.5 months'],[2,'2 months']],hint:()=>'Returned at the end of your tenancy, so it is not part of the total. Shown in cash needed to get started.'},
- buffer:{t:'range',l:'Buffer on monthly costs',min:0,max:20,step:1,unit:'%',full:1}
+ buffer:{t:'range',l:'Buffer on regular costs',min:0,max:20,step:1,unit:'%',full:1}
 };
-const ADDON_FIELDS={flights:['flightStart','homeTrips'],visa:[],leisure:['night','events','outings','subs','gym'],travel:['domTrips','domDays','domStyle','nearTrips','nearDays','nearMedium','nearStyle'],shopping:['clothRange','clothItems'],setup:['kit','firstWeek','deposit'],buffer:['buffer']};
+const ADDON_FIELDS={flights:['flightStart','homeTrips'],visa:[],leisure:['night','events','outings','subs','gym'],travel:['domTrips','domDays','domStyle','nearTrips','nearDays','nearMedium','nearStyle'],shopping:['clothRange','clothItems'],buffer:['buffer']};
 const TUNE_FIELDS=['eatOut','grocStyle','coffee','mobile','tMode','rides','care','billsIncl'];
 const NUM=['city','locality','tier','level','mobile','care','gym','domStyle','nearStyle','clothRange','deposit'];
 
@@ -1063,7 +1095,7 @@ function refreshFields(keys){
     const h=$('#h_'+k);if(h)h.textContent=f.hint?f.hint():'';
   });
 }
-function rentText(m){return isWeekly()?{main:lc(m/W2M),unit:'/wk',sub:lc(m)+' /mo'}:{main:lc(m),unit:'/mo',sub:''}}
+function rentText(m){return {main:lc(perAmt(m)),unit:PER().u,sub:''}}
 function refreshControls(){
   opts($('#f_country'),Object.keys(MODEL).map(c=>[c,c+' · '+MODEL[c].ccy]),S.country);
   opts($('#f_city'),MODEL[S.country].cities.map((c,i)=>[i,c.c]),S.city);
@@ -1075,14 +1107,14 @@ function refreshControls(){
   document.querySelectorAll('#c_months button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===S.months)));
   // rent cards
   const names=['Budget','Typical','Premium'],desc=['Cheapest 10% of properties (10th percentile)','Cheaper quarter of properties (25th percentile)','Median property, never above the average'];
-  const rc=l.r.map((v,i)=>{const t=rentText(v);return [names[i],t.main,t.unit,t.sub,sameCcy()?'':'≈ '+fmtCcy(v*pairRate(),S.home)+' /mo',desc[i]]}),rsig=JSON.stringify(rc),rt=$('#f_tier');
+  const rc=l.r.map((v,i)=>{const t=rentText(v);return [names[i],t.main,t.unit,t.sub,sameCcy()?'':'≈ '+fmtCcy(perAmt(v)*pairRate(),S.home)+' '+PER().u,desc[i]]}),rsig=JSON.stringify(rc),rt=$('#f_tier');
   if(rt.dataset.sig!==rsig){rt.innerHTML=rc.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="rn">${o[0]}</span><span class="rp num">${o[1]}<small> ${o[2]}</small></span>${o[3]?`<span class="rh num">${o[3]}</span>`:''}${o[4]?`<span class="rh num">${o[4]}</span>`:''}<span class="rd">${o[5]}</span></button>`).join('');rt.dataset.sig=rsig}
   [...rt.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.tier)));
   $('#rentSrc').innerHTML=rentSource();
   const bb=$('#basisBtn');if(bb)bb.onclick=()=>{S.basis=S.basis==='report'?'db':'report';update()};
   // living levels with their monthly amount
-  const lv=LEVELS.map((L,i)=>{const st=JSON.parse(JSON.stringify(S));Object.assign(st,L.s);for(const k in st.ao)st.ao[k]=false;return [L.n,fmtP(compute(st).livingM),L.d]}),lsig=JSON.stringify(lv),le=$('#f_level');
-  if(le.dataset.sig!==lsig){le.innerHTML=lv.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="ln">${o[0]}</span><span class="la num">${o[1]}<small> /mo</small></span><span class="ld">${o[2]}</span></button>`).join('');le.dataset.sig=lsig}
+  const lv=LEVELS.map((L,i)=>{const st=JSON.parse(JSON.stringify(S));Object.assign(st,L.s);for(const k in st.ao)st.ao[k]=false;return [L.n,fmtP(perAmt(compute(st).livingM)),L.d,PER().u]}),lsig=JSON.stringify(lv),le=$('#f_level');
+  if(le.dataset.sig!==lsig){le.innerHTML=lv.map((o,i)=>`<button type="button" role="radio" data-i="${i}"><span class="ln">${o[0]}</span><span class="la num">${o[1]}<small> ${o[3]}</small></span><span class="ld">${o[2]}</span></button>`).join('');le.dataset.sig=lsig}
   [...le.children].forEach((b,i)=>b.setAttribute('aria-checked',String(i===S.level)));
   $('#tuneBtn').setAttribute('aria-expanded',String(S.tuneOpen));
   $('#tuneBtn').firstChild.textContent=S.level===null?'Fine-tune living costs (customised) ':'Fine-tune living costs ';
@@ -1092,29 +1124,26 @@ function refreshControls(){
   ADDONS.forEach(a=>{
     const on=!!S.ao[a.id];
     $('#ao_'+a.id).classList.toggle('on',on);$('#aoh_'+a.id).setAttribute('aria-checked',String(on));$('#aob_'+a.id).hidden=!on;
-    const c=addonCost(a.id),parts=[];
-    if(c.m>0.5)parts.push(fmtP(c.m)+' /mo');
-    if(c.o>0.5)parts.push(fmtP(c.o)+' one-time');
-    $('#aoa_'+a.id).innerHTML=(parts.join('<br>')||'—')+(c.dep>0.5?`<small>+ ${fmtP(c.dep)} deposit</small>`:'');
+    // prices appear only once the expense is switched on
+    let amt='';
+    if(on){const c=addonCost(a.id),parts=[];
+      if(c.m>0.5)parts.push(fmtP(perAmt(c.m))+' '+PER().u);
+      if(c.o>0.5)parts.push(fmtP(c.o)+' one-time');
+      amt=parts.join('<br>')||(a.id==='flights'?'<small>Enter your fare</small>':'');}
+    $('#aoa_'+a.id).innerHTML=amt;
     refreshFields(ADDON_FIELDS[a.id]);
   });
   $('#flightCcy').textContent=S.home;
-  $('#flightPrice').value=Math.round(toHome(flightINR()));
-  $('#flightHint').innerHTML=S.flightINR!=null?`Your fare. <button type="button" class="linkbtn" id="fpReset">Use our estimate (${fmtCcy(toHome(cn().flightINR),S.home)})</button>`:`Our estimate for a return flight from India. Type the fare you found to use it instead.`;
+  $('#flightPrice').value=S.flightINR!=null?Math.round(toHome(S.flightINR)):'';
+  $('#flightPrice').placeholder='Enter your return fare';
+  $('#flightHint').innerHTML=S.flightINR!=null?`Using your fare. <button type="button" class="linkbtn" id="fpReset">Clear</button>`:`Flights are added once you enter the return fare you found.`;
   const fr=$('#fpReset');if(fr)fr.onclick=()=>{S.flightINR=null;update()};
   $('#feelist').innerHTML=cn().fees.map(f=>{const fc=feeCost(f,S.months),tot=(fc.o+fc.m*S.months);return `<li><span>${esc(f.label)}<small>${esc(f.note)}</small></span><span>${esc(lc(tot))}</span></li>`}).join('');
   $('#home').value=S.home;
 }
 function rentSource(){
-  const c=cityM(),M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep],k=cityK(),wk=isWeekly();
-  const f=v=>wk?lc(v*k/W2M)+'/wk':lc(v*k)+'/mo';
-  const bands=`Premium ${f(c.b[2])} (median) · Typical ${f(c.b[1])} (25th percentile) · Budget ${f(c.b[0])} (10th percentile)`;
-  const medW=c.b[2]/W2M;
-  if(useReport())return `<span class="badge">Outlook report</span><span>Premium is set to the <b>${esc(rep.short)}</b> figure of ${lc(c.rep)} a week${rep.placeholder?' (the report marks it as a placeholder)':''}; Typical and Budget keep the spread of our listings. ${bands}. Our live listings median is ${lc(medW)} a week. <button type="button" class="linkbtn" id="basisBtn">Use live listings instead</button></span>`;
-  let cmp='';
-  if(c.rep!=null){const d=Math.round((medW-c.rep)/c.rep*100);cmp=` The ${esc(rep.short)} quotes ${lc(c.rep)} a week${rep.placeholder?' (marked as a placeholder in that report)':''}; our median is ${d===0?'the same':Math.abs(d)+'% '+(d>0?'higher':'lower')}. <button type="button" class="linkbtn" id="basisBtn">Use the report figure instead</button>`}
-  else if(rep)cmp=` ${esc(c.c)} is not in the ${esc(rep.short)}.`;
-  return `<span class="badge db">Live listings</span><span>From <b>${c.n} priced properties</b> in ${esc(c.c)} (${c.rooms} room types, current and upcoming tenancies, ${SNAPSHOT}): ${bands}.${c.n<10?' Small sample, so treat it as indicative.':''}${cmp}</span>`;
+  const c=cityM(),d=new Date(SNAPSHOT).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  return `<span class="badge">House of Student data</span><span>Based on <b>House of Student proprietary data</b>: live rents from <b>${c.n} verified ${c.n===1?'property':'properties'}</b> in ${esc(c.c)}, updated ${d}.${c.n<10?' Smaller sample, so treat it as a guide.':''}</span>`;
 }
 
 function renderPair(){
@@ -1181,35 +1210,37 @@ function update(){
   refreshControls();renderPair();
   const r=compute(),mo=r.mo,c=cn();
   const where=(r.loc.whole?'':r.loc.short+', ')+cityM().c+', '+S.country;
-  $('#sMonthly').innerHTML=money(r.running);
-  $('#mTotal').textContent=fmtP(r.running)+' /mo';
+  const PP=PER(),units=stayUnits();
+  $('#sHead').textContent=`Your estimated ${PP.adj} cost`;
+  $('#sMonthly').innerHTML=money(perAmt(r.running));
+  $('#mTotal').textContent=fmtP(perAmt(r.running))+' '+PP.u;
+  $('#mLbl').textContent=`Estimated per ${PP.word}`;
   $('#sWhere').textContent=`${['Budget','Typical','Premium'][S.tier]} room in ${where}`;
-  const rows=[['Rent'+(isWeekly()?' · '+lc(r.loc.r[S.tier]/W2M)+' /wk':''),'#2a78d6',r.rentM],['Living costs','#eb6834',r.livingM]];
-  if(r.extraM>0.5)rows.push(['Other expenses','#e87ba4',r.extraM]);
+  const rows=[['Rent','#2a78d6',perAmt(r.rentM)],['Living costs','#eb6834',perAmt(r.livingM)]];
+  if(r.extraM>0.5)rows.push(['Other expenses','#e87ba4',perAmt(r.extraM)]);
   $('#split').innerHTML=rows.map(x=>`<li style="--c:${x[1]}"><span>${x[0]}</span><b>${money(x[2])}</b></li>`).join('');
-  $('#tLabel').textContent=`Total for ${mo} months`;
+  $('#tLabel').textContent=isWeekly()?`Total for ${nfmt(units)} weeks (${mo} months)`:`Total for ${mo} months`;
   $('#sTotal').innerHTML=money(r.total);
-  $('#sEq').textContent=`${fmtP(r.running)} a month × ${mo}`+(r.oneTime>0.5?` + ${fmtP(r.oneTime)} one-time`:'');
-  const showUp=r.oneTime>0.5||r.deposit>0.5;$('#upBox').hidden=!showUp;
-  if(showUp){$('#sUp').innerHTML=money(r.upfront);$('#sUpNote').textContent=[r.oneTime>0.5?`one-time ${fmtP(r.oneTime)}`:'',r.deposit>0.5?`refundable deposit ${fmtP(r.deposit)}`:'',`first month ${fmtP(r.running)}`].filter(Boolean).join(' + ')}
+  $('#sEq').textContent=`${fmtP(perAmt(r.running))} a ${PP.word} × ${nfmt(units)} ${PP.many}`+(r.oneTime>0.5?` + ${fmtP(r.oneTime)} one-time`:'');
+  const showUp=r.oneTime>0.5;$('#upBox').hidden=!showUp;
+  if(showUp){$('#sUp').innerHTML=money(r.oneTime+perAmt(r.running));$('#sUpNote').textContent=`one-time ${fmtP(r.oneTime)} + first ${PP.word} ${fmtP(perAmt(r.running))}`}
   renderDonut(r);
   const al=[];
   if(r.loc.n<10)al.push(`Rent here is based on only ${r.loc.n} priced properties, so treat it as indicative.`);
-  if(useReport()&&REPORTS[MODEL[S.country].rep].placeholder)al.push('You are using the Australia Outlook rent figure, which that report marks as a placeholder.');
   $('#alerts').innerHTML=al.map(a=>`<div class="alert">${a}</div>`).join('');
 
   // breakdown table, grouped by segment
-  let h=`<thead><tr><th class="l">Item</th><th class="l">Basis</th><th class="l">Source</th><th>Per month</th><th>Total for ${mo} months</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th class="l">Item</th><th class="l">Basis</th><th class="l">Source</th><th>${PP.col}</th><th>Total for ${mo} months</th></tr></thead><tbody>`;
   r.segs.forEach(sg=>{
     const rows=r.L.filter(l=>sg.cats.includes(l.cat));if(!rows.length)return;
-    h+=`<tr class="grp"><td class="l" colspan="3"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${sg.c};margin-right:8px"></span>${sg.n}</td><td class="num">${money(sg.total/mo)}</td><td class="num">${money(sg.total)}</td></tr>`;
+    h+=`<tr class="grp"><td class="l" colspan="3"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${sg.c};margin-right:8px"></span>${sg.n}</td><td class="num">${money(perAmt(sg.total/mo))}</td><td class="num">${money(sg.total)}</td></tr>`;
     sg.cats.forEach(cid=>{
       const sr=rows.filter(l=>l.cat===cid);if(!sr.length)return;
       if(sg.cats.length>1)h+=`<tr class="sub"><td class="l" colspan="5">${CATNAME[cid]}</td></tr>`;
-      sr.forEach(l=>{h+=`<tr><td class="l">${esc(l.label)}</td><td class="basis">${esc(l.note)}</td><td class="l">${qpill(l.q)}</td><td class="num">${l.o&&!l.m&&!l.y?'<span style="color:var(--faint)">one-time</span>':money(l.m+l.y/12)}</td><td class="num">${money(l.total)}</td></tr>`});
+      sr.forEach(l=>{h+=`<tr><td class="l">${esc(l.label)}</td><td class="basis">${esc(l.note)}</td><td class="l">${qpill(l.q)}</td><td class="num">${l.o&&!l.m&&!l.y?'<span style="color:var(--faint)">one-time</span>':money(perAmt(l.m+l.y/12))}</td><td class="num">${money(l.total)}</td></tr>`});
     });
   });
-  h+=`<tr class="tot"><td class="l" colspan="3">Total (excl. tuition)</td><td class="num">${money(r.running)}</td><td class="num">${money(r.total)}</td></tr>`;
+  h+=`<tr class="tot"><td class="l" colspan="3">Total (excl. tuition)</td><td class="num">${money(perAmt(r.running))}</td><td class="num">${money(r.total)}</td></tr>`;
   if(r.deposit>0.5)h+=`<tr><td class="l">Refundable deposit</td><td class="basis">${S.deposit} × monthly rent, returned at the end of the tenancy. Not part of the total.</td><td class="l">${qpill(citySrc())}</td><td></td><td class="num">${money(r.deposit)}</td></tr>`;
   $('#detail').innerHTML=h+'</tbody>';
 
@@ -1217,10 +1248,11 @@ function update(){
   const M=MODEL[S.country],rep=M.rep&&REPORTS[M.rep];
   $('#mRent').innerHTML=`<p><b>Rent comes from live House of Student listings</b> (snapshot ${SNAPSHOT}), validated as follows: only live properties whose tenancy window ends on or after the snapshot date; weekly prices converted to monthly at 52 weeks ÷ 12 months; prices outside each country's 1st–99th percentile removed as data-entry errors; each room type priced at the median of its tenancy options, and each property at the median of its room types, so every property counts once. <b>Premium</b> is the median property, capped at the average where the median is higher. <b>Typical</b> is the 25th percentile (a quarter of properties cost less). <b>Budget</b> is the 10th percentile (only 10% cost less). Each band is capped at the one above. Cities need at least 5 priced properties and neighbourhoods at least 4.</p>`+recon();
   const P=r.P;
-  const prow=[['Groceries, full self-catering','groc',' / week',S.country==='United Kingdom'?'At Standard (18 home-cooked meals a week) this is £146 a month, the national student figure from Save the Student quoted in the UK Outlook':''],['Meal out','cheap','',''],['Coffee','coffee','',''],['Student transit pass','pass',' / month',!P.pass?'Included in the semester contribution':''],['Taxi or ride-share trip','ride','',''],['Mobile plan (standard)','mobile',' / month',''],['Utilities (if not in rent)','utils',' / month',''],['Home internet (if not in rent)','net',' / month',''],['Mid-range restaurant meal (sets leisure prices)','mid','',''],['Cinema ticket','cinema',''],['Subscription','sub',' / month',''],['Gym','gym',' / month','']];
+  const pv=(v,b)=>b==='w'?perAmt(v*W2M):b==='m'?perAmt(v):v, pu=b=>b?' / '+PP.word:'';
+  const prow=[['Groceries, full self-catering','groc','w',S.country==='United Kingdom'?'At Standard (18 home-cooked meals a week) this is £146 a month, the national student figure from Save the Student quoted in the UK Outlook':''],['Meal out','cheap','',''],['Coffee','coffee','',''],['Student transit pass','pass','m',!P.pass?'Included in the semester contribution':''],['Taxi or ride-share trip','ride','',''],['Mobile plan (standard)','mobile','m',''],['Utilities (if not in rent)','utils','m',''],['Home internet (if not in rent)','net','m',''],['Mid-range restaurant meal (sets leisure prices)','mid','',''],['Cinema ticket','cinema',''],['Subscription','sub','m',''],['Gym','gym','m','']];
   let a='<thead><tr><th class="l">Assumption</th><th>Value</th><th class="l">Source</th><th class="l">Note</th></tr></thead><tbody>';
-  prow.forEach(x=>{a+=`<tr><td class="l">${x[0]}</td><td class="num">${lc(P[x[1]])}${x[2]}</td><td class="l">${qpill(c.cited.includes(x[1])?'cited':'est')}</td><td class="basis">${esc(x[3]||'')}</td></tr>`});
-  a+=`<tr><td class="l">Return flight from India</td><td class="num">${fmtCcy(c.flightINR,'INR')}</td><td class="l">${qpill('est')}</td><td class="basis">Fares vary widely by month and route. Enter your own fare under Flights.</td></tr></tbody>`;
+  prow.forEach(x=>{a+=`<tr><td class="l">${x[0]}</td><td class="num">${lc(pv(P[x[1]],x[2]))}${pu(x[2])}</td><td class="l">${qpill(c.cited.includes(x[1])?'cited':'est')}</td><td class="basis">${esc(x[3]||'')}</td></tr>`});
+  a+='</tbody>';
   $('#assump').innerHTML=a;
   window.__last=r;
 }
@@ -1229,13 +1261,69 @@ function summaryText(){
   const r=window.__last,both=v=>fmtP(v)+(sCcy()?` (${fmtS(v)})`:'');
   const where=(r.loc.whole?'':r.loc.short+', ')+cityM().c+', '+S.country;
   const out=['House of Student: rent and living cost estimate (excl. tuition)',`${['Budget','Typical','Premium'][S.tier]} room in ${where}, ${S.level!=null?LEVELS[S.level].n:'custom'} living costs`,'',
-   `Per month: ${both(r.running)}`,`  Rent ${both(r.rentM)}`,`  Living costs ${both(r.livingM)}`];
-  if(r.extraM>0.5)out.push(`  Other expenses ${both(r.extraM)}`);
+   `Per ${PER().word}: ${both(perAmt(r.running))}`,`  Rent ${both(perAmt(r.rentM))}`,`  Living costs ${both(perAmt(r.livingM))}`];
+  if(r.extraM>0.5)out.push(`  Other expenses ${both(perAmt(r.extraM))}`);
   out.push('',`Total for ${r.mo} months: ${both(r.total)}`+(r.oneTime>0.5?` (incl. ${fmtP(r.oneTime)} one-time)`:''));
   const on=ADDONS.filter(a=>S.ao[a.id]).map(a=>a.t);if(on.length)out.push('Includes: '+on.join(', '));
   if(!sameCcy())out.push(`Exchange rate: 1 ${localCcy()} = ${+pairRate().toPrecision(6)} ${S.home}`);
+  out.push('','Rent based on House of Student proprietary data. Estimates only; actual costs can vary.');
   return out.join('\n');
 }
+
+/* =====================================================================
+   SHARE: the link carries the student's choices, so a hosted page reopens the same estimate
+   ===================================================================== */
+const SHARE_BASE='https://houseofstudent.com/';   // used when the file is opened locally rather than from a website
+const SHARE_KEYS=['country','city','locality','months','tier','level','billsIncl','eatOut','grocStyle','coffee','tMode','rides','mobile','care','ao','flightINR','flightStart','homeTrips','night','events','outings','subs','gym','domTrips','domDays','domStyle','nearTrips','nearDays','nearMedium','nearStyle','clothRange','clothItems','buffer','home'];
+function stateHash(){const o={};SHARE_KEYS.forEach(k=>o[k]=S[k]);return 'e='+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'')}
+function loadHash(){
+  try{const m=location.hash.match(/e=([A-Za-z0-9+/]+)/);if(!m)return;
+    const o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    if(!o||!MODEL[o.country])return;
+    SHARE_KEYS.forEach(k=>{if(o[k]!==undefined)S[k]=k==='ao'?{...S.ao,...o.ao}:o[k]});
+    if(!MODEL[S.country].cities[S.city])S.city=0;
+    if(!FX[S.home])S.home='INR';
+  }catch(_){ }
+}
+function shareURL(){const base=/^https?:$/.test(location.protocol)?location.href.split('#')[0]:SHARE_BASE;return base+'#'+stateHash()}
+function shareText(){
+  const r=window.__last,PP=PER(),where=(r.loc.whole?'':r.loc.short+', ')+cityM().c+', '+S.country;
+  return `My study-abroad cost estimate from House of Student: about ${fmtP(perAmt(r.running))} a ${PP.word} for rent and living costs in ${where} (${['Budget','Typical','Premium'][S.tier]} room). Total for ${S.months} months: ${fmtP(r.total)}. Rent based on House of Student proprietary data; actual costs can vary.`;
+}
+const SVGI={
+ chat:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/></svg>',
+ plane:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 3 2 11l7 3 3 7 10-18zM9 14l13-11"/></svg>',
+ mail:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+ sms:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>',
+ more:'<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
+ link:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>'
+};
+function openShare(){
+  const url=shareURL(),text=shareText(),e=encodeURIComponent,T=e(text),U=e(url);
+  const items=[
+    ['WhatsApp','#25D366',SVGI.chat,`https://wa.me/?text=${e(text+' '+url)}`],
+    ['Telegram','#229ED9',SVGI.plane,`https://t.me/share/url?url=${U}&text=${T}`],
+    ['Facebook','#1877F2','f',`https://www.facebook.com/sharer/sharer.php?u=${U}`],
+    ['X','#111111','X',`https://twitter.com/intent/tweet?text=${T}&url=${U}`],
+    ['LinkedIn','#0A66C2','in',`https://www.linkedin.com/sharing/share-offsite/?url=${U}`],
+    ['Reddit','#FF4500','r/',`https://www.reddit.com/submit?url=${U}&title=${e('My study-abroad cost estimate from House of Student')}`],
+    ['Threads','#111111','@',`https://www.threads.net/intent/post?text=${e(text+' '+url)}`],
+    ['Email','#3B3733',SVGI.mail,`mailto:?subject=${e('My study-abroad cost estimate')}&body=${e(summaryText()+'\n\n'+url)}`],
+    ['SMS','#6BB52E',SVGI.sms,`sms:?&body=${e(text+' '+url)}`]
+  ];
+  let h=items.map(i=>`<a href="${i[3]}" target="_blank" rel="noopener"><span class="ico" style="--c:${i[1]}">${i[2]}</span>${i[0]}</a>`).join('');
+  h+=`<button type="button" id="shCopy"><span class="ico" style="--c:#78726B">${SVGI.link}</span>Copy text</button>`;
+  if(navigator.share)h+=`<button type="button" id="shMore"><span class="ico" style="--c:#3B3733">${SVGI.more}</span>More apps</button>`;
+  $('#shareGrid').innerHTML=h;
+  $('#sharePreview').textContent=text;
+  $('#shareLink').value=url;
+  $('#shareShade').hidden=false;
+  $('#shareClose').focus();
+  const cp=async(t,b,label)=>{try{await navigator.clipboard.writeText(t);b.lastChild.textContent='Copied'}catch(_){$('#shareLink').select();b.lastChild.textContent='Press Ctrl+C'}setTimeout(()=>b.lastChild.textContent=label,1600)};
+  $('#shCopy').onclick=e2=>cp(text+' '+url,e2.currentTarget,'Copy text');
+  const m=$('#shMore');if(m)m.onclick=()=>navigator.share({title:'My study-abroad cost estimate',text,url}).catch(()=>{});
+}
+function closeShare(){$('#shareShade').hidden=true}
 
 /* =====================================================================
    9. INIT
@@ -1251,8 +1339,14 @@ function summaryText(){
   $('#mSources').innerHTML=`<p>Reference exchange rates: ${FX_NOTE}. ${HOME_CCYS.filter(c=>c!=='INR').map(c=>`1 ${c} = ₹${FX[c]}`).join(' · ')}. You can type your own rate for the currency pair in the summary panel.</p><ul>`+
     Object.values(REPORTS).map(r=>`<li>${esc(r.name)}: ${esc(r.basis)}.</li>`).join('')+
     SOURCES.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>, ${s[2]}</li>`).join('')+'</ul>';
+  loadHash();
   buildForm();update();
   $('#btnPrint').addEventListener('click',()=>window.print());
+  document.querySelectorAll('[data-share]').forEach(b=>b.addEventListener('click',openShare));
+  $('#shareClose').addEventListener('click',closeShare);
+  $('#shareShade').addEventListener('click',e=>{if(e.target.id==='shareShade')closeShare()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#shareShade').hidden)closeShare()});
+  $('#shareCopyLink').addEventListener('click',async e=>{const b=e.currentTarget;try{await navigator.clipboard.writeText($('#shareLink').value);b.textContent='Copied'}catch(_){$('#shareLink').select();b.textContent='Press Ctrl+C'}setTimeout(()=>b.textContent='Copy link',1600)});
   $('#btnCopy').addEventListener('click',async e=>{
     const b=e.currentTarget;
     try{await navigator.clipboard.writeText(summaryText());b.textContent='Copied'}catch(_){b.textContent='Copy unavailable'}
